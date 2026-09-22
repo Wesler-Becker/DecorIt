@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class ARPlacementController : MonoBehaviour
 {
@@ -11,6 +12,12 @@ public class ARPlacementController : MonoBehaviour
 
     [SerializeField]
     private GameObject objectToPlace;
+
+    [SerializeField]
+    private ARInteractionUI interactionUI;
+
+    [SerializeField]
+    private ARObjectManipulator objectManipulator;
 
     private GameObject spawnedObject;
 
@@ -33,6 +40,13 @@ public class ARPlacementController : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
+        // Ignora o clique caso ele esteja sobre algum elemento da interface
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
         TryPlaceObject(mousePosition);
@@ -43,17 +57,32 @@ public class ARPlacementController : MonoBehaviour
         if (Touchscreen.current == null)
             return;
 
-        if (!Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+        var touch = Touchscreen.current.primaryTouch;
+
+        if (!touch.press.wasPressedThisFrame)
             return;
 
-        Vector2 touchPosition =
-            Touchscreen.current.primaryTouch.position.ReadValue();
+        // Ignora o toque caso ele esteja sobre a interface
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject(touch.touchId.ReadValue()))
+        {
+            return;
+        }
+
+        Vector2 touchPosition = touch.position.ReadValue();
 
         TryPlaceObject(touchPosition);
     }
 
     private void TryPlaceObject(Vector2 screenPosition)
     {
+        // Só permite posicionar se o modo estiver ativo
+        if (interactionUI != null &&
+            !interactionUI.PosicionamentoAtivo())
+        {
+            return;
+        }
+
         Debug.Log("Tentando posicionar objeto.");
 
         if (raycastManager.Raycast(
@@ -74,6 +103,8 @@ public class ARPlacementController : MonoBehaviour
                     hitPose.position,
                     hitPose.rotation
                 );
+
+                objectManipulator.SetTargetObject(spawnedObject);
             }
             else
             {
