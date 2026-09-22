@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ARPlacementController
   raycastManager: {fileID: 1137400612}
-  objectToPlace: {fileID: 1889377698070997578, guid: 665f7faed2c883e4988481d338fcf3a7, type: 3}
+  objectToPlace: {fileID: 1460976451586105414, guid: 716b3f78c924e1343967b3632e86b455, type: 3}
   interactionUI: {fileID: 1080965682}
   objectManipulator: {fileID: 1137400618}
 --- !u!114 &1137400618
