@@ -4,6 +4,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System;
 
 public class ARPlacementController : MonoBehaviour
 {
@@ -98,11 +99,17 @@ public class ARPlacementController : MonoBehaviour
             {
                 Debug.Log("Criando objeto.");
 
+                GameObject prefabToPlace = CatalogSelectionSession.SelectedCurtainPrefab != null
+                    ? CatalogSelectionSession.SelectedCurtainPrefab
+                    : objectToPlace;
+
                 spawnedObject = Instantiate(
-                    objectToPlace,
+                    prefabToPlace,
                     hitPose.position,
                     hitPose.rotation
                 );
+
+                ApplyVisitSelection(spawnedObject);
 
                 objectManipulator.SetTargetObject(spawnedObject);
             }
@@ -119,6 +126,29 @@ public class ARPlacementController : MonoBehaviour
         else
         {
             Debug.Log("Nenhum plano encontrado no ponto selecionado.");
+        }
+    }
+
+    private static void ApplyVisitSelection(GameObject placedObject)
+    {
+        VisitDraft selection = VisitDraftSession.Current;
+        CurtainController curtain = placedObject.GetComponent<CurtainController>();
+        if (curtain == null) return;
+
+        if (selection.widthCentimeters > 0f && selection.heightCentimeters > 0f)
+            curtain.SetDimensions(selection.widthCentimeters, selection.heightCentimeters);
+
+        if (Enum.TryParse(selection.panelType, out CurtainController.CurtainType type))
+            curtain.SetCurtainType(type);
+
+        foreach (MeshRenderer mesh in placedObject.GetComponentsInChildren<MeshRenderer>(true))
+        {
+            string partName = mesh.gameObject.name;
+            if ((partName.Contains("RodBody") || partName.Contains("Finial")) &&
+                CatalogSelectionSession.SelectedRodMaterial != null)
+                mesh.sharedMaterial = CatalogSelectionSession.SelectedRodMaterial;
+            else if (CatalogSelectionSession.SelectedFabricMaterial != null)
+                mesh.sharedMaterial = CatalogSelectionSession.SelectedFabricMaterial;
         }
     }
 }

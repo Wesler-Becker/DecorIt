@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.IO;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ARPhotoCapture : MonoBehaviour
 {
@@ -13,12 +15,21 @@ public class ARPhotoCapture : MonoBehaviour
 
     private void Start()
     {
-        btnCamera.onClick.AddListener(TirarFoto);
+        ARUIIconFactory.ConfigureButton(btnCamera, "Camera", "Foto", 66f, 22f);
+        if (btnCamera != null)
+        {
+            RectTransform rect = btnCamera.transform as RectTransform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(0f, 100f);
+        }
+        if (btnCamera != null) btnCamera.onClick.AddListener(TirarFoto);
+        AddBackButton();
     }
 
     private void OnDestroy()
     {
-        btnCamera.onClick.RemoveListener(TirarFoto);
+        if (btnCamera != null) btnCamera.onClick.RemoveListener(TirarFoto);
     }
 
     private void TirarFoto()
@@ -71,12 +82,6 @@ public class ARPhotoCapture : MonoBehaviour
                 ) +
                 ".png";
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-
-            SalvarAndroid(dados, nomeArquivo);
-
-#else
-
             string caminho =
                 Path.Combine(
                     Application.persistentDataPath,
@@ -88,11 +93,17 @@ public class ARPhotoCapture : MonoBehaviour
                 dados
             );
 
+            if (ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
+                    RecordSession.CurrentRecordId, caminho))
+                Debug.Log("Foto associada ao registro: " + caminho);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            SalvarAndroid(dados, nomeArquivo);
+#endif
+
             Debug.Log(
                 "Foto salva em: " + caminho
             );
-
-#endif
         }
         catch (System.Exception erro)
         {
@@ -114,6 +125,32 @@ public class ARPhotoCapture : MonoBehaviour
         {
             arCanvas.enabled = true;
         }
+    }
+
+    private void AddBackButton()
+    {
+        if (arCanvas == null || arCanvas.transform.Find("BackToRoomButton") != null) return;
+        GameObject buttonObject = new GameObject("BackToRoomButton", typeof(RectTransform), typeof(Image), typeof(Button));
+        buttonObject.transform.SetParent(arCanvas.transform, false);
+        RectTransform rect = buttonObject.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0f, 1f); rect.anchorMax = new Vector2(0f, 1f); rect.pivot = new Vector2(0f, 1f);
+        rect.anchoredPosition = new Vector2(28f, -45f); rect.sizeDelta = new Vector2(190f, 84f);
+        Image image = buttonObject.GetComponent<Image>(); image.color = new Color(.12f, .32f, .48f, .94f);
+        Button button = buttonObject.GetComponent<Button>(); button.targetGraphic = image; button.onClick.AddListener(ReturnFromAR);
+        GameObject labelObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
+        labelObject.transform.SetParent(buttonObject.transform, false);
+        RectTransform labelRect = labelObject.GetComponent<RectTransform>(); labelRect.anchorMin = Vector2.zero; labelRect.anchorMax = Vector2.one; labelRect.offsetMin = new Vector2(66f, 4f); labelRect.offsetMax = new Vector2(-8f, -4f);
+        TMP_Text label = labelObject.GetComponent<TMP_Text>(); label.text = "Voltar"; label.fontSize = 28f; label.alignment = TextAlignmentOptions.MidlineLeft; label.color = Color.white;
+        GameObject iconObject = new GameObject("BackIcon", typeof(RectTransform), typeof(Image));
+        iconObject.transform.SetParent(buttonObject.transform, false);
+        RectTransform iconRect = iconObject.GetComponent<RectTransform>(); iconRect.anchorMin = new Vector2(0f, 0.5f); iconRect.anchorMax = new Vector2(0f, 0.5f); iconRect.pivot = new Vector2(0.5f, 0.5f); iconRect.anchoredPosition = new Vector2(37f, 0f); iconRect.sizeDelta = new Vector2(42f, 42f);
+        ARUIIconFactory.SetIcon(iconObject.GetComponent<Image>(), "Back");
+    }
+
+    private void ReturnFromAR()
+    {
+        string destination = string.IsNullOrEmpty(VisitDraftSession.TargetRoomId) ? "Home" : "RoomDetail";
+        SceneManager.LoadScene(destination);
     }
 
 #if UNITY_ANDROID && !UNITY_EDITOR

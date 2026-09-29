@@ -25,6 +25,12 @@ public class ARInteractionUI : MonoBehaviour
 
     private void Start()
     {
+        ConfigureLayout(btnPosicionar, new Vector2(1f, 0f), new Vector2(-110f, 95f));
+        ConfigureLayout(btnAjustar, new Vector2(0f, 0f), new Vector2(110f, 95f));
+        ConfigureLayout(btnModoGesto, new Vector2(0f, 0f), new Vector2(95f, 235f));
+        ARUIIconFactory.ConfigureButton(btnPosicionar, "Position", "Posicionar", 58f, 21f, 160f);
+        ARUIIconFactory.ConfigureButton(btnAjustar, "Adjust", "Ajustar", 58f, 21f, 160f);
+        ARUIIconFactory.ConfigureButton(btnModoGesto, "Rotate", "Girar", 58f, 22f);
         btnPosicionar.onClick.AddListener(AtivarPosicionamento);
         btnAjustar.onClick.AddListener(AtivarAjuste);
         btnModoGesto.onClick.AddListener(AlternarModoGesto);
@@ -68,18 +74,15 @@ public class ARInteractionUI : MonoBehaviour
 
     private void AtualizarInterface()
     {
-        btnPosicionar.image.color =
-            modoPosicionar ? corAtiva : corInativa;
-
-        btnAjustar.image.color =
-            modoAjustar ? corAtiva : corInativa;
+        ARUIIconFactory.SetSelected(btnPosicionar, modoPosicionar);
+        ARUIIconFactory.SetSelected(btnAjustar, modoAjustar);
 
         // O botão secundário só aparece durante o ajuste.
         btnModoGesto.gameObject.SetActive(modoAjustar);
 
         // O texto indica a ação que será ativada ao clicar.
-        textoModoGesto.text =
-            modoRotacao ? "Aproximar" : "Girar";
+        textoModoGesto.text = modoRotacao ? "Aproximar" : "Girar";
+        ARUIIconFactory.ConfigureButton(btnModoGesto, modoRotacao ? "Zoom" : "Rotate", textoModoGesto.text, 58f, 22f);
 
         Debug.Log(
             "Posicionar: " + modoPosicionar +
@@ -101,5 +104,14 @@ public class ARInteractionUI : MonoBehaviour
     public bool RotacaoAtiva()
     {
         return modoRotacao;
+    }
+
+    private static void ConfigureLayout(Button button, Vector2 anchor, Vector2 position)
+    {
+        if (button == null) return;
+        RectTransform rect = button.transform as RectTransform;
+        rect.anchorMin = rect.anchorMax = anchor;
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = position;
     }
 }

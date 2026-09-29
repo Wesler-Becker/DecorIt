@@ -20,6 +20,10 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void Start()
     {
+        RectTransform rect = btnSuperficies.transform as RectTransform;
+        rect.anchoredPosition = new Vector2(-95f, 0f);
+        rect.sizeDelta = new Vector2(136f, 132f);
+        ARUIIconFactory.ConfigureButton(btnSuperficies, "Planes", "Planos", 58f, 22f);
         btnSuperficies.onClick.AddListener(AlternarSuperficies);
 
         // Monitora novos planos detectados
@@ -74,9 +78,6 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void AtualizarInterface()
     {
-        btnSuperficies.image.color =
-            superficiesVisiveis
-                ? corAtiva
-                : corInativa;
+        ARUIIconFactory.SetSelected(btnSuperficies, superficiesVisiveis);
     }
 }
