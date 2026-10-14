@@ -10,6 +10,7 @@ public sealed class PhotoData
     public string path;
     public string roomName;
     public string recordId;
+    public string capturedAt;
 }
 
 [Serializable]
@@ -18,6 +19,7 @@ public sealed class VisitRecordData
     public string id;
     public string createdAt;
     public string notes;
+    public string roomNotes;
     public string openingName;
     public float widthCentimeters;
     public float heightCentimeters;
@@ -35,6 +37,7 @@ public sealed class RoomData
     public string id;
     public string name;
     public string imageLabel;
+    public List<PhotoData> photos = new List<PhotoData>();
     public List<VisitRecordData> records = new List<VisitRecordData>();
 }
 
@@ -46,6 +49,7 @@ public sealed class ClientData
     public string phone;
     public string address;
     public List<RoomData> rooms = new List<RoomData>();
+    public List<PhotoData> unassignedPhotos = new List<PhotoData>();
 }
 
 [Serializable]
@@ -84,11 +88,13 @@ public static class ClientRepository
             if (client == null) continue;
             if (string.IsNullOrEmpty(client.id)) { client.id = Guid.NewGuid().ToString("N"); normalized = true; }
             if (client.rooms == null) { client.rooms = new List<RoomData>(); normalized = true; }
+            if (client.unassignedPhotos == null) { client.unassignedPhotos = new List<PhotoData>(); normalized = true; }
             foreach (RoomData room in client.rooms)
             {
                 if (room == null) continue;
                 if (string.IsNullOrEmpty(room.id)) { room.id = Guid.NewGuid().ToString("N"); normalized = true; }
                 if (room.records == null) { room.records = new List<VisitRecordData>(); normalized = true; }
+                if (room.photos == null) { room.photos = new List<PhotoData>(); normalized = true; }
                 foreach (VisitRecordData record in room.records)
                     if (record != null && record.photos == null) { record.photos = new List<PhotoData>(); normalized = true; }
             }
@@ -130,7 +136,7 @@ public static class ClientRepository
         if (room == null || draft == null) return null;
         var record = new VisitRecordData
         {
-            id = Guid.NewGuid().ToString("N"), createdAt = DateTime.Now.ToString("o"), notes = draft.visitNotes,
+            id = Guid.NewGuid().ToString("N"), createdAt = DateTime.Now.ToString("o"), notes = draft.visitNotes, roomNotes = draft.roomNotes,
             openingName = draft.openingName, widthCentimeters = draft.widthCentimeters, heightCentimeters = draft.heightCentimeters,
             productCategory = draft.productCategory, modelName = draft.modelName, panelType = draft.panelType,
             fabricMaterialName = draft.fabricMaterialName, rodMaterialName = draft.rodMaterialName
@@ -140,7 +146,7 @@ public static class ClientRepository
         return record;
     }
 
-    public static bool AddPhoto(string clientId, string roomId, string recordId, string path)
+    public static bool AddPhoto(string clientId, string roomId, string recordId, string path, string capturedAt = null)
     {
         if (string.IsNullOrWhiteSpace(path)) return false;
         List<ClientData> clients = Load();
@@ -148,9 +154,38 @@ public static class ClientRepository
         RoomData room = client?.rooms.Find(item => item.id == roomId);
         VisitRecordData record = room?.records.Find(item => item.id == recordId);
         if (record == null) return false;
-        record.photos.Add(new PhotoData { path = path, roomName = room.name, recordId = record.id });
+        record.photos.Add(new PhotoData { path = path, roomName = room.name, recordId = record.id, capturedAt = capturedAt ?? DateTime.Now.ToString("o") });
         int photoCount = room.records.Sum(item => item.photos.Count);
         room.imageLabel = photoCount == 1 ? "1 foto" : $"{photoCount} fotos";
+        Save(clients);
+        return true;
+    }
+
+    public static bool AddUnassignedPhoto(string clientId, string path, string capturedAt = null)
+    {
+        if (string.IsNullOrWhiteSpace(path)) return false;
+        List<ClientData> clients = Load();
+        ClientData client = clients.Find(item => item.id == clientId);
+        if (client == null) return false;
+        client.unassignedPhotos.Add(new PhotoData { path = path, roomName = "Sem cômodo", recordId = "", capturedAt = capturedAt ?? DateTime.Now.ToString("o") });
+        Save(clients);
+        return true;
+    }
+
+    public static bool UpdateCurrentRecordSelection(string clientId, string roomId, string recordId,
+        string modelName, string panelType, string fabricMaterialName, string rodMaterialName)
+    {
+        if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(roomId) || string.IsNullOrWhiteSpace(recordId))
+            return false;
+        List<ClientData> clients = Load();
+        ClientData client = clients.Find(item => item.id == clientId);
+        RoomData room = client?.rooms.Find(item => item.id == roomId);
+        VisitRecordData record = room?.records.Find(item => item.id == recordId);
+        if (record == null) return false;
+        record.modelName = modelName;
+        record.panelType = panelType;
+        record.fabricMaterialName = fabricMaterialName;
+        record.rodMaterialName = rodMaterialName;
         Save(clients);
         return true;
     }
@@ -161,9 +196,15 @@ public static class ClientRepository
         ClientData client = Find(clientId);
         if (client == null) return photos;
         foreach (RoomData room in client.rooms)
+        {
+            foreach (PhotoData photo in room.photos)
+                if (photo != null && !string.IsNullOrWhiteSpace(photo.path)) photos.Add(photo);
             foreach (VisitRecordData record in room.records)
                 foreach (PhotoData photo in record.photos)
                     if (photo != null && !string.IsNullOrWhiteSpace(photo.path)) photos.Add(photo);
+        }
+        foreach (PhotoData photo in client.unassignedPhotos)
+            if (photo != null && !string.IsNullOrWhiteSpace(photo.path)) photos.Add(photo);
         return photos;
     }
 

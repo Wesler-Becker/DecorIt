@@ -18,6 +18,13 @@ public class ARSurfaceUI : MonoBehaviour
 
     private bool superficiesVisiveis = true;
 
+    public bool PlanesVisible => superficiesVisiveis;
+
+    public void HideLegacyButton()
+    {
+        if (btnSuperficies != null) btnSuperficies.gameObject.SetActive(false);
+    }
+
     private void Start()
     {
         RectTransform rect = btnSuperficies.transform as RectTransform;
@@ -47,10 +54,13 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void AlternarSuperficies()
     {
+        ToggleFromCameraMenu();
+    }
+
+    public void ToggleFromCameraMenu()
+    {
         superficiesVisiveis = !superficiesVisiveis;
-
         AtualizarPlanos();
-
         AtualizarInterface();
     }
 

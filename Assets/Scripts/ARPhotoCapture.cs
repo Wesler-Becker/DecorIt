@@ -15,13 +15,14 @@ public class ARPhotoCapture : MonoBehaviour
 
     private void Start()
     {
-        ARUIIconFactory.ConfigureButton(btnCamera, "Camera", "Foto", 66f, 22f);
+        UnityARHostBridge.ReadLaunchData();
+        ARUIIconFactory.ConfigureCameraButton(btnCamera, "Camera", 82f, new Color(0.98f, 0.99f, 1f, 0.96f), new Color(0.10f, 0.19f, 0.25f, 1f));
         if (btnCamera != null)
         {
             RectTransform rect = btnCamera.transform as RectTransform;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(0f, 100f);
+            rect.anchoredPosition = new Vector2(0f, 78f);
         }
         if (btnCamera != null) btnCamera.onClick.AddListener(TirarFoto);
         AddBackButton();
@@ -75,9 +76,11 @@ public class ARPhotoCapture : MonoBehaviour
             // Converte para PNG
             byte[] dados = foto.EncodeToPNG();
 
+            System.DateTime captureDate = System.DateTime.Now;
+            string capturedAt = captureDate.ToString("o");
             string nomeArquivo =
                 "AR_Cortinas_" +
-                System.DateTime.Now.ToString(
+                captureDate.ToString(
                     "yyyyMMdd_HHmmss"
                 ) +
                 ".png";
@@ -93,9 +96,14 @@ public class ARPhotoCapture : MonoBehaviour
                 dados
             );
 
-            if (ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
-                    RecordSession.CurrentRecordId, caminho))
-                Debug.Log("Foto associada ao registro: " + caminho);
+            bool photoSaved = UnityARHostBridge.IsHostedByReact && string.IsNullOrEmpty(VisitDraftSession.TargetRoomId)
+                ? ClientRepository.AddUnassignedPhoto(ClientSession.SelectedClientId, caminho, capturedAt)
+                : ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
+                    RecordSession.CurrentRecordId, caminho, capturedAt);
+            if (photoSaved)
+                Debug.Log(string.IsNullOrEmpty(VisitDraftSession.TargetRoomId)
+                    ? "Foto associada ao cliente: " + caminho
+                    : "Foto associada ao registro: " + caminho);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             SalvarAndroid(dados, nomeArquivo);
@@ -134,21 +142,24 @@ public class ARPhotoCapture : MonoBehaviour
         buttonObject.transform.SetParent(arCanvas.transform, false);
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0f, 1f); rect.anchorMax = new Vector2(0f, 1f); rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(28f, -45f); rect.sizeDelta = new Vector2(190f, 84f);
-        Image image = buttonObject.GetComponent<Image>(); image.color = new Color(.12f, .32f, .48f, .94f);
+        rect.anchoredPosition = new Vector2(62f, -70f); rect.sizeDelta = new Vector2(64f, 64f);
+        Image image = buttonObject.GetComponent<Image>(); image.color = new Color(0.06f, 0.09f, 0.12f, 0.82f);
         Button button = buttonObject.GetComponent<Button>(); button.targetGraphic = image; button.onClick.AddListener(ReturnFromAR);
         GameObject labelObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
         labelObject.transform.SetParent(buttonObject.transform, false);
         RectTransform labelRect = labelObject.GetComponent<RectTransform>(); labelRect.anchorMin = Vector2.zero; labelRect.anchorMax = Vector2.one; labelRect.offsetMin = new Vector2(66f, 4f); labelRect.offsetMax = new Vector2(-8f, -4f);
-        TMP_Text label = labelObject.GetComponent<TMP_Text>(); label.text = "Voltar"; label.fontSize = 28f; label.alignment = TextAlignmentOptions.MidlineLeft; label.color = Color.white;
+        TMP_Text label = labelObject.GetComponent<TMP_Text>(); label.text = ""; label.gameObject.SetActive(false);
         GameObject iconObject = new GameObject("BackIcon", typeof(RectTransform), typeof(Image));
         iconObject.transform.SetParent(buttonObject.transform, false);
         RectTransform iconRect = iconObject.GetComponent<RectTransform>(); iconRect.anchorMin = new Vector2(0f, 0.5f); iconRect.anchorMax = new Vector2(0f, 0.5f); iconRect.pivot = new Vector2(0.5f, 0.5f); iconRect.anchoredPosition = new Vector2(37f, 0f); iconRect.sizeDelta = new Vector2(42f, 42f);
         ARUIIconFactory.SetIcon(iconObject.GetComponent<Image>(), "Back");
+        iconObject.SetActive(false);
+        ARUIIconFactory.ConfigureCameraButton(button, "Back", 64f, new Color(0.06f, 0.09f, 0.12f, 0.82f), Color.white);
     }
 
     private void ReturnFromAR()
     {
+        if (UnityARHostBridge.ReturnToReactHost()) return;
         string destination = string.IsNullOrEmpty(VisitDraftSession.TargetRoomId) ? "Home" : "RoomDetail";
         SceneManager.LoadScene(destination);
     }

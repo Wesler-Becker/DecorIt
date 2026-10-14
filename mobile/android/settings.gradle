@@ -1,0 +1,20 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'DecorItMobile'
+include ':app'
+include ':unityLibrary'
+project(':unityLibrary').projectDir = file('unityExport/unityLibrary')
+include ':unityLibrary:xrmanifest.androidlib'
+project(':unityLibrary:xrmanifest.androidlib').projectDir = file('unityExport/unityLibrary/xrmanifest.androidlib')
+includeBuild('../node_modules/@react-native/gradle-plugin')
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+  repositories {
+    google()
+    mavenCentral()
+    flatDir { dirs "${rootDir}/unityExport/unityLibrary/libs" }
+  }
+}
+

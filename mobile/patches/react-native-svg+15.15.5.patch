@@ -1,0 +1,27 @@
+diff --git a/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt b/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt
+index f21366b..aad8dcf 100644
+--- a/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt
++++ b/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt
+@@ -36,6 +36,7 @@ if(ReactAndroid_VERSION_MINOR GREATER_EQUAL 76)
+     react_codegen_rnsvg
+     ReactAndroid::reactnative
+     ReactAndroid::jsi
++    c++_shared
+   )
+ else()
+   target_link_libraries(
+@@ -57,12 +58,14 @@ else()
+     yoga
+     react_render_imagemanager
+     react_utils
++    c++_shared
+   )
+ endif()
+ 
+ target_link_libraries(
+   react_codegen_rnsvg
+   fbjni
++  c++_shared
+ )
+ 
+ target_include_directories(

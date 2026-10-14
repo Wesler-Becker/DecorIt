@@ -1,0 +1,35 @@
+buildscript {
+    ext {
+        buildToolsVersion = "36.0.0"
+        minSdkVersion = 26
+        compileSdkVersion = 36
+        targetSdkVersion = 36
+        ndkVersion = "27.2.12479018"
+        kotlinVersion = "2.2.0"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+def localAndroidProperties = new Properties()
+def localAndroidPropertiesFile = rootProject.file("local.properties")
+if (localAndroidPropertiesFile.exists()) {
+    localAndroidPropertiesFile.withInputStream { localAndroidProperties.load(it) }
+}
+ext.ndkPath = new File(localAndroidProperties.getProperty("sdk.dir"), "../NDK").canonicalPath
+
+// The Unity XR manifest is a nested Android library, not a React Native module.
+subprojects {
+    if (path == ":unityLibrary:xrmanifest.androidlib") {
+        ext.set("react.newArchEnabled", "true")
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"
