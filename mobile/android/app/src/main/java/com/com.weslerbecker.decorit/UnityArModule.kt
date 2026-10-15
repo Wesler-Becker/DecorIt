@@ -21,6 +21,7 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
         payload.getString("roomId"),
         payload.getString("recordId"),
         payload.getString("draftJson"),
+        payload.hasKey("quickAR") && payload.getBoolean("quickAR"),
       )
       promise.resolve(null)
     } catch (error: Exception) {
@@ -30,13 +31,14 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
 }
 
 object UnityArLauncher {
-  fun open(context: Context, clientId: String?, roomId: String?, recordId: String?, draftJson: String?) {
+  fun open(context: Context, clientId: String?, roomId: String?, recordId: String?, draftJson: String?, quickAR: Boolean = false) {
     val intent = Intent(context, ImmersiveUnityPlayerActivity::class.java)
       .putExtra("decorit_rn_host", true)
       .putExtra("decorit_client_id", clientId)
       .putExtra("decorit_room_id", roomId)
       .putExtra("decorit_record_id", recordId)
       .putExtra("decorit_draft_json", draftJson)
+      .putExtra("decorit_quick_ar", quickAR)
     context.startActivity(intent)
   }
 }

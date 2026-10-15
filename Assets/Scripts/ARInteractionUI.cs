@@ -68,13 +68,18 @@ public class ARInteractionUI : MonoBehaviour
         HideLegacyControls();
         BuildCameraOverlay();
 
-        if (!UnityARHostBridge.IsPhotoOnly)
+        if (!UnityARHostBridge.IsPhotoOnly || UnityARHostBridge.IsQuickAR)
         {
             CreateMaterialPresets();
             BuildFabricTray();
             BuildRodTray();
             BuildModelTray();
             BuildCameraMenu();
+            if (UnityARHostBridge.IsQuickAR)
+            {
+                modoPosicionar = true;
+                UpdateControlState();
+            }
             UpdateSelection();
         }
     }
@@ -100,11 +105,11 @@ public class ARInteractionUI : MonoBehaviour
     private void BuildCameraOverlay()
     {
         menuButton = CreateButton("CameraMenuButton", transform, new Vector2(1f, 1f), new Vector2(-64f, -82f), new Vector2(88f, 88f), Ink, ToggleMenu);
-        menuButton.gameObject.SetActive(!UnityARHostBridge.IsPhotoOnly);
+        menuButton.gameObject.SetActive(!UnityARHostBridge.IsPhotoOnly || UnityARHostBridge.IsQuickAR);
         TMP_Text menuGlyph = CreateText("MenuGlyph", menuButton.transform, "•••", 52f, SoftWhite, TextAlignmentOptions.Center);
         Stretch(menuGlyph.rectTransform, new Vector2(5f, 0f), new Vector2(-5f, 0f));
 
-        TMP_Text cameraLabel = CreateText("CameraModeLabel", transform, UnityARHostBridge.IsPhotoOnly ? "REGISTRO DE FOTO" : "CÂMERA  ·  AR", 17f, SoftWhite, TextAlignmentOptions.Center);
+        TMP_Text cameraLabel = CreateText("CameraModeLabel", transform, UnityARHostBridge.IsPhotoOnly && !UnityARHostBridge.IsQuickAR ? "REGISTRO DE FOTO" : "CÂMERA  ·  AR", 17f, SoftWhite, TextAlignmentOptions.Center);
         RectTransform cameraLabelRect = cameraLabel.rectTransform;
         cameraLabelRect.anchorMin = cameraLabelRect.anchorMax = new Vector2(0.5f, 1f);
         cameraLabelRect.pivot = new Vector2(0.5f, 1f);
@@ -126,7 +131,7 @@ public class ARInteractionUI : MonoBehaviour
 
         ConfigureMenuRow(btnPosicionar, "Position", "Posicionar objeto", 78f);
         ConfigureMenuRow(btnAjustar, "Adjust", "Mover e ajustar", 148f);
-        ConfigureMenuRow(btnModoGesto, "Rotate", "Gestos: girar", 218f);
+        ConfigureMenuRow(btnModoGesto, "Rotate", "Gestos: aproximar", 218f);
 
         Button planesButton = CreateMenuRow("PlanesMenuButton", "Planes", "Planos: visíveis", 288f, TogglePlanes);
         planesButtonText = planesButton.GetComponentInChildren<TMP_Text>();
@@ -565,6 +570,7 @@ public class ARInteractionUI : MonoBehaviour
     {
         if (placementController != null) placementController.SetPanelType(type);
         VisitDraftSession.Current.panelType = type.ToString();
+        UnityARHostBridge.SaveLastViewConfig();
         UpdateSelection();
     }
 
@@ -615,7 +621,7 @@ public class ARInteractionUI : MonoBehaviour
         }
         if (planesButtonText != null && surfaceUI != null)
             planesButtonText.text = surfaceUI.PlanesVisible ? "Planos: visíveis" : "Planos: ocultos";
-        if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: aproximar" : "Gestos: girar";
+        if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: girar" : "Gestos: aproximar";
     }
 
     private void AtivarPosicionamento()
@@ -642,7 +648,7 @@ public class ARInteractionUI : MonoBehaviour
     {
         ARUIIconFactory.SetSelected(btnPosicionar, modoPosicionar);
         ARUIIconFactory.SetSelected(btnAjustar, modoAjustar);
-        if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: aproximar" : "Gestos: girar";
+        if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: girar" : "Gestos: aproximar";
     }
 
     public bool PosicionamentoAtivo() => modoPosicionar;

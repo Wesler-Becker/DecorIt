@@ -1,4 +1,4 @@
-import {assignClientPhotoToRoom, collectPhotos, createVisitRecord, needsClientCollectionMigration, normalizeClientCollection} from './clientDomain';
+import {assignClientPhotoToRoom, collectPhotos, createVisitRecord, needsClientCollectionMigration, normalizeClientCollection, validateRoomName} from './clientDomain';
 import type {VisitDraft} from '../types';
 
 const legacyClient = {
@@ -84,5 +84,40 @@ describe('cliente e armazenamento legado', () => {
     expect(assigned[0].unassignedPhotos).toHaveLength(0);
     expect(assigned[0].rooms[0].photos).toEqual([{path: '/files/ambiente.png', roomName: 'Sala', recordId: ''}]);
     expect(collectPhotos(assigned)[0]).toMatchObject({path: '/files/ambiente.png', roomId: 'room-1', roomName: 'Sala'});
+  });
+
+  it('trata o cômodo Não informado como origem de fotos a identificar', () => {
+    const clients = normalizeClientCollection({clients: [{
+      id: 'client-1', name: 'Maria', unassignedPhotos: [], rooms: [
+        {id: 'room-unknown', name: 'Não informado', imageLabel: '1 foto', photos: [{path: '/files/quick-ar.png', roomName: 'Não informado', recordId: ''}], records: []},
+        {id: 'room-1', name: 'Sala', records: []},
+      ],
+    }]}).clients;
+    expect(collectPhotos(clients)[0]).toMatchObject({path: '/files/quick-ar.png', roomId: '', roomName: 'Não informado'});
+
+    const assigned = assignClientPhotoToRoom(clients, 'client-1', '/files/quick-ar.png', 'room-1');
+    expect(assigned[0].rooms.map(room => room.id)).toEqual(['room-1']);
+    expect(assigned[0].rooms[0].photos[0]).toMatchObject({path: '/files/quick-ar.png', roomName: 'Sala'});
+  });
+
+  it('move a foto identificada e remove o cômodo Não informado quando fica vazio', () => {
+    const clients = normalizeClientCollection({clients: [{
+      id: 'client-1', name: 'Maria', rooms: [
+        {id: 'unknown', name: 'Não informado', imageLabel: '1 foto', photos: [{path: '/photos/a.png', roomName: 'Não informado', recordId: ''}], records: []},
+        {id: 'room-1', name: 'Sala', imageLabel: 'Sem fotos', photos: [], records: []},
+      ],
+    }]}).clients;
+    const assigned = assignClientPhotoToRoom(clients, 'client-1', '/photos/a.png', 'room-1');
+
+    expect(assigned[0].rooms).toHaveLength(1);
+    expect(assigned[0].rooms[0]).toMatchObject({id: 'room-1', imageLabel: '1 foto', photos: [{path: '/photos/a.png', roomName: 'Sala'}]});
+    expect(collectPhotos(assigned)[0]).toMatchObject({roomId: 'room-1', roomName: 'Sala'});
+  });
+
+  it('recusa cômodos repetidos e o nome reservado sem diferenciar caixa ou acentos', () => {
+    const rooms = [{id: 'room-1', name: 'Sala de estar', imageLabel: '', records: [], photos: []}];
+    expect(validateRoomName('  sala   DE ESTAR ', rooms)).toMatch(/já possui/);
+    expect(validateRoomName('NAO INFORMADO', rooms)).toMatch(/reservado/);
+    expect(validateRoomName('Quarto', rooms)).toBeNull();
   });
 });

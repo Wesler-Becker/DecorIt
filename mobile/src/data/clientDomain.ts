@@ -1,6 +1,23 @@
 import type {ClientData, PhotoData, PhotoItem, RoomData, VisitDraft, VisitRecordData} from '../types';
 
 export type ClientCollection = {clients: ClientData[]};
+export const UNASSIGNED_ROOM_NAME = 'Não informado';
+
+export function isUnassignedRoom(room: RoomData): boolean {
+  return room.name.trim().toLocaleLowerCase('pt-BR') === UNASSIGNED_ROOM_NAME.toLocaleLowerCase('pt-BR');
+}
+
+function normalizeRoomName(name: string): string {
+  return name.trim().replace(/\s+/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+}
+
+export function validateRoomName(name: string, rooms: RoomData[]): string | null {
+  const normalizedName = normalizeRoomName(name);
+  if (!normalizedName) return 'Informe o nome do cômodo.';
+  if (normalizedName === normalizeRoomName(UNASSIGNED_ROOM_NAME)) return '“Não informado” é um nome reservado para fotos sem cômodo.';
+  if (rooms.some(room => normalizeRoomName(room.name) === normalizedName)) return 'Este cliente já possui um cômodo com esse nome.';
+  return null;
+}
 
 export function createId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`;
@@ -13,7 +30,15 @@ export function normalizeClientCollection(value: unknown): ClientCollection {
     id: String(entry.id || createId()),
     name: String(entry.name || ''),
     phone: String(entry.phone || ''),
-    address: String(entry.address || ''),
+    address: String(entry.address || [entry.street, entry.complement, entry.neighborhood,
+      [entry.city, entry.state].filter(Boolean).join(' - '), entry.postalCode].filter(Boolean).join(', ')),
+    postalCode: String(entry.postalCode || ''),
+    street: String(entry.street || ''),
+    complement: String(entry.complement || ''),
+    neighborhood: String(entry.neighborhood || ''),
+    city: String(entry.city || ''),
+    state: String(entry.state || ''),
+    observations: String(entry.observations || ''),
     unassignedPhotos: normalizePhotos(entry.unassignedPhotos, '', ''),
     rooms: (Array.isArray(entry.rooms) ? entry.rooms : []).filter(Boolean).map((room: any): RoomData => ({
       id: String(room.id || createId()),
@@ -46,6 +71,7 @@ export function needsClientCollectionMigration(value: unknown): boolean {
 
   return raw.clients.some((client: any) => {
     if (!client || typeof client.id !== 'string' || !client.id || !Array.isArray(client.rooms)) return true;
+    if (['postalCode', 'street', 'complement', 'neighborhood', 'city', 'state', 'observations'].some(field => typeof client[field] !== 'string')) return true;
     return !Array.isArray(client.unassignedPhotos) || client.rooms.some((room: any) => {
       if (!room || typeof room.id !== 'string' || !room.id || !Array.isArray(room.records)) return true;
       if (!Array.isArray(room.photos)) return true;
@@ -65,7 +91,7 @@ export function collectPhotos(clients: ClientData[]): PhotoItem[] {
   return clients.flatMap(client => [
     ...client.unassignedPhotos.map(photo => toPhotoItem(photo, client, '', '')),
     ...client.rooms.flatMap(room => [
-      ...room.photos.map(photo => toPhotoItem(photo, client, room.id, '')),
+      ...room.photos.map(photo => toPhotoItem(photo, client, isUnassignedRoom(room) ? '' : room.id, '')),
       ...room.records.flatMap(record => record.photos.map(photo => ({
         ...toPhotoItem(photo, client, room.id, record.createdAt),
         modelName: record.modelName,
@@ -82,12 +108,28 @@ export function collectPhotos(clients: ClientData[]): PhotoItem[] {
 export function assignClientPhotoToRoom(clients: ClientData[], clientId: string, path: string, roomId: string): ClientData[] {
   const client = clients.find(item => item.id === clientId);
   const room = client?.rooms.find(item => item.id === roomId);
-  const photo = client?.unassignedPhotos.find(item => item.path === path);
+  if (room && isUnassignedRoom(room)) throw new Error('Escolha o cômodo onde a foto será identificada.');
+  const unassignedRoom = client?.rooms.find(isUnassignedRoom);
+  const photo = client?.unassignedPhotos.find(item => item.path === path) || unassignedRoom?.photos.find(item => item.path === path);
   if (!client || !room || !photo) throw new Error('Não foi possível localizar a foto ou o cômodo.');
   return clients.map(item => item.id !== clientId ? item : {
     ...item,
     unassignedPhotos: item.unassignedPhotos.filter(candidate => candidate.path !== path),
-    rooms: item.rooms.map(candidate => candidate.id === roomId ? {...candidate, photos: [...candidate.photos, {...photo, roomName: candidate.name}]} : candidate),
+    rooms: item.rooms.flatMap(candidate => {
+      if (candidate.id === roomId) {
+        const photos = candidate.photos.some(itemPhoto => itemPhoto.path === path)
+          ? candidate.photos
+          : [...candidate.photos, {...photo, roomName: candidate.name}];
+        return [{...candidate, photos, imageLabel: `${photos.length} foto${photos.length === 1 ? '' : 's'}`}];
+      }
+      if (isUnassignedRoom(candidate)) {
+        const photos = candidate.photos.filter(itemPhoto => itemPhoto.path !== path);
+        return photos.length || candidate.records.length
+          ? [{...candidate, photos, imageLabel: photos.length ? `${photos.length} foto${photos.length === 1 ? '' : 's'}` : 'Sem fotos'}]
+          : [];
+      }
+      return [candidate];
+    }),
   });
 }
 
@@ -147,8 +189,8 @@ export function createEmptyDraft(client: ClientData, room: RoomData): VisitDraft
 export function seedClients(): ClientData[] {
   const room = (name: string): RoomData => ({id: createId(), name, imageLabel: 'Sem fotos', records: [], photos: []});
   return [
-    {id: createId(), name: 'Maria Oliveira', phone: '(11) 99999-0000', address: 'Rua das Flores, 120', rooms: [room('Sala de estar'), room('Quarto casal')], unassignedPhotos: []},
-    {id: createId(), name: 'Carlos Mendes', phone: '(11) 98888-1234', address: 'Av. Central, 45', rooms: [room('Quarto casal')], unassignedPhotos: []},
-    {id: createId(), name: 'Ana Pereira', phone: '(11) 97777-4567', address: 'Rua do Sol, 89', rooms: [room('Escritório')], unassignedPhotos: []},
+    {id: createId(), name: 'Maria Oliveira', phone: '(11) 99999-0000', address: 'Rua das Flores, 120', postalCode: '', street: 'Rua das Flores, 120', complement: '', neighborhood: '', city: '', state: '', observations: '', rooms: [room('Sala de estar'), room('Quarto casal')], unassignedPhotos: []},
+    {id: createId(), name: 'Carlos Mendes', phone: '(11) 98888-1234', address: 'Av. Central, 45', postalCode: '', street: 'Av. Central, 45', complement: '', neighborhood: '', city: '', state: '', observations: '', rooms: [room('Quarto casal')], unassignedPhotos: []},
+    {id: createId(), name: 'Ana Pereira', phone: '(11) 97777-4567', address: 'Rua do Sol, 89', postalCode: '', street: 'Rua do Sol, 89', complement: '', neighborhood: '', city: '', state: '', observations: '', rooms: [room('Escritório')], unassignedPhotos: []},
   ];
 }

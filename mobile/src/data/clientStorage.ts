@@ -1,13 +1,23 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import {Platform} from 'react-native';
 import {needsClientCollectionMigration, normalizeClientCollection, seedClients} from './clientDomain';
-import type {ClientData} from '../types';
+import type {ClientData, VisitDraft} from '../types';
 
 // Unity's Android persistentDataPath is getExternalFilesDir(null); RNFS points to the same directory.
 const dataDirectory = Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath;
 const clientsPath = `${dataDirectory}/clients.json`;
 const backupPath = `${clientsPath}.bak`;
 const temporaryPath = `${clientsPath}.tmp`;
+const lastARConfigPath = `${dataDirectory}/last_ar_config.json`;
+
+export async function loadLastARConfig(): Promise<Partial<VisitDraft>> {
+  try {
+    if (await RNFS.exists(lastARConfigPath)) return JSON.parse(await RNFS.readFile(lastARConfigPath, 'utf8')) as Partial<VisitDraft>;
+  } catch {
+    // A missing or incomplete config falls back to the default AR setup.
+  }
+  return {};
+}
 
 export async function loadClients(): Promise<ClientData[]> {
   for (const path of [clientsPath, backupPath]) {

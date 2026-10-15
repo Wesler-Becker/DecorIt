@@ -35,9 +35,18 @@ export type ClientData = {
   name: string;
   phone: string;
   address: string;
+  postalCode: string;
+  street: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  observations: string;
   rooms: RoomData[];
   unassignedPhotos: PhotoData[];
 };
+
+export type ClientDetails = Pick<ClientData, 'phone' | 'address' | 'postalCode' | 'street' | 'complement' | 'neighborhood' | 'city' | 'state' | 'observations'>;
 
 export type VisitDraft = {
   clientName: string;
@@ -77,17 +86,18 @@ export type RootStackParamList = {
   MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
   ClientProfile: {clientId: string};
   ClientForm: {clientId?: string};
-  NewRoom: {clientId: string};
+  NewRoom: {clientId: string; pendingPhotoPath?: string};
   RoomDetail: {clientId: string; roomId: string};
   RecordDetail: {clientId: string; roomId: string; recordId: string};
   NewRecord: {clientId: string; roomId?: string};
   CatalogSelection: undefined;
-  UnityAR: {clientId: string; roomId?: string; recordId?: string};
+  UnityAR: {clientId: string; roomId?: string; recordId?: string; autoOpen?: boolean};
 };
 
 export type MainTabParamList = {
   Início: undefined;
   Clientes: undefined;
+  'AR Rápido': undefined;
   Fotos: undefined;
   Catálogo: undefined;
 };

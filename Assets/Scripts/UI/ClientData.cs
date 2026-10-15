@@ -48,6 +48,13 @@ public sealed class ClientData
     public string name;
     public string phone;
     public string address;
+    public string postalCode;
+    public string street;
+    public string complement;
+    public string neighborhood;
+    public string city;
+    public string state;
+    public string observations;
     public List<RoomData> rooms = new List<RoomData>();
     public List<PhotoData> unassignedPhotos = new List<PhotoData>();
 }
@@ -167,7 +174,16 @@ public static class ClientRepository
         List<ClientData> clients = Load();
         ClientData client = clients.Find(item => item.id == clientId);
         if (client == null) return false;
-        client.unassignedPhotos.Add(new PhotoData { path = path, roomName = "Sem cômodo", recordId = "", capturedAt = capturedAt ?? DateTime.Now.ToString("o") });
+        if (client.rooms == null) client.rooms = new List<RoomData>();
+        RoomData unassignedRoom = client.rooms.Find(item => string.Equals(item.name, "Não informado", StringComparison.OrdinalIgnoreCase));
+        if (unassignedRoom == null)
+        {
+            unassignedRoom = new RoomData { id = Guid.NewGuid().ToString("N"), name = "Não informado", imageLabel = "Sem fotos" };
+            client.rooms.Add(unassignedRoom);
+        }
+        if (unassignedRoom.photos == null) unassignedRoom.photos = new List<PhotoData>();
+        unassignedRoom.photos.Add(new PhotoData { path = path, roomName = "Não informado", recordId = "", capturedAt = capturedAt ?? DateTime.Now.ToString("o") });
+        unassignedRoom.imageLabel = unassignedRoom.photos.Count == 1 ? "1 foto" : $"{unassignedRoom.photos.Count} fotos";
         Save(clients);
         return true;
     }

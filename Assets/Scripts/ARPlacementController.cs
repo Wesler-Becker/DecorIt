@@ -87,7 +87,7 @@ public class ARPlacementController : MonoBehaviour
 
     private void TryPlaceObject(Vector2 screenPosition)
     {
-        if (UnityARHostBridge.IsPhotoOnly) return;
+        if (UnityARHostBridge.IsPhotoOnly && !UnityARHostBridge.IsQuickAR) return;
 
         // Só permite posicionar se o modo estiver ativo
         if (interactionUI != null &&
@@ -295,6 +295,7 @@ public class ARPlacementController : MonoBehaviour
     private static void PersistCurrentSelection()
     {
         VisitDraft draft = VisitDraftSession.Current;
+        UnityARHostBridge.SaveLastViewConfig();
         ClientRepository.UpdateCurrentRecordSelection(
             ClientSession.SelectedClientId,
             VisitDraftSession.TargetRoomId,
