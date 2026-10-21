@@ -1,0 +1,23 @@
+{
+  "familyId": "microfibra_solea",
+  "reference": "Referencia/Tramas/microfibra_solea_crop.png",
+  "referencePage": 111,
+  "nativeSize": [
+    408,
+    408
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "fe093e73cde18f1a5905a5c103bd200887dc91254cdcc6f0fe03997f603b841c"
+}

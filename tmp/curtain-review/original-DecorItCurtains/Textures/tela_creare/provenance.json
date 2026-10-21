@@ -1,0 +1,23 @@
+{
+  "familyId": "tela_creare",
+  "reference": "Referencia/Reconstrucoes/tela_creare_master.png",
+  "referencePage": 10,
+  "nativeSize": [
+    1254,
+    1254
+  ],
+  "mapSize": [
+    1024,
+    1024
+  ],
+  "method": "reconstrucao_visual_assistida_por_IA_da_referencia; mapas_tecnicos_derivados",
+  "opacityStatus": "mascara_reconstruida_aproximada_nao_medida",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.5048389434814453,
+  "mode": "AlphaClip",
+  "threadOpacity": 0.82,
+  "photoConfidence": "media",
+  "sourceSHA256": "87178a8d686dd169af839b51d202bdd450cefdcc5330b957926819cc92222c50"
+}

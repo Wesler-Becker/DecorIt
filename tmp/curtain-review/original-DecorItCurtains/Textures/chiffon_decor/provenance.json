@@ -1,0 +1,23 @@
+{
+  "familyId": "chiffon_decor",
+  "reference": "Referencia/Tramas/chiffon_decor_crop.png",
+  "referencePage": 60,
+  "nativeSize": [
+    184,
+    184
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "fb40667cad2c1c7098543b33685f85287d35fd3364e3016432211c982cca227e"
+}

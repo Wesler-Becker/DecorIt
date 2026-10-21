@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class ARObjectManipulator : MonoBehaviour
 {
@@ -29,6 +31,15 @@ public class ARObjectManipulator : MonoBehaviour
 
     private bool wasDragging = false;
     private bool wasUsingTwoFingers = false;
+    private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
+
+    private bool IsOverUI(Vector2 position)
+    {
+        if (EventSystem.current == null) return false;
+        uiHits.Clear();
+        EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) {position = position}, uiHits);
+        return uiHits.Count > 0;
+    }
 
     public void SetTargetObject(GameObject obj)
     {
@@ -69,6 +80,11 @@ public class ARObjectManipulator : MonoBehaviour
 
         Vector2 currentPosition =
             Mouse.current.position.ReadValue();
+        if (IsOverUI(currentPosition))
+        {
+            wasDragging = false;
+            return;
+        }
 
         // ========================================================
         // BOTÃO ESQUERDO = MOVIMENTAÇÃO
@@ -109,7 +125,7 @@ public class ARObjectManipulator : MonoBehaviour
 
         // Enquanto o scroll estiver pressionado,
         // utiliza somente o deslocamento do mouse.
-        if (Mouse.current.middleButton.isPressed)
+        if (Mouse.current.middleButton.isPressed && interactionUI.RotacaoAtiva())
         {
             Vector2 delta =
                 currentPosition - lastTouchPosition;
@@ -128,7 +144,7 @@ public class ARObjectManipulator : MonoBehaviour
         float scroll =
             Mouse.current.scroll.ReadValue().y;
 
-        if (Mathf.Abs(scroll) > 0.01f)
+        if (Mathf.Abs(scroll) > 0.01f && !interactionUI.RotacaoAtiva())
         {
             MoveDepth(
                 scroll * depthSensitivity
@@ -156,6 +172,12 @@ public class ARObjectManipulator : MonoBehaviour
         {
             if (touch.press.isPressed)
             {
+                if (IsOverUI(touch.position.ReadValue()))
+                {
+                    wasDragging = false;
+                    wasUsingTwoFingers = false;
+                    return;
+                }
                 if (activeTouches == 0)
                     firstTouch = touch;
 

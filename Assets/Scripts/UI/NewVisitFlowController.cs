@@ -73,6 +73,9 @@ public sealed class NewVisitFlowController : MonoBehaviour
         CatalogSelectionSession.SelectedCurtainPrefab = null;
         CatalogSelectionSession.SelectedFabricMaterial = null;
         CatalogSelectionSession.SelectedRodMaterial = null;
+        CatalogSelectionSession.CurrentConfiguration = null;
+        CatalogSelectionSession.HasConfiguredCurtain = false;
+        CatalogSelectionSession.ReturnToAR = false;
         clientNameInput.text = selected.name;
         phoneInput.text = selected.phone;
         addressInput.text = selected.address;

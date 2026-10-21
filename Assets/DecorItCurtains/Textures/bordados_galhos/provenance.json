@@ -1,0 +1,15 @@
+{
+    "familyId": "bordados_galhos",
+    "referencePage": 74,
+    "source": "ArtSource/Curtains/bordados_galhos.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.6000000238418579,
+    "meanCoverage": 0.9924604296684265,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

@@ -16,13 +16,14 @@ public class ARPhotoCapture : MonoBehaviour
     private void Start()
     {
         UnityARHostBridge.ReadLaunchData();
-        ARUIIconFactory.ConfigureCameraButton(btnCamera, "Camera", 82f, new Color(0.98f, 0.99f, 1f, 0.96f), new Color(0.10f, 0.19f, 0.25f, 1f));
+        ARUIIconFactory.ConfigureCameraButton(btnCamera, "Shutter", 116f, Color.clear, Color.white);
         if (btnCamera != null)
         {
+            btnCamera.transform.SetParent(ARUIIconFactory.GetCameraControlsRoot(arCanvas), false);
             RectTransform rect = btnCamera.transform as RectTransform;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(0f, 78f);
+            rect.anchoredPosition = new Vector2(0f, 84f);
         }
         if (btnCamera != null) btnCamera.onClick.AddListener(TirarFoto);
         AddBackButton();
@@ -137,12 +138,14 @@ public class ARPhotoCapture : MonoBehaviour
 
     private void AddBackButton()
     {
-        if (arCanvas == null || arCanvas.transform.Find("BackToRoomButton") != null) return;
+        if (arCanvas == null) return;
+        RectTransform controlsRoot = ARUIIconFactory.GetCameraControlsRoot(arCanvas);
+        if (controlsRoot.Find("BackToRoomButton") != null) return;
         GameObject buttonObject = new GameObject("BackToRoomButton", typeof(RectTransform), typeof(Image), typeof(Button));
-        buttonObject.transform.SetParent(arCanvas.transform, false);
+        buttonObject.transform.SetParent(controlsRoot, false);
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0f, 1f); rect.anchorMax = new Vector2(0f, 1f); rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(62f, -70f); rect.sizeDelta = new Vector2(64f, 64f);
+        rect.anchoredPosition = new Vector2(24f, -24f); rect.sizeDelta = new Vector2(88f, 88f);
         Image image = buttonObject.GetComponent<Image>(); image.color = new Color(0.06f, 0.09f, 0.12f, 0.82f);
         Button button = buttonObject.GetComponent<Button>(); button.targetGraphic = image; button.onClick.AddListener(ReturnFromAR);
         GameObject labelObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -154,7 +157,7 @@ public class ARPhotoCapture : MonoBehaviour
         RectTransform iconRect = iconObject.GetComponent<RectTransform>(); iconRect.anchorMin = new Vector2(0f, 0.5f); iconRect.anchorMax = new Vector2(0f, 0.5f); iconRect.pivot = new Vector2(0.5f, 0.5f); iconRect.anchoredPosition = new Vector2(37f, 0f); iconRect.sizeDelta = new Vector2(42f, 42f);
         ARUIIconFactory.SetIcon(iconObject.GetComponent<Image>(), "Back");
         iconObject.SetActive(false);
-        ARUIIconFactory.ConfigureCameraButton(button, "Back", 64f, new Color(0.06f, 0.09f, 0.12f, 0.82f), Color.white);
+        ARUIIconFactory.ConfigureCameraButton(button, "Close", 88f, Color.clear, Color.white);
     }
 
     private void ReturnFromAR()

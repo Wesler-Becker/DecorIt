@@ -1,0 +1,23 @@
+{
+  "familyId": "parati",
+  "reference": "Referencia/Tramas/parati_crop.png",
+  "referencePage": 26,
+  "nativeSize": [
+    317,
+    317
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "e59468879bb3b8c3e5c63a639531988571fd565c1efebe8550b8461136216c77"
+}

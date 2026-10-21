@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: cetim_blackout_rose_p104_15925
+  m_Shader: {fileID: 4800000, guid: 92d6c982084558ea95dbccbe155863cd, type: 3}
+  m_ShaderKeywords:
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 98d1802a64ad5cd68bf5c9bd1d7bb668, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OpacityMap:
+        m_Texture: {fileID: 2800000, guid: 28baf50728045696aafc85c0bcf9d30a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 2168000459585c0ea0c5f9869d6fa3f4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Surface: 0
+    - _SrcBlend: 1
+    - _DstBlend: 0
+    - _ZWrite: 1
+    - _Cull: 0
+    - _NormalStrength: 0.3
+    - _ThreadOpacity: 1
+    - _Cutoff: 0.35
+    m_Colors:
+    - _BaseColor: {r: 0.662745098, g: 0.580392157, b: 0.596078431, a: 1}

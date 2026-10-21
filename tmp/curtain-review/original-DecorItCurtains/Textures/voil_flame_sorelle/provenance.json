@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_flame_sorelle",
+  "reference": "Referencia/Tramas/voil_flame_sorelle_crop.png",
+  "referencePage": 110,
+  "nativeSize": [
+    486,
+    486
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "0233f5a9829aaad5cd846e1ce98ec8c5f4df5c0d7cd4882d9931e1b1ce0834f4"
+}

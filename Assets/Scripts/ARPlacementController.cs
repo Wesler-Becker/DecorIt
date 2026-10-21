@@ -5,6 +5,7 @@ using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ARPlacementController : MonoBehaviour
 {
@@ -29,6 +30,45 @@ public class ARPlacementController : MonoBehaviour
     private int modelIndex;
 
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+    private void Start()
+    {
+        InitializeCurtainSettings();
+    }
+
+    public void InitializeCurtainSettings()
+    {
+        if (CatalogSelectionSession.HasConfiguredCurtain)
+            return;
+
+        VisitDraft draft = VisitDraftSession.Current ?? new VisitDraft();
+        VisitDraftSession.Current = draft;
+        CurtainViewSettings settings = CurtainViewSettingsStore.LoadLast();
+
+        // A room's fresh measurements take precedence over the saved curtain dimensions.
+        if (draft.widthCentimeters > 0f && draft.heightCentimeters > 0f)
+        {
+            settings.widthCentimeters = draft.widthCentimeters;
+            settings.heightCentimeters = draft.heightCentimeters;
+            if (!string.IsNullOrEmpty(draft.fabricMaterialPath) &&
+                draft.fabricMaterialPath != "Assets/Materials/CurtainFabric.mat")
+            {
+                settings.fabricMaterialPath = draft.fabricMaterialPath;
+                settings.fabricMaterialName = draft.fabricMaterialName;
+            }
+        }
+
+        CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(settings);
+        CurtainViewSettingsStore.ApplyToDraft(settings, draft);
+        CatalogSelectionSession.SelectedCurtainPrefab = FindModel(settings.modelName);
+        CatalogSelectionSession.SelectedFabricMaterial = CurtainViewSettingsStore.ResolveFabric(
+            settings.fabricMaterialPath, settings.fabricMaterialName);
+        if (CatalogSelectionSession.SelectedFabricMaterial == null)
+            CatalogSelectionSession.SelectedFabricMaterial = GetBaseFabricMaterial(false);
+        if (CatalogSelectionSession.SelectedRodMaterial == null)
+            CatalogSelectionSession.SelectedRodMaterial = GetBaseFabricMaterial(true);
+        CatalogSelectionSession.HasConfiguredCurtain = true;
+    }
 
     public string ActiveModelName => CurrentPrefab() != null ? CurrentPrefab().name : "Cortina";
     public bool HasAlternativeModels => GetModelOptions().Count > 1;
@@ -169,11 +209,9 @@ public class ARPlacementController : MonoBehaviour
         CurtainController curtain = placedObject.GetComponent<CurtainController>();
         if (curtain == null) return;
 
-        if (selection.widthCentimeters > 0f && selection.heightCentimeters > 0f)
-            curtain.SetDimensions(selection.widthCentimeters, selection.heightCentimeters);
-
-        if (Enum.TryParse(selection.panelType, out CurtainController.CurtainType type))
-            curtain.SetCurtainType(type);
+        CurtainViewSettings settings = CatalogSelectionSession.CurrentConfiguration ??
+            CurtainViewSettingsStore.FromDraft(selection);
+        curtain.ApplySettings(settings);
 
         foreach (MeshRenderer mesh in placedObject.GetComponentsInChildren<MeshRenderer>(true))
         {
@@ -212,11 +250,11 @@ public class ARPlacementController : MonoBehaviour
         PersistCurrentSelection();
     }
 
-    public void ApplyFabricMaterial(Material material, string displayName)
+    public void ApplyFabricMaterial(Material material, string displayName, string assetPath = "")
     {
         CatalogSelectionSession.SelectedFabricMaterial = material;
         VisitDraftSession.Current.fabricMaterialName = displayName;
-        VisitDraftSession.Current.fabricMaterialPath = string.Empty;
+        VisitDraftSession.Current.fabricMaterialPath = assetPath;
         ApplyMaterialToSpawnedObject(material, false);
         PersistCurrentSelection();
     }
@@ -278,6 +316,16 @@ public class ARPlacementController : MonoBehaviour
             : objectToPlace;
     }
 
+    private GameObject FindModel(string modelName)
+    {
+        if (objectToPlace != null && (string.IsNullOrEmpty(modelName) || objectToPlace.name == modelName))
+            return objectToPlace;
+        GameObject[] resources = Resources.LoadAll<GameObject>("ARModels");
+        foreach (GameObject model in resources)
+            if (model != null && model.name == modelName) return model;
+        return objectToPlace;
+    }
+
     private List<GameObject> GetModelOptions()
     {
         if (modelOptions != null) return modelOptions;
@@ -296,6 +344,7 @@ public class ARPlacementController : MonoBehaviour
     {
         VisitDraft draft = VisitDraftSession.Current;
         UnityARHostBridge.SaveLastViewConfig();
+        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(draft));
         ClientRepository.UpdateCurrentRecordSelection(
             ClientSession.SelectedClientId,
             VisitDraftSession.TargetRoomId,

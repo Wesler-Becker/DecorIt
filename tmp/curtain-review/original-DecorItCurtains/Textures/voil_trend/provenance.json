@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_trend",
+  "reference": "Referencia/Reconstrucoes/voil_trend_master.png",
+  "referencePage": 3,
+  "nativeSize": [
+    1254,
+    1254
+  ],
+  "mapSize": [
+    1024,
+    1024
+  ],
+  "method": "reconstrucao_visual_assistida_por_IA_da_referencia; mapas_tecnicos_derivados",
+  "opacityStatus": "mascara_reconstruida_aproximada_nao_medida",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.3304605484008789,
+  "mode": "AlphaClip",
+  "threadOpacity": 0.82,
+  "photoConfidence": "media",
+  "sourceSHA256": "f65d19716148ee33748f311c70e15618d9620ddbcab04933d1991395feae76b6"
+}

@@ -1,0 +1,23 @@
+{
+  "familyId": "tricot",
+  "reference": "Referencia/Reconstrucoes/tricot_master.png",
+  "referencePage": 15,
+  "nativeSize": [
+    1254,
+    1254
+  ],
+  "mapSize": [
+    1024,
+    1024
+  ],
+  "method": "reconstrucao_visual_assistida_por_IA_da_referencia; mapas_tecnicos_derivados",
+  "opacityStatus": "mascara_reconstruida_aproximada_nao_medida",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.27583980560302734,
+  "mode": "AlphaClip",
+  "threadOpacity": 0.82,
+  "photoConfidence": "media",
+  "sourceSHA256": "344c00c4b5780ae428590aadd9d174a38f80428cfdc5cf4195c140bfa57434af"
+}

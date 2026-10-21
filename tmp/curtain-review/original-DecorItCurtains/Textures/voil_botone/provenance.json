@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_botone",
+  "reference": "Referencia/Tramas/voil_botone_crop.png",
+  "referencePage": 70,
+  "nativeSize": [
+    192,
+    192
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "542379f2463cb3bba04dbc1be72225c1b3664f9645368b49e0814ea92f96b487"
+}

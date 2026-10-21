@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_flame_bali",
+  "reference": "Referencia/Tramas/voil_flame_bali_crop.png",
+  "referencePage": 37,
+  "nativeSize": [
+    189,
+    189
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "9838a3b29a6ab0fe860de4bd4472a8d3f0e60dc3b02f6826b4e1db55f9059f8e"
+}

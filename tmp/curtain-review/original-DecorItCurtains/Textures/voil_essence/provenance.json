@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_essence",
+  "reference": "Referencia/Tramas/voil_essence_crop.png",
+  "referencePage": 58,
+  "nativeSize": [
+    185,
+    185
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "f9f8e1cff00d243ab2e8432a1075fe2ae4a0c4aff9115c51fcebc8ca90f9b5a4"
+}

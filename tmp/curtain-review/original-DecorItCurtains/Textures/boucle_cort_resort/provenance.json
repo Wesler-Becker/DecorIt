@@ -1,0 +1,23 @@
+{
+  "familyId": "boucle_cort_resort",
+  "reference": "Referencia/Tramas/boucle_cort_resort_crop.png",
+  "referencePage": 8,
+  "nativeSize": [
+    374,
+    374
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "1e4570d5c097d84615341014f7168a9fabc1a350a73ac9d75e0ab50d67fd34db"
+}

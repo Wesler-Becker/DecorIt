@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_linhao_iguape",
+  "reference": "Referencia/Tramas/voil_linhao_iguape_crop.png",
+  "referencePage": 42,
+  "nativeSize": [
+    356,
+    356
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "da449e2cc7ad284f82d2d58284982a18aeb8c8bd9dcb018c0ea4259cc63d6322"
+}

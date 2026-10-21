@@ -1,0 +1,15 @@
+{
+    "familyId": "voil_linho_pipa",
+    "referencePage": 40,
+    "source": "ArtSource/Curtains/voil_linho_pipa.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.9830966591835022,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

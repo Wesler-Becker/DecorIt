@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_linho_pipa",
+  "reference": "Referencia/Tramas/voil_linho_pipa_crop.png",
+  "referencePage": 40,
+  "nativeSize": [
+    355,
+    355
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "6807ba5cad6d1a3a90ee69dca78d8a20ef234c814efc9776466e6392feb48230"
+}

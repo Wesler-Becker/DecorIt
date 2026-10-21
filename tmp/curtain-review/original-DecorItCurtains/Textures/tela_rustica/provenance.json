@@ -1,0 +1,23 @@
+{
+  "familyId": "tela_rustica",
+  "reference": "Referencia/Tramas/tela_rustica_crop.png",
+  "referencePage": 12,
+  "nativeSize": [
+    343,
+    343
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "ce1dbb7beb0beb250653876b8532f124b48679109a9bf29a2ece63e320a5be76"
+}

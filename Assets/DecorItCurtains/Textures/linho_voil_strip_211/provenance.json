@@ -1,0 +1,15 @@
+{
+    "familyId": "linho_voil_strip_211",
+    "referencePage": 76,
+    "source": "ArtSource/Curtains/linho_voil_strip_211.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.23999999463558198,
+    "meanCoverage": 0.9827905297279358,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

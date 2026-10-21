@@ -1,0 +1,618 @@
+[
+  {
+    "id": "voil_trend",
+    "name": "Voil Trend",
+    "page": 3,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_trend.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "AlphaClip"
+  },
+  {
+    "id": "boucle_cortina_loft",
+    "name": "Boucle Cortina Loft",
+    "page": 5,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\boucle_cortina_loft.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "boucle_cort_resort",
+    "name": "Boucle Cort Resort",
+    "page": 8,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\boucle_cort_resort.jpg",
+    "size": [
+      720,
+      960
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "tela_creare",
+    "name": "Tela Creare",
+    "page": 10,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\tela_creare.jpg",
+    "size": [
+      648,
+      864
+    ],
+    "mode": "AlphaClip"
+  },
+  {
+    "id": "tela_rustica",
+    "name": "Tela Rústica",
+    "page": 12,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\tela_rustica.jpg",
+    "size": [
+      540,
+      720
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_tresset",
+    "name": "Voil Tresset",
+    "page": 13,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_tresset.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "tricot",
+    "name": "Tricot",
+    "page": 15,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\tricot.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "AlphaClip"
+  },
+  {
+    "id": "linho_absoluto",
+    "name": "Linho Absoluto",
+    "page": 17,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_absoluto.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "linho_gaia",
+    "name": "Linho Gaia",
+    "page": 19,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_gaia.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_artesano",
+    "name": "Voil Artesano",
+    "page": 21,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_artesano.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "AlphaClip"
+  },
+  {
+    "id": "linho_moorea",
+    "name": "Linho Moorea",
+    "page": 24,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_moorea.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "parati",
+    "name": "Parati",
+    "page": 26,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\parati.jpg",
+    "size": [
+      432,
+      576
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_shantung",
+    "name": "Voil Shantung",
+    "page": 28,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_shantung.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_camburi",
+    "name": "Voil Camburi",
+    "page": 30,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_camburi.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "ln_tela",
+    "name": "LN Tela",
+    "page": 32,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\ln_tela.jpg",
+    "size": [
+      540,
+      720
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_linho_bora_bora",
+    "name": "Voil Linho Bora Bora",
+    "page": 33,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_linho_bora_bora.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_flame_bali",
+    "name": "Voil Flamê Bali",
+    "page": 37,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_flame_bali.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_linho_pipa",
+    "name": "Voil Linho Pipa",
+    "page": 40,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_linho_pipa.jpg",
+    "size": [
+      576,
+      768
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_linhao_iguape",
+    "name": "Voil Linhão Iguape",
+    "page": 42,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_linhao_iguape.jpg",
+    "size": [
+      540,
+      720
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_bora_bora",
+    "name": "Voil Bora Bora",
+    "page": 44,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_bora_bora.jpg",
+    "size": [
+      432,
+      576
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "brisa",
+    "name": "Brisa",
+    "page": 46,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\brisa.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "fresh",
+    "name": "Fresh",
+    "page": 48,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\fresh.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_urban",
+    "name": "Voil Urban",
+    "page": 50,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_urban.jpg",
+    "size": [
+      576,
+      768
+    ],
+    "mode": "AlphaClip"
+  },
+  {
+    "id": "voil_scalla",
+    "name": "Voil Scalla",
+    "page": 51,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_scalla.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_lumina",
+    "name": "Voil Lumina",
+    "page": 53,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_lumina.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_evidence",
+    "name": "Voil Evidence",
+    "page": 55,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_evidence.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_essence",
+    "name": "Voil Essence",
+    "page": 58,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_essence.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "chiffon_decor",
+    "name": "Chiffon Decor",
+    "page": 60,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\chiffon_decor.jpg",
+    "size": [
+      540,
+      720
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_snow",
+    "name": "Voil Snow",
+    "page": 62,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_snow.jpg",
+    "size": [
+      720,
+      960
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_cross",
+    "name": "Voil Cross",
+    "page": 64,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_cross.jpg",
+    "size": [
+      648,
+      864
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_cristal",
+    "name": "Voil Cristal",
+    "page": 66,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_cristal.jpg",
+    "size": [
+      648,
+      864
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_gaze",
+    "name": "Voil Gaze",
+    "page": 68,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_gaze.jpg",
+    "size": [
+      480,
+      640
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_botone",
+    "name": "Voil Botonê",
+    "page": 70,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_botone.jpg",
+    "size": [
+      432,
+      576
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "bordados_ramos",
+    "name": "Bordados Ramos",
+    "page": 72,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\bordados_ramos.jpg",
+    "size": [
+      416,
+      624
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "bordados_galhos",
+    "name": "Bordados Galhos",
+    "page": 74,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\bordados_galhos.jpg",
+    "size": [
+      416,
+      624
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "linho_voil_strip_211",
+    "name": "Linho Voil Strip 211",
+    "page": 76,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_voil_strip_211.jpg",
+    "size": [
+      960,
+      1280
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_liso",
+    "name": "Voil Liso",
+    "page": 78,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_liso.jpg",
+    "size": [
+      864,
+      1152
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "voil_unique",
+    "name": "Voil Unique",
+    "page": 79,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_unique.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "blackout_giardino",
+    "name": "Blackout Giardino",
+    "page": 81,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_giardino.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_terrazo",
+    "name": "Blackout Terrazo",
+    "page": 83,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_terrazo.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "linho_nix",
+    "name": "Linho Nix",
+    "page": 85,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_nix.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "linho_cronos",
+    "name": "Linho Cronos",
+    "page": 87,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\linho_cronos.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_100_indonesia_dupla_face",
+    "name": "Blackout 100% Indonesia Dupla Face",
+    "page": 90,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_100_indonesia_dupla_face.jpg",
+    "size": [
+      584,
+      778
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_dupla_face",
+    "name": "Blackout Dupla Face",
+    "page": 92,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_dupla_face.jpg",
+    "size": [
+      648,
+      864
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_100",
+    "name": "Blackout 100%",
+    "page": 94,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_100.jpg",
+    "size": [
+      576,
+      768
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_fosco",
+    "name": "Blackout Fosco",
+    "page": 96,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_fosco.jpg",
+    "size": [
+      720,
+      960
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_fosco_3m",
+    "name": "Blackout Fosco 3M",
+    "page": 98,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_fosco_3m.jpg",
+    "size": [
+      768,
+      1024
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "oxford",
+    "name": "Oxford",
+    "page": 101,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\oxford.jpg",
+    "size": [
+      1200,
+      1600
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "cetim_blackout",
+    "name": "Cetim Blackout",
+    "page": 104,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\cetim_blackout.jpg",
+    "size": [
+      960,
+      339
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "microfibra_skin_peach",
+    "name": "Microfibra Skin Peach",
+    "page": 106,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\microfibra_skin_peach.jpg",
+    "size": [
+      584,
+      778
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "microfibra",
+    "name": "Microfibra",
+    "page": 108,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\microfibra.jpg",
+    "size": [
+      540,
+      720
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "voil_flame_sorelle",
+    "name": "Voil Flame Sorelle",
+    "page": 110,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\voil_flame_sorelle.jpg",
+    "size": [
+      1210,
+      1613
+    ],
+    "mode": "Transparent"
+  },
+  {
+    "id": "microfibra_solea",
+    "name": "Microfibra Solea",
+    "page": 111,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\microfibra_solea.jpg",
+    "size": [
+      1512,
+      2016
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_dupla_face_rocca",
+    "name": "Blackout Dupla Face Rocca",
+    "page": 112,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_dupla_face_rocca.jpg",
+    "size": [
+      1210,
+      1613
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_dupla_face_sireno",
+    "name": "Blackout Dupla Face Sireno",
+    "page": 113,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_dupla_face_sireno.jpg",
+    "size": [
+      1210,
+      1613
+    ],
+    "mode": "Opaque"
+  },
+  {
+    "id": "blackout_dupla_face_nord",
+    "name": "Blackout Dupla Face Nord",
+    "page": 114,
+    "path": "E:\\Unity\\DecorIt\\tmp\\curtain-review\\references\\blackout_dupla_face_nord.jpg",
+    "size": [
+      1210,
+      1613
+    ],
+    "mode": "Opaque"
+  }
+]

@@ -1,0 +1,15 @@
+{
+    "familyId": "boucle_cortina_loft",
+    "referencePage": 5,
+    "source": "ArtSource/Curtains/boucle_cortina_loft.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.9483858942985535,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

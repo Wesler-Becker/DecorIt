@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_lumina",
+  "reference": "Referencia/Tramas/voil_lumina_crop.png",
+  "referencePage": 53,
+  "nativeSize": [
+    600,
+    600
+  ],
+  "mapSize": [
+    512,
+    512
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "1fc231917832da966ac948e1e32ad57586a5fd9dc1b1a327c1606dd22fe28045"
+}

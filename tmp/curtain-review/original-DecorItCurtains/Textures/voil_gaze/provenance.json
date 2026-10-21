@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_gaze",
+  "reference": "Referencia/Tramas/voil_gaze_crop.png",
+  "referencePage": 68,
+  "nativeSize": [
+    212,
+    212
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "6c7714e0cf0290e67d9ce4e90dc68b9e668026e06b686f9d62ee5a59a0e1aa3a"
+}

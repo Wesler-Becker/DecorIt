@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_cristal",
+  "reference": "Referencia/Tramas/voil_cristal_crop.png",
+  "referencePage": 66,
+  "nativeSize": [
+    195,
+    195
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "1b9227ecea50e538dd3aa90ab35669582eec031831ecdc762bb70c693d6c2b9f"
+}

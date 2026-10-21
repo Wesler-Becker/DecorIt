@@ -1,0 +1,23 @@
+{
+  "familyId": "brisa",
+  "reference": "Referencia/Tramas/brisa_crop.png",
+  "referencePage": 46,
+  "nativeSize": [
+    341,
+    341
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "5ab0b188b4dc2367048ee252158228beda73bf077f2dc5a9181c9326f12fd096"
+}

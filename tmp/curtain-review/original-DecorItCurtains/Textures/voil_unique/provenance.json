@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_unique",
+  "reference": "Referencia/Tramas/voil_unique_crop.png",
+  "referencePage": 79,
+  "nativeSize": [
+    500,
+    500
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "175cb56ec96b184e163341be9e36cc82449d9042e4e8be56e6f6a7f6b3527e55"
+}

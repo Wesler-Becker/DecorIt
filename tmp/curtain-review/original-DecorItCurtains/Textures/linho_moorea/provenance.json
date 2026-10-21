@@ -1,0 +1,23 @@
+{
+  "familyId": "linho_moorea",
+  "reference": "Referencia/Tramas/linho_moorea_crop.png",
+  "referencePage": 24,
+  "nativeSize": [
+    188,
+    188
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "03aea66d75ab800a5edb92de1040fa758585103e41ccbc3473fdc90e0a4d7dab"
+}

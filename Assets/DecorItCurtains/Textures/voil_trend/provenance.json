@@ -1,0 +1,15 @@
+{
+    "familyId": "voil_trend",
+    "referencePage": 3,
+    "source": "ArtSource/Curtains/voil_trend.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.07999999821186066,
+    "meanCoverage": 0.4128997027873993,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": true,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Mascara de fios reconstruida por image_gen; albedo neutro; normal aproximado por derivada periodica"
+}

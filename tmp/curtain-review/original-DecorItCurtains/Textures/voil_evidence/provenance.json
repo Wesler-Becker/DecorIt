@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_evidence",
+  "reference": "Referencia/Tramas/voil_evidence_crop.png",
+  "referencePage": 55,
+  "nativeSize": [
+    400,
+    400
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "390da5837ccce0f172ed6e09ef3b0432cec3a6d81e0aec57a2af9da196a4e224"
+}

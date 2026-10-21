@@ -6,6 +6,8 @@ Aplicativo mobile em React Native + TypeScript. As telas comuns ficam em `src/sc
 
 Na pasta `mobile`, instale as dependências com `npm install`, inicie o Metro com `npm start` e, em outro terminal, execute `npm run android` com um aparelho ou emulador Android conectado. Verifique o ambiente com `npx react-native doctor`.
 
+No Windows, os atalhos `atualizar-debug.bat` e `gerar-release.bat` automatizam os fluxos mais comuns. Ambos regeneram a biblioteca Unity antes de compilar, então deixe o projeto aberto no Editor. O primeiro também inicia o Metro em outra janela com `--reset-cache`, instala/atualiza o Debug em um dispositivo via ADB, ajusta a porta salva do bundler para `localhost:8081` e abre o app. O segundo gera `android/app/build/outputs/apk/release/app-release.apk` sem Metro. A assinatura Release atual ainda usa a chave debug e deve ser substituída por uma chave de distribuição antes de publicar.
+
 ## Dados e Unity
 
 No Android, o app conserva o identificador `com.Wesler_Becker.DecorIt` para compartilhar `clients.json` e as fotos no diretório privado já usado pelo Unity. O modelo JSON mantém clientes, cômodos, registros e caminhos de fotos existentes.

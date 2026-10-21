@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_cross",
+  "reference": "Referencia/Tramas/voil_cross_crop.png",
+  "referencePage": 64,
+  "nativeSize": [
+    185,
+    185
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "400e55f488eceab8486aec9154fdd2d9455f5e66e935e9870ee92fac8186a321"
+}

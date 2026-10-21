@@ -1,6 +1,7 @@
 
 using UnityEngine;
 
+[ExecuteAlways]
 public class CurtainController : MonoBehaviour
 {
     public enum CurtainType
@@ -8,6 +9,21 @@ public class CurtainController : MonoBehaviour
         SinglePanel,
         DoublePanel
     }
+
+    public enum FabricStyle
+    {
+        Personalizado,
+        Liso,
+        Natural,
+        Wave
+    }
+
+    [Header("Fabric style")]
+    [Tooltip("Personalizado usa Fold Settings. Os outros estilos definem a densidade e profundidade das ondas.")]
+    [SerializeField] private FabricStyle fabricStyle = FabricStyle.Personalizado;
+    [Tooltip("Intensidade do caimento natural, das rugas e da variacao da barra.")]
+    [Range(0f, 1f)] [SerializeField] private float fabricNaturalness = 1f;
+    [SerializeField] private int fabricSeed = 17;
 
     [Header("Curtain Type")]
     [SerializeField] private CurtainType curtainType =
@@ -50,28 +66,33 @@ public class CurtainController : MonoBehaviour
     [SerializeField] private ProceduralCurtainMesh leftPanel;
     [SerializeField] private ProceduralCurtainMesh rightPanel;
 
-    private void Start()
+    private bool updateRequested;
+
+    private void OnEnable()
     {
-        UpdateCurtain();
+        updateRequested = true;
+    }
+
+    private void Update()
+    {
+        if (updateRequested)
+            UpdateCurtain();
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // Executa a atualização ao alterar valores no Inspector
-        // somente durante o Play.
-        if (!Application.isPlaying)
-            return;
-
-        UpdateCurtain();
+        // Apply on the main thread, including previews outside Play mode.
+        updateRequested = true;
     }
 #endif
 
+    [ContextMenu("Atualizar cortina")]
     public void UpdateCurtain()
     {
-        if (singlePanel == null ||
-            leftPanel == null ||
-            rightPanel == null)
+        updateRequested = false;
+        if ((curtainType == CurtainType.SinglePanel && singlePanel == null) ||
+            (curtainType == CurtainType.DoublePanel && (leftPanel == null || rightPanel == null)))
         {
             Debug.LogWarning(
                 "CurtainController: panel references are missing."
@@ -80,8 +101,12 @@ public class CurtainController : MonoBehaviour
             return;
         }
 
-        float width = Mathf.Max(10f, widthCm) / 100f;
-        float height = Mathf.Max(10f, heightCm) / 100f;
+        widthCm = Mathf.Clamp(widthCm, 10f, 10000f);
+        heightCm = Mathf.Clamp(heightCm, 10f, 10000f);
+        opening = Mathf.Clamp01(opening);
+        fabricNaturalness = Mathf.Clamp01(fabricNaturalness);
+        float width = widthCm / 100f;
+        float height = heightCm / 100f;
 
         if (curtainType == CurtainType.SinglePanel)
         {
@@ -102,18 +127,12 @@ public class CurtainController : MonoBehaviour
     {
         singlePanel.gameObject.SetActive(true);
 
-        leftPanel.gameObject.SetActive(false);
-        rightPanel.gameObject.SetActive(false);
+        if (leftPanel != null) leftPanel.gameObject.SetActive(false);
+        if (rightPanel != null) rightPanel.gameObject.SetActive(false);
 
-        singlePanel.transform.localPosition = Vector3.zero;
-
-        singlePanel.Configure(
-            width,
-            height,
-            CalculateFoldCount(width),
-            foldDepth,
-            foldProfile
-        );
+        float visibleWidth = width * Mathf.Lerp(1f, 0.15f, opening);
+        singlePanel.transform.localPosition = new Vector3((visibleWidth - width) / 2f, 0f, 0f);
+        ConfigurePanel(singlePanel, visibleWidth, height, width, 0);
     }
 
     
@@ -121,7 +140,7 @@ public class CurtainController : MonoBehaviour
         float width,
         float height)
     {
-        singlePanel.gameObject.SetActive(false);
+        if (singlePanel != null) singlePanel.gameObject.SetActive(false);
 
         leftPanel.gameObject.SetActive(true);
         rightPanel.gameObject.SetActive(true);
@@ -154,34 +173,65 @@ public class CurtainController : MonoBehaviour
         rightPanel.transform.localPosition =
             new Vector3(rightPosition, 0f, 0f);
 
-        // A quantidade de ondas permanece baseada na
-        // largura original, representando o tecido recolhido.
-        int panelFoldCount =
-            CalculateFoldCount(originalPanelWidth);
-
-        leftPanel.Configure(
-            visiblePanelWidth,
-            height,
-            panelFoldCount,
-            foldDepth,
-            foldProfile
-        );
-
-        rightPanel.Configure(
-            visiblePanelWidth,
-            height,
-            panelFoldCount,
-            foldDepth,
-            foldProfile
-        );
+        ConfigurePanel(leftPanel, visiblePanelWidth, height, originalPanelWidth, 0);
+        ConfigurePanel(rightPanel, visiblePanelWidth, height, originalPanelWidth, 101);
     }
 
-    private int CalculateFoldCount(float panelWidth)
+    private void ConfigurePanel(ProceduralCurtainMesh panel, float visibleWidth,
+        float panelHeight, float closedWidth, int seedOffset)
     {
-        return Mathf.Max(
-            1,
-            Mathf.RoundToInt(panelWidth * foldsPerMeter)
-        );
+        float density = Mathf.Clamp(foldsPerMeter, 1f, 32f);
+        float depth = foldDepth;
+        float profile = foldProfile;
+        float naturalness = fabricNaturalness;
+        switch (fabricStyle)
+        {
+            case FabricStyle.Liso:
+                density = 3f;
+                depth = 0.018f;
+                profile = 1f;
+                naturalness *= 0.65f;
+                break;
+            case FabricStyle.Natural:
+                density = 5f;
+                depth = 0.06f;
+                profile = 1.15f;
+                break;
+            case FabricStyle.Wave:
+                density = 6f;
+                depth = 0.095f;
+                profile = 0.8f;
+                naturalness *= 0.45f;
+                break;
+        }
+
+        int count = Mathf.Clamp(Mathf.RoundToInt(closedWidth * density), 1, 128);
+        panel.Configure(visibleWidth, panelHeight, count, depth, profile, closedWidth,
+            unchecked(fabricSeed + seedOffset), naturalness);
+    }
+
+    public void SetFabricStyle(FabricStyle style)
+    {
+        fabricStyle = style;
+        UpdateCurtain();
+    }
+
+    public void ApplySettings(CurtainViewSettings settings)
+    {
+        if (settings == null) return;
+        widthCm = Mathf.Clamp(settings.widthCentimeters, 10f, 10000f);
+        heightCm = Mathf.Clamp(settings.heightCentimeters, 10f, 10000f);
+        if (System.Enum.TryParse(settings.panelType, out CurtainType savedType))
+            curtainType = savedType;
+        if (System.Enum.TryParse(settings.fabricStyle, out FabricStyle savedStyle))
+            fabricStyle = savedStyle;
+        foldsPerMeter = Mathf.Clamp(settings.foldsPerMeter, 1f, 32f);
+        foldDepth = Mathf.Clamp(settings.foldDepthCentimeters / 100f, 0f, 1f);
+        foldProfile = Mathf.Clamp(settings.foldProfile, 0.5f, 2f);
+        fabricNaturalness = Mathf.Clamp01(settings.naturalness);
+        fabricSeed = settings.seed;
+        opening = Mathf.Clamp01(settings.opening);
+        UpdateCurtain();
     }
 
     public void SetDimensions(
@@ -206,6 +256,7 @@ public class CurtainController : MonoBehaviour
         float newFoldDepth,
         float newFoldProfile)
     {
+        fabricStyle = FabricStyle.Personalizado;
         foldsPerMeter = Mathf.Max(1f, newFoldsPerMeter);
         foldDepth = Mathf.Max(0f, newFoldDepth);
         foldProfile = Mathf.Clamp(newFoldProfile, 0.5f, 2f);
@@ -215,9 +266,9 @@ public class CurtainController : MonoBehaviour
 
     public void SetOpening(float value)
     {
-    opening = Mathf.Clamp01(value);
+        opening = Mathf.Clamp01(value);
 
-    UpdateCurtain();
+        UpdateCurtain();
     }
 
     private void UpdateRod(float curtainWidth)

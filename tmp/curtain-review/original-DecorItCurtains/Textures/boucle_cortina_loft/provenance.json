@@ -1,0 +1,23 @@
+{
+  "familyId": "boucle_cortina_loft",
+  "reference": "Referencia/Tramas/boucle_cortina_loft_crop.png",
+  "referencePage": 5,
+  "nativeSize": [
+    700,
+    700
+  ],
+  "mapSize": [
+    512,
+    512
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "ffc4dbf78f90ae4ae2fef838d9ae4ac12a4fbb78c0a2e89561a7607b10840301"
+}

@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_camburi",
+  "reference": "Referencia/Tramas/voil_camburi_crop.png",
+  "referencePage": 30,
+  "nativeSize": [
+    377,
+    377
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "29d7334cc85ee8cfae0b3c8e7cacd76d6c6190eb24b0e8d16461bf0dccbf8fb1"
+}

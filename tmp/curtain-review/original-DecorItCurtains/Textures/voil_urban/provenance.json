@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_urban",
+  "reference": "Referencia/Reconstrucoes/voil_urban_master.png",
+  "referencePage": 50,
+  "nativeSize": [
+    1254,
+    1254
+  ],
+  "mapSize": [
+    1024,
+    1024
+  ],
+  "method": "reconstrucao_visual_assistida_por_IA_da_referencia; mapas_tecnicos_derivados",
+  "opacityStatus": "mascara_reconstruida_aproximada_nao_medida",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.1949481964111328,
+  "mode": "AlphaClip",
+  "threadOpacity": 0.82,
+  "photoConfidence": "media",
+  "sourceSHA256": "6f3b308de9ed219462d0049cdfa93d24d6603512450b21939ac1b73b103d5e3e"
+}

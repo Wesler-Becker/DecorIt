@@ -1,0 +1,23 @@
+{
+  "familyId": "blackout_giardino",
+  "reference": "Referencia/Tramas/blackout_giardino_crop.png",
+  "referencePage": 81,
+  "nativeSize": [
+    700,
+    700
+  ],
+  "mapSize": [
+    512,
+    512
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "d525eae1e6dce58c131879d8107b43d65c3542b248d52ca39ab38e8fd5c6503b"
+}

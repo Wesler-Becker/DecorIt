@@ -1,0 +1,23 @@
+{
+  "familyId": "blackout_dupla_face_sireno",
+  "reference": "Referencia/Tramas/blackout_dupla_face_sireno_crop.png",
+  "referencePage": 113,
+  "nativeSize": [
+    480,
+    480
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "62268aa49b7ee151050e497d19e9d1d954b0fb8504bd6480e7f6a5aca3d9bc08"
+}

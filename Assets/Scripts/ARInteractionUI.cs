@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ARInteractionUI : MonoBehaviour
@@ -33,6 +34,9 @@ public class ARInteractionUI : MonoBehaviour
     private static readonly string[] RodNames = { "Alumínio", "Preto", "Dourado" };
 
     private readonly List<Material> runtimeMaterials = new List<Material>();
+    private readonly List<Sprite> runtimeSwatchSprites = new List<Sprite>();
+    private readonly List<string> fabricNames = new List<string>();
+    private readonly List<string> fabricPaths = new List<string>();
     private readonly List<Image> fabricSwatches = new List<Image>();
     private readonly List<Image> rodSwatches = new List<Image>();
     private readonly List<Material> fabrics = new List<Material>();
@@ -45,6 +49,13 @@ public class ARInteractionUI : MonoBehaviour
     private GameObject modelTray;
     private GameObject activeQuickSelector;
     private Button menuButton;
+    private Transform overlayRoot;
+    private Button addButton;
+    private GameObject addOptionsPanel;
+    private Button editButton;
+    private Button zoomButton;
+    private Button rotateButton;
+    private GameObject editControls;
     private readonly List<Button> modelOptionButtons = new List<Button>();
     private readonly List<GameObject> modelOptions = new List<GameObject>();
     private TMP_Text planesButtonText;
@@ -58,6 +69,7 @@ public class ARInteractionUI : MonoBehaviour
     private void Start()
     {
         placementController = FindFirstObjectByType<ARPlacementController>();
+        if (placementController != null) placementController.InitializeCurtainSettings();
         surfaceUI = GetComponent<ARSurfaceUI>();
         if (btnPosicionar == null || btnAjustar == null || btnModoGesto == null)
             Debug.LogError("ARInteractionUI: os botões originais não foram ligados no Canvas.");
@@ -75,11 +87,8 @@ public class ARInteractionUI : MonoBehaviour
             BuildRodTray();
             BuildModelTray();
             BuildCameraMenu();
-            if (UnityARHostBridge.IsQuickAR)
-            {
-                modoPosicionar = true;
-                UpdateControlState();
-            }
+            BuildEditingControls();
+            UpdateControlState();
             UpdateSelection();
         }
     }
@@ -92,6 +101,9 @@ public class ARInteractionUI : MonoBehaviour
         foreach (Material material in runtimeMaterials)
             if (material != null) Destroy(material);
         runtimeMaterials.Clear();
+        foreach (Sprite sprite in runtimeSwatchSprites)
+            if (sprite != null) Destroy(sprite);
+        runtimeSwatchSprites.Clear();
     }
 
     private void HideLegacyControls()
@@ -104,52 +116,101 @@ public class ARInteractionUI : MonoBehaviour
 
     private void BuildCameraOverlay()
     {
-        menuButton = CreateButton("CameraMenuButton", transform, new Vector2(1f, 1f), new Vector2(-64f, -82f), new Vector2(88f, 88f), Ink, ToggleMenu);
+        overlayRoot = ARUIIconFactory.GetCameraControlsRoot(GetComponentInParent<Canvas>());
+        menuButton = CreateButton("CameraMenuButton", overlayRoot, Vector2.one, new Vector2(-24f, -24f), new Vector2(88f, 88f), Color.clear, ToggleMenu);
+        ARUIIconFactory.ConfigureCameraButton(menuButton, "Menu", 88f, Color.clear, SoftWhite);
         menuButton.gameObject.SetActive(!UnityARHostBridge.IsPhotoOnly || UnityARHostBridge.IsQuickAR);
-        TMP_Text menuGlyph = CreateText("MenuGlyph", menuButton.transform, "•••", 52f, SoftWhite, TextAlignmentOptions.Center);
-        Stretch(menuGlyph.rectTransform, new Vector2(5f, 0f), new Vector2(-5f, 0f));
+    }
 
-        TMP_Text cameraLabel = CreateText("CameraModeLabel", transform, UnityARHostBridge.IsPhotoOnly && !UnityARHostBridge.IsQuickAR ? "REGISTRO DE FOTO" : "CÂMERA  ·  AR", 17f, SoftWhite, TextAlignmentOptions.Center);
-        RectTransform cameraLabelRect = cameraLabel.rectTransform;
-        cameraLabelRect.anchorMin = cameraLabelRect.anchorMax = new Vector2(0.5f, 1f);
-        cameraLabelRect.pivot = new Vector2(0.5f, 1f);
-        cameraLabelRect.anchoredPosition = new Vector2(0f, -34f);
-        cameraLabelRect.sizeDelta = new Vector2(280f, 40f);
-        cameraLabel.fontStyle = FontStyles.Bold;
-        cameraLabel.characterSpacing = 1.5f;
-        cameraLabel.raycastTarget = false;
+    private void BuildEditingControls()
+    {
+        addButton = CreateButton("AddCurtainButton", overlayRoot, Vector2.zero, new Vector2(24f, 36f), new Vector2(96f, 96f), Ink, ToggleAddOptions);
+        ARUIIconFactory.ConfigureCameraButton(addButton, "Add", 96f, Ink, SoftWhite);
+        BuildAddOptions();
+        editControls = CreatePanel("CameraEditControls", overlayRoot, new Vector2(1f, 0f), new Vector2(-24f, 36f), new Vector2(252f, 96f), Color.clear);
+        editControls.GetComponent<Image>().raycastTarget = false;
+        zoomButton = CreateGestureButton("ZoomGestureButton", "Zoom", 42f, () => SelecionarGesto(false));
+        editButton = CreateGestureButton("EditObjectButton", "Edit", 126f, AtivarAjuste);
+        rotateButton = CreateGestureButton("RotateGestureButton", "Rotate", 210f, () => SelecionarGesto(true));
+    }
+
+    private void BuildAddOptions()
+    {
+        addOptionsPanel = CreatePanel("AddCurtainOptions", overlayRoot, Vector2.zero,
+            new Vector2(24f, 144f), new Vector2(420f, 170f), Panel);
+        Button addLast = CreateButton("AddLastCurtainButton", addOptionsPanel.transform,
+            new Vector2(0f, 1f), new Vector2(12f, -10f), new Vector2(396f, 68f),
+            new Color(0.12f, 0.17f, 0.21f, 0.96f), AddLastCurtain);
+        StyleMenuButton(addLast, "Adicionar última configuração", "Add");
+        Button search = CreateButton("SearchCurtainButton", addOptionsPanel.transform,
+            new Vector2(0f, 1f), new Vector2(12f, -90f), new Vector2(396f, 68f),
+            new Color(0.12f, 0.17f, 0.21f, 0.96f), OpenCurtainCatalog);
+        StyleMenuButton(search, "Buscar cortina no catálogo", "Search");
+        addOptionsPanel.SetActive(false);
+    }
+
+    private void ToggleAddOptions()
+    {
+        if (addOptionsPanel != null) addOptionsPanel.SetActive(!addOptionsPanel.activeSelf);
+    }
+
+    private void AddLastCurtain()
+    {
+        if (addOptionsPanel != null) addOptionsPanel.SetActive(false);
+        if (placementController != null) placementController.InitializeCurtainSettings();
+        modoPosicionar = true;
+        modoAjustar = false;
+        UpdateControlState();
+    }
+
+    private void OpenCurtainCatalog()
+    {
+        if (addOptionsPanel != null) addOptionsPanel.SetActive(false);
+        CatalogSelectionSession.ReturnToAR = true;
+        CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.LoadLast();
+        SceneManager.LoadScene("Catalog");
+    }
+
+    private Button CreateGestureButton(string name, string icon, float x, System.Action action)
+    {
+        Button button = CreateButton(name, editControls.transform, new Vector2(0f, 0.5f), new Vector2(x, 0f), new Vector2(80f, 80f), Ink, action);
+        (button.transform as RectTransform).pivot = new Vector2(0.5f, 0.5f);
+        ARUIIconFactory.ConfigureCameraButton(button, icon, 80f, Ink, SoftWhite);
+        return button;
+    }
+
+    private void SelecionarGesto(bool rotacao)
+    {
+        modoRotacao = rotacao;
+        UpdateControlState();
     }
 
     private void BuildCameraMenu()
     {
-        menuPanel = CreatePanel("CameraOptionsPanel", transform, new Vector2(1f, 1f), new Vector2(-22f, -194f), new Vector2(432f, 890f), Panel);
+        menuPanel = CreatePanel("CameraOptionsPanel", overlayRoot, new Vector2(1f, 1f), new Vector2(-24f, -132f), new Vector2(432f, 680f), Panel);
         menuPanel.SetActive(false);
         TMP_Text title = CreateText("MenuTitle", menuPanel.transform, "AJUSTES DA CENA", 20f, SoftWhite, TextAlignmentOptions.Left);
         PlaceTopLeft(title.rectTransform, new Vector2(24f, 20f), new Vector2(380f, 38f));
         title.fontStyle = FontStyles.Bold;
         title.characterSpacing = 1.1f;
 
-        ConfigureMenuRow(btnPosicionar, "Position", "Posicionar objeto", 78f);
-        ConfigureMenuRow(btnAjustar, "Adjust", "Mover e ajustar", 148f);
-        ConfigureMenuRow(btnModoGesto, "Rotate", "Gestos: aproximar", 218f);
-
-        Button planesButton = CreateMenuRow("PlanesMenuButton", "Planes", "Planos: visíveis", 288f, TogglePlanes);
+        Button planesButton = CreateMenuRow("PlanesMenuButton", "Planes", "Planos: visíveis", 78f, TogglePlanes);
         planesButtonText = planesButton.GetComponentInChildren<TMP_Text>();
 
-        AddSectionLabel(menuPanel.transform, "MODELO", 362f);
-        Button singlePanel = CreateMenuRow("SinglePanelButton", "", "Painel único", 398f, () => SetPanelType(CurtainController.CurtainType.SinglePanel));
-        Button doublePanel = CreateMenuRow("DoublePanelButton", "", "Painel duplo", 462f, () => SetPanelType(CurtainController.CurtainType.DoublePanel));
+        AddSectionLabel(menuPanel.transform, "MODELO", 152f);
+        Button singlePanel = CreateMenuRow("SinglePanelButton", "", "Painel único", 188f, () => SetPanelType(CurtainController.CurtainType.SinglePanel));
+        Button doublePanel = CreateMenuRow("DoublePanelButton", "", "Painel duplo", 252f, () => SetPanelType(CurtainController.CurtainType.DoublePanel));
         singlePanel.image.color = new Color(0.12f, 0.17f, 0.21f, 0.96f);
         doublePanel.image.color = new Color(0.12f, 0.17f, 0.21f, 0.96f);
 
-        AddSectionLabel(menuPanel.transform, "MODELO DISPONÍVEL", 538f);
-        CreateMenuRow("ModelSelectorButton", "", "Escolher Modelo", 574f, ToggleModelTray);
+        AddSectionLabel(menuPanel.transform, "MODELO DISPONÍVEL", 328f);
+        CreateMenuRow("ModelSelectorButton", "", "Escolher Modelo", 364f, ToggleModelTray);
 
-        AddSectionLabel(menuPanel.transform, "ACABAMENTO DO VARÃO", 648f);
-        CreateMenuRow("RodSelectorButton", "", "Escolher Acabamento", 684f, ToggleRodTray);
+        AddSectionLabel(menuPanel.transform, "ACABAMENTO DO VARÃO", 438f);
+        CreateMenuRow("RodSelectorButton", "", "Escolher Acabamento", 474f, ToggleRodTray);
 
-        AddSectionLabel(menuPanel.transform, "TECIDO", 752f);
-        Button fabricButton = CreateMenuRow("FabricTrayButton", "", "Escolher Tecido", 786f, ToggleFabricTray);
+        AddSectionLabel(menuPanel.transform, "TECIDO", 548f);
+        Button fabricButton = CreateMenuRow("FabricTrayButton", "", "Escolher Tecido", 582f, ToggleFabricTray);
         fabricButton.image.color = new Color(0.12f, 0.17f, 0.21f, 0.96f);
     }
 
@@ -161,7 +222,7 @@ public class ARInteractionUI : MonoBehaviour
         RectTransform canvasRect = canvas != null ? canvas.GetComponent<RectTransform>() : null;
         float canvasWidth = canvasRect != null ? canvasRect.rect.width : Screen.width;
         quickSelectorWidth = Mathf.Clamp(canvasWidth - 500f, 220f, 580f);
-        GameObject tray = CreatePanel(name, transform, Vector2.zero, new Vector2(20f, 310f), new Vector2(quickSelectorWidth, 140f), Panel);
+        GameObject tray = CreatePanel(name, overlayRoot, Vector2.zero, new Vector2(20f, 170f), new Vector2(quickSelectorWidth, 140f), Panel);
         TMP_Text heading = CreateText(name + "Title", tray.transform, title, 16f, new Color(0.8f, 0.85f, 0.89f), TextAlignmentOptions.Left);
         PlaceTopLeft(heading.rectTransform, new Vector2(20f, 8f), new Vector2(quickSelectorWidth - 40f, 24f));
         heading.fontStyle = FontStyles.Bold;
@@ -172,7 +233,7 @@ public class ARInteractionUI : MonoBehaviour
     private void BuildFabricTray()
     {
         fabricTray = CreateQuickSelectorTray("FabricQuickSelector", "TECIDO  ·  TOQUE PARA TESTAR");
-        BuildHorizontalSelector(fabricTray.transform, "FabricSwatches", fabrics, FabricNames, fabricSwatches, -34f, SelectFabric,
+        BuildHorizontalSelector(fabricTray.transform, "FabricSwatches", fabrics, fabricNames, fabricSwatches, -34f, SelectFabric,
             new Vector2(quickSelectorWidth - 24f, 94f), new Vector2(0f, 1f));
     }
 
@@ -268,7 +329,18 @@ public class ARInteractionUI : MonoBehaviour
         {
             Color color = i == 0 && baseFabric != null ? baseFabric.color : FabricColors[i];
             fabrics.Add(CreateTintedMaterial(baseFabric, "Tecido " + FabricNames[i], color));
+            fabricNames.Add(FabricNames[i]);
+            fabricPaths.Add(string.Empty);
         }
+        CurtainMaterialCatalog catalog = Resources.Load<CurtainMaterialCatalog>("CurtainMaterials");
+        if (catalog != null)
+            foreach (CurtainMaterialCatalog.Entry entry in catalog.entries)
+            {
+                if (entry.material == null) continue;
+                fabrics.Add(entry.material);
+                fabricNames.Add(entry.displayName);
+                fabricPaths.Add(entry.assetPath);
+            }
         for (int i = 0; i < RodNames.Length; i++)
         {
             Color color = i == 0 && baseRod != null ? baseRod.color : RodColors[i];
@@ -276,11 +348,16 @@ public class ARInteractionUI : MonoBehaviour
         }
 
         selectedFabricIndex = FindPresetIndex(FabricNames, VisitDraftSession.Current.fabricMaterialName);
+        int importedIndex = fabricPaths.FindIndex(path => !string.IsNullOrEmpty(path) && path == VisitDraftSession.Current.fabricMaterialPath);
+        if (importedIndex < 0) importedIndex = fabricNames.FindIndex(name => name == VisitDraftSession.Current.fabricMaterialName);
+        if (importedIndex >= 0) selectedFabricIndex = importedIndex;
         selectedRodIndex = FindPresetIndex(RodNames, VisitDraftSession.Current.rodMaterialName);
         if (CatalogSelectionSession.SelectedFabricMaterial != null)
             fabrics[selectedFabricIndex] = CatalogSelectionSession.SelectedFabricMaterial;
         if (CatalogSelectionSession.SelectedRodMaterial != null)
             rods[selectedRodIndex] = CatalogSelectionSession.SelectedRodMaterial;
+        CatalogSelectionSession.SelectedFabricMaterial = fabrics[selectedFabricIndex];
+        CatalogSelectionSession.SelectedRodMaterial = rods[selectedRodIndex];
     }
 
     private Material CreateFallbackMaterial(string name, Color color)
@@ -383,7 +460,7 @@ public class ARInteractionUI : MonoBehaviour
         text.characterSpacing = 1.2f;
     }
 
-    private void BuildHorizontalSelector(Transform parent, string name, List<Material> materials, string[] labels, List<Image> swatches, float topOffset, System.Action<int> onSelected, Vector2 size, Vector2 anchor)
+    private void BuildHorizontalSelector(Transform parent, string name, List<Material> materials, IReadOnlyList<string> labels, List<Image> swatches, float topOffset, System.Action<int> onSelected, Vector2 size, Vector2 anchor)
     {
         GameObject scrollObject = new GameObject(name, typeof(RectTransform), typeof(ScrollRect));
         scrollObject.transform.SetParent(parent, false);
@@ -435,8 +512,10 @@ public class ARInteractionUI : MonoBehaviour
             GameObject item = new GameObject(labels[i], typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
             item.transform.SetParent(contentObject.transform, false);
             LayoutElement layoutElement = item.GetComponent<LayoutElement>();
-            layoutElement.preferredWidth = 82f;
+            float itemWidth = name == "FabricSwatches" ? 160f : 82f;
+            layoutElement.preferredWidth = itemWidth;
             layoutElement.preferredHeight = size.y - 4f;
+            item.GetComponent<RectTransform>().sizeDelta = new Vector2(itemWidth, size.y - 4f);
             Image itemBackground = item.GetComponent<Image>();
             itemBackground.color = new Color(0f, 0f, 0f, 0f);
             Button itemButton = item.GetComponent<Button>();
@@ -452,7 +531,16 @@ public class ARInteractionUI : MonoBehaviour
             swatchRect.sizeDelta = new Vector2(46f, 46f);
             Image swatch = swatchObject.GetComponent<Image>();
             swatch.sprite = ARUIIconFactory.CircleSprite;
-            swatch.color = materials[i].color;
+            Material material = materials[i];
+            swatch.color = material.HasProperty("_BaseColor") ? material.GetColor("_BaseColor") : material.color;
+            Texture2D texture = material.HasProperty("_BaseMap") ? material.GetTexture("_BaseMap") as Texture2D : material.mainTexture as Texture2D;
+            if (texture != null)
+            {
+                Sprite thumbnail = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                runtimeSwatchSprites.Add(thumbnail);
+                swatch.sprite = thumbnail;
+                swatch.preserveAspect = true;
+            }
             swatch.raycastTarget = false;
             Outline outline = swatchObject.GetComponent<Outline>();
             outline.effectColor = Accent;
@@ -466,7 +554,9 @@ public class ARInteractionUI : MonoBehaviour
             labelRect.anchorMin = labelRect.anchorMax = new Vector2(0.5f, 0f);
             labelRect.pivot = new Vector2(0.5f, 0f);
             labelRect.anchoredPosition = new Vector2(0f, 1f);
-            labelRect.sizeDelta = new Vector2(82f, 22f);
+            labelRect.sizeDelta = new Vector2(itemWidth, 38f);
+            label.overflowMode = TextOverflowModes.Ellipsis;
+            label.maxVisibleLines = 2;
             label.raycastTarget = false;
         }
     }
@@ -571,6 +661,7 @@ public class ARInteractionUI : MonoBehaviour
         if (placementController != null) placementController.SetPanelType(type);
         VisitDraftSession.Current.panelType = type.ToString();
         UnityARHostBridge.SaveLastViewConfig();
+        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current));
         UpdateSelection();
     }
 
@@ -578,9 +669,10 @@ public class ARInteractionUI : MonoBehaviour
     {
         selectedFabricIndex = index;
         CatalogSelectionSession.SelectedFabricMaterial = fabrics[index];
-        VisitDraftSession.Current.fabricMaterialName = FabricNames[index];
-        VisitDraftSession.Current.fabricMaterialPath = string.Empty;
-        if (placementController != null) placementController.ApplyFabricMaterial(fabrics[index], FabricNames[index]);
+        VisitDraftSession.Current.fabricMaterialName = fabricNames[index];
+        VisitDraftSession.Current.fabricMaterialPath = fabricPaths[index];
+        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current));
+        if (placementController != null) placementController.ApplyFabricMaterial(fabrics[index], fabricNames[index], fabricPaths[index]);
         UpdateSelection();
     }
 
@@ -590,6 +682,7 @@ public class ARInteractionUI : MonoBehaviour
         CatalogSelectionSession.SelectedRodMaterial = rods[index];
         VisitDraftSession.Current.rodMaterialName = RodNames[index];
         VisitDraftSession.Current.rodMaterialPath = string.Empty;
+        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current));
         if (placementController != null) placementController.ApplyRodMaterial(rods[index], RodNames[index]);
         UpdateSelection();
     }
@@ -641,13 +734,20 @@ public class ARInteractionUI : MonoBehaviour
     private void AlternarModoGesto()
     {
         modoRotacao = !modoRotacao;
-        UpdateSelection();
+        UpdateControlState();
     }
 
     private void UpdateControlState()
     {
         ARUIIconFactory.SetSelected(btnPosicionar, modoPosicionar);
         ARUIIconFactory.SetSelected(btnAjustar, modoAjustar);
+        ARUIIconFactory.SetSelected(addButton, modoPosicionar);
+        ARUIIconFactory.SetSelected(editButton, modoAjustar);
+        ARUIIconFactory.SetSelected(zoomButton, !modoRotacao);
+        ARUIIconFactory.SetSelected(rotateButton, modoRotacao);
+        if (zoomButton != null) zoomButton.gameObject.SetActive(modoAjustar);
+        if (rotateButton != null) rotateButton.gameObject.SetActive(modoAjustar);
+        if (editControls != null) editControls.GetComponent<Image>().color = modoAjustar ? Ink : Color.clear;
         if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: girar" : "Gestos: aproximar";
     }
 

@@ -1,0 +1,23 @@
+{
+  "familyId": "cetim_blackout",
+  "reference": "Referencia/Tramas/cetim_blackout_crop.png",
+  "referencePage": 104,
+  "nativeSize": [
+    304,
+    304
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "e290addaa29e471bfacb6eee8d843227154712210469f687d3c671fa11d927ab"
+}

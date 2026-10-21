@@ -1,0 +1,23 @@
+{
+  "familyId": "bordados_galhos",
+  "reference": "Referencia/Tramas/bordados_galhos_crop.png",
+  "referencePage": 74,
+  "nativeSize": [
+    354,
+    354
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "b815d848cdb2341f385ce4c91fb469f6d6ad4caa90f3e53e4f6db951a42306bf"
+}

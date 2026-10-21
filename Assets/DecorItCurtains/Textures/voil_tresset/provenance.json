@@ -1,0 +1,15 @@
+{
+    "familyId": "voil_tresset",
+    "referencePage": 13,
+    "source": "ArtSource/Curtains/voil_tresset.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.5936635136604309,
+    "coverageFromAuthoredAlpha": true,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

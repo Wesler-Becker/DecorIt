@@ -1,0 +1,23 @@
+{
+  "familyId": "microfibra_skin_peach",
+  "reference": "Referencia/Tramas/microfibra_skin_peach_crop.png",
+  "referencePage": 106,
+  "nativeSize": [
+    180,
+    180
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "80b89053a6be503504e51f8712d458301b2deb78e5f1e350f968a00296927041"
+}

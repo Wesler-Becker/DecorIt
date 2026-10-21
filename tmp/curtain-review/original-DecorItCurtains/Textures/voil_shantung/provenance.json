@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_shantung",
+  "reference": "Referencia/Tramas/voil_shantung_crop.png",
+  "referencePage": 28,
+  "nativeSize": [
+    227,
+    227
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "4f4edf63e86e845f280a79f062aee4a2635e3d96c2dbd125d6822bb01de56919"
+}

@@ -1,0 +1,15 @@
+{
+    "familyId": "bordados_ramos",
+    "referencePage": 72,
+    "source": "ArtSource/Curtains/bordados_ramos.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.6000000238418579,
+    "meanCoverage": 0.9920646548271179,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

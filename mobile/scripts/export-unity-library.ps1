@@ -30,24 +30,15 @@ do {
 $libraryBuildFile = Join-Path $unityExport 'unityLibrary\build.gradle'
 $libraryBuild = Get-Content -LiteralPath $libraryBuildFile -Raw
 $libraryBuild = [regex]::Replace($libraryBuild, "(?m)^\s*implementation project\(':unityLibrary:xrmanifest\.androidlib'\)\r?\n", '')
+$libraryBuild = $libraryBuild.Replace('implementation fileTree', 'api fileTree')
+$libraryBuild = $libraryBuild.Replace("implementation 'androidx.games:games-activity:", "api 'androidx.games:games-activity:")
+$libraryBuild = $libraryBuild.Replace('implementation "androidx.games:games-activity:', 'api "androidx.games:games-activity:')
 $libraryBuild = [regex]::Replace($libraryBuild, '(?m)^\s*ndkPath "[^"]+"\r?\n', '')
 $libraryBuild = [regex]::Replace($libraryBuild, '(?m)^\s*ndkVersion "[^"]+"\r?\n', '    ndkVersion rootProject.ext.ndkVersion' + "`n")
 $libraryBuild = $libraryBuild.Replace("android {`r`n", "android {`r`n    ndkPath rootProject.ext.ndkPath`r`n")
 $libraryBuild = $libraryBuild.Replace("android {`n", "android {`n    ndkPath rootProject.ext.ndkPath`n")
-$libraryBuild = $libraryBuild.Replace('getProperty("unity.androidNdkPath")', 'getLocalProperty("ndk.dir")')
-$libraryBuild = $libraryBuild.Replace('getProperty("unity.androidSdkPath")', 'getLocalProperty("sdk.dir")')
-
-if ($libraryBuild -notmatch 'def getLocalProperty\(') {
-  $helper = @'
-def getLocalProperty(String name) {
-    Properties local = new Properties()
-    local.load(new FileInputStream("${rootDir}/local.properties"))
-    return local.getProperty(name)
-}
-
-'@
-  $libraryBuild = $libraryBuild.Replace('def getIl2CppOutputPath(', $helper + 'def getIl2CppOutputPath(')
-}
+$libraryBuild = $libraryBuild.Replace('getProperty("unity.androidNdkPath")', 'android.ndkPath')
+$libraryBuild = $libraryBuild.Replace('getProperty("unity.androidSdkPath")', 'getSdkDir()')
 
 Set-Content -LiteralPath $libraryBuildFile -Value $libraryBuild -NoNewline
 Write-Output "unityLibrary exportado em: $unityExport"

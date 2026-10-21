@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_snow",
+  "reference": "Referencia/Tramas/voil_snow_crop.png",
+  "referencePage": 62,
+  "nativeSize": [
+    188,
+    188
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "4491d6a8b975971a463bae5e70ecff2776fb380c433359d1e5e9b6d22e754500"
+}

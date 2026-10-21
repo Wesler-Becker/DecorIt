@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: microfibra_solea_bege_p111_16864
+  m_Shader: {fileID: 4800000, guid: c964506f16855e1abe8ff70901e643d9, type: 3}
+  m_ShaderKeywords:
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: edc9e6b996b45c92b9cab47f691032b2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OpacityMap:
+        m_Texture: {fileID: 2800000, guid: ef1203d6c5c658f99f26ede1691ff117, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 4a11a7fb37d358f68ddb100dde24f626, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Surface: 0
+    - _SrcBlend: 1
+    - _DstBlend: 0
+    - _ZWrite: 1
+    - _Cull: 0
+    - _NormalStrength: 0.3
+    - _ThreadOpacity: 1
+    - _Cutoff: 0.35
+    m_Colors:
+    - _BaseColor: {r: 0.870588235, g: 0.858823529, b: 0.815686275, a: 1}

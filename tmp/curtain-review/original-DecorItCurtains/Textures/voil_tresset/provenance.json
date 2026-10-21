@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_tresset",
+  "reference": "Referencia/Tramas/voil_tresset_crop.png",
+  "referencePage": 13,
+  "nativeSize": [
+    700,
+    700
+  ],
+  "mapSize": [
+    512,
+    512
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "media",
+  "sourceSHA256": "cbb0c506a6dcf405da05b4e9e6646c1e0eefbc9d43f4e3e902628212f4f25e07"
+}

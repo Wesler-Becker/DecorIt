@@ -1,0 +1,15 @@
+{
+    "familyId": "voil_cross",
+    "referencePage": 64,
+    "source": "ArtSource/Curtains/voil_cross.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.9751573801040649,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

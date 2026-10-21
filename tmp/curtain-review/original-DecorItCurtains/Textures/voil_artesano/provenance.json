@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_artesano",
+  "reference": "Referencia/Reconstrucoes/voil_artesano_master.png",
+  "referencePage": 21,
+  "nativeSize": [
+    1254,
+    1254
+  ],
+  "mapSize": [
+    1024,
+    1024
+  ],
+  "method": "reconstrucao_visual_assistida_por_IA_da_referencia; mapas_tecnicos_derivados",
+  "opacityStatus": "mascara_reconstruida_aproximada_nao_medida",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.13000774383544922,
+  "mode": "AlphaClip",
+  "threadOpacity": 0.82,
+  "photoConfidence": "media",
+  "sourceSHA256": "b2de006c2eae3adcc24d333383a41cb3deec70127b5d8714b4985836cad45dda"
+}

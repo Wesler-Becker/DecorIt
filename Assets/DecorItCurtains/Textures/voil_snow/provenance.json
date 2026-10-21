@@ -1,0 +1,15 @@
+{
+    "familyId": "voil_snow",
+    "referencePage": 62,
+    "source": "ArtSource/Curtains/voil_snow.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.9916374683380127,
+    "coverageFromAuthoredAlpha": false,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

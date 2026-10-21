@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: voil_trend_cinza_p4_15654
+  m_Shader: {fileID: 4800000, guid: c964506f16855e1abe8ff70901e643d9, type: 3}
+  m_ShaderKeywords:
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 2450
+  stringTagMap:
+    RenderType: TransparentCutout
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 6100eb649049500d84e08e0fad7f6f92, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OpacityMap:
+        m_Texture: {fileID: 2800000, guid: d7b03876b1435fa9ba7745bf1f0aac95, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 868c53718c765bd4aa69f9c1f5dc9865, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Surface: 1
+    - _SrcBlend: 1
+    - _DstBlend: 0
+    - _ZWrite: 1
+    - _Cull: 0
+    - _NormalStrength: 0.45
+    - _ThreadOpacity: 0.82
+    - _Cutoff: 0.35
+    m_Colors:
+    - _BaseColor: {r: 0.835294118, g: 0.82745098, b: 0.815686275, a: 1}

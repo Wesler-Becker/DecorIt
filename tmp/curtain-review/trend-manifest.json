@@ -1,0 +1,15 @@
+{
+  "entries": [
+    {
+      "id": "voil_trend",
+      "source": "ArtSource/Curtains/voil_trend.png",
+      "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-7327e167-2534-471c-a8b0-d0a2fdd3e5b9.png",
+      "coverageFromAlpha": false,
+      "tileSizeMeters": 0.08,
+      "threadOpacity": 0.96,
+      "normalStrength": 0.45,
+      "prompt": "Use case: precise-object-edit. Production flat tileable Voil Trend curtain texture. Reference is the original catalogue photo. Closely reconstruct ONLY the GREY tangled fabric in the LOWER TWO THIRDS. It is a very dense chaos of extremely thin wiry crimped yarns with thousands of minuscule curls and loops layered over diagonal supporting filaments. It is NOT lace, crochet, macrame, rope or a regular net. Holes occupy only about 15-22 percent, small uneven angular gaps of widely varying sizes, never evenly spaced circles. Fibers should be 3 times thinner and 2 times more numerous than a typical generated lace pattern. Use actual photo structure, not simplified net. Neutral white/light gray yarn (color variants will be applied in Unity), actual alpha transparency only through little gaps. All the interwoven fine filaments remain opaque. Uniform flat orthographic plane, textile fills complete square. Exclude white folded fabric at top, background substrate, folds, lighting gradients, shadows, text, borders, empty margin. Dense high frequency photoreal tangled microstructure. Seamless continuous opposite edges. A flat technical albedo RGBA textile tile, no staged photography. Best available native detail.",
+      "sourceIsCoverage": true
+    }
+  ]
+}

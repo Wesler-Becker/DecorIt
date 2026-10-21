@@ -1,0 +1,23 @@
+{
+  "familyId": "linho_gaia",
+  "reference": "Referencia/Tramas/linho_gaia_crop.png",
+  "referencePage": 19,
+  "nativeSize": [
+    700,
+    700
+  ],
+  "mapSize": [
+    512,
+    512
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "media",
+  "sourceSHA256": "57ccb26638e3a9b906552c9fdea596230ded8213fdb7d1bcca217b9178c42b5b"
+}

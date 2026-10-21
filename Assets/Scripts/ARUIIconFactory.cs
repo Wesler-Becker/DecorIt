@@ -13,6 +13,17 @@ public static class ARUIIconFactory
     public static Sprite RoundedSprite => roundedSprite != null ? roundedSprite : roundedSprite = CreateShapeSprite(false);
     public static Sprite CircleSprite => circleSprite != null ? circleSprite : circleSprite = CreateShapeSprite(true);
 
+    public static RectTransform GetCameraControlsRoot(Canvas canvas)
+    {
+        Transform existing = canvas.transform.Find("CameraControlsSafeArea");
+        if (existing != null) return (RectTransform)existing;
+        GameObject root = new GameObject("CameraControlsSafeArea", typeof(RectTransform), typeof(SafeAreaFitter));
+        root.transform.SetParent(canvas.transform, false);
+        RectTransform rect = root.GetComponent<RectTransform>();
+        rect.localScale = Vector3.one;
+        return rect;
+    }
+
     public static void ConfigureButton(Button button, string iconName, string caption, float iconSize = 56f, float fontSize = 22f, float buttonWidth = 136f)
     {
         if (button == null) return;
@@ -109,7 +120,7 @@ public static class ARUIIconFactory
         iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
         iconRect.pivot = new Vector2(0.5f, 0.5f);
         iconRect.anchoredPosition = Vector2.zero;
-        iconRect.sizeDelta = Vector2.one * size * 0.42f;
+        iconRect.sizeDelta = Vector2.one * size * (iconName == "Shutter" ? 1f : 0.58f);
         Image icon = iconTransform.GetComponent<Image>();
         icon.sprite = LoadSprite(iconName);
         icon.preserveAspect = true;
@@ -157,6 +168,12 @@ public static class ARUIIconFactory
     private static Sprite LoadSprite(string iconName)
     {
         if (Sprites.TryGetValue(iconName, out Sprite cached)) return cached;
+        if (iconName == "Menu" || iconName == "Close" || iconName == "Add" || iconName == "Edit" || iconName == "Shutter" || iconName == "Search")
+        {
+            Sprite glyph = CreateCameraGlyph(iconName);
+            Sprites.Add(iconName, glyph);
+            return glyph;
+        }
         Texture2D texture = Resources.Load<Texture2D>("ARIcons/" + iconName);
         if (texture == null)
         {
@@ -167,5 +184,45 @@ public static class ARUIIconFactory
         sprite.name = "ARIcon_" + iconName;
         Sprites.Add(iconName, sprite);
         return sprite;
+    }
+
+    private static Sprite CreateCameraGlyph(string name)
+    {
+        Vector4[] lines;
+        switch (name)
+        {
+            case "Menu": lines = new[] {new Vector4(22, 92, 106, 92), new Vector4(22, 64, 106, 64), new Vector4(22, 36, 106, 36)}; break;
+            case "Close": lines = new[] {new Vector4(28, 28, 100, 100), new Vector4(28, 100, 100, 28)}; break;
+            case "Add": lines = new[] {new Vector4(22, 64, 106, 64), new Vector4(64, 22, 64, 106)}; break;
+            case "Edit": lines = new[] {new Vector4(25, 22, 34, 51), new Vector4(34, 51, 87, 104), new Vector4(87, 104, 106, 85), new Vector4(106, 85, 53, 32), new Vector4(53, 32, 25, 22), new Vector4(78, 95, 97, 76), new Vector4(34, 51, 53, 32)}; break;
+            case "Search": lines = new[] {new Vector4(48, 89, 55, 96), new Vector4(55, 96, 64, 99), new Vector4(64, 99, 73, 96), new Vector4(73, 96, 80, 89), new Vector4(80, 89, 83, 80), new Vector4(83, 80, 80, 71), new Vector4(80, 71, 73, 64), new Vector4(73, 64, 64, 61), new Vector4(64, 61, 55, 64), new Vector4(55, 64, 48, 71), new Vector4(48, 71, 45, 80), new Vector4(45, 80, 48, 89), new Vector4(79, 65, 106, 38)}; break;
+            default: lines = new Vector4[0]; break;
+        }
+        const int resolution = 128;
+        Texture2D texture = new Texture2D(resolution, resolution, TextureFormat.RGBA32, false)
+        {name = "ARCamera" + name, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp};
+        Color32[] pixels = new Color32[resolution * resolution];
+        for (int y = 0; y < resolution; y++)
+        for (int x = 0; x < resolution; x++)
+        {
+            Vector2 point = new Vector2(x + 0.5f, y + 0.5f);
+            float distance = float.MaxValue;
+            foreach (Vector4 line in lines)
+            {
+                Vector2 a = new Vector2(line.x, line.y);
+                Vector2 delta = new Vector2(line.z, line.w) - a;
+                float t = Mathf.Clamp01(Vector2.Dot(point - a, delta) / delta.sqrMagnitude);
+                distance = Mathf.Min(distance, Vector2.Distance(point, a + delta * t) - 4f);
+            }
+            if (name == "Shutter")
+            {
+                float radius = Vector2.Distance(point, new Vector2(64f, 64f));
+                distance = Mathf.Min(Mathf.Abs(radius - 58f) - 2.5f, radius - 49f);
+            }
+            pixels[y * resolution + x] = new Color32(255, 255, 255, (byte)(Mathf.Clamp01(0.5f - distance) * 255f));
+        }
+        texture.SetPixels32(pixels);
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, resolution, resolution), new Vector2(0.5f, 0.5f), 100f);
     }
 }

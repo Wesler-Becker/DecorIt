@@ -1,0 +1,23 @@
+{
+  "familyId": "bordados_ramos",
+  "reference": "Referencia/Tramas/bordados_ramos_crop.png",
+  "referencePage": 72,
+  "nativeSize": [
+    354,
+    354
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.84,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "6c4296a77b70781096625f3f92f163dea18d340ee12bc680305f95385d6c88f3"
+}

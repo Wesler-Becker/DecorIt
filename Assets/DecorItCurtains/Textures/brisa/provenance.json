@@ -1,0 +1,15 @@
+{
+    "familyId": "brisa",
+    "referencePage": 46,
+    "source": "ArtSource/Curtains/brisa.png",
+    "width": 1254,
+    "height": 1254,
+    "tileSizeMeters": 0.03999999910593033,
+    "meanCoverage": 0.6674337387084961,
+    "coverageFromAuthoredAlpha": true,
+    "sourceIsCoverage": false,
+    "physicalScaleKnown": false,
+    "heightIsMeasured": false,
+    "normalConvention": "Unity tangent +Y",
+    "method": "Albedo reconstruido por image_gen; alpha autoral onde disponivel; normal aproximado"
+}

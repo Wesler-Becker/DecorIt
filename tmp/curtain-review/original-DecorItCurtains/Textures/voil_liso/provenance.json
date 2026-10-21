@@ -1,0 +1,23 @@
+{
+  "familyId": "voil_liso",
+  "reference": "Referencia/Tramas/voil_liso_crop.png",
+  "referencePage": 78,
+  "nativeSize": [
+    179,
+    179
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "furos_nao_segmentados; mapa_branco; transparencia_uniforme_ajustavel",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Transparent",
+  "threadOpacity": 0.7,
+  "photoConfidence": "baixa",
+  "sourceSHA256": "d5e21c6bdd64b99d7dfeb5d495fd6278d0cc1d13b554b74a2ce56f5072a72426"
+}

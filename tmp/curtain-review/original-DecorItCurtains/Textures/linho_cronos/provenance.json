@@ -1,0 +1,23 @@
+{
+  "familyId": "linho_cronos",
+  "reference": "Referencia/Tramas/linho_cronos_crop.png",
+  "referencePage": 87,
+  "nativeSize": [
+    500,
+    500
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "800e2d961de08b4bb8e74005774a49f5f3eb75fbcc84c8eaf73f6d6dd957bbff"
+}

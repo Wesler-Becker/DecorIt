@@ -1,0 +1,23 @@
+{
+  "familyId": "blackout_dupla_face_rocca",
+  "reference": "Referencia/Tramas/blackout_dupla_face_rocca_crop.png",
+  "referencePage": 112,
+  "nativeSize": [
+    424,
+    424
+  ],
+  "mapSize": [
+    256,
+    256
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "096a34508a662a9fd9c3e088fccac50da31c59d98c3f56eb0a9a5b951618e407"
+}

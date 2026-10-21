@@ -1,0 +1,23 @@
+{
+  "familyId": "blackout_dupla_face",
+  "reference": "Referencia/Tramas/blackout_dupla_face_crop.png",
+  "referencePage": 92,
+  "nativeSize": [
+    210,
+    210
+  ],
+  "mapSize": [
+    128,
+    128
+  ],
+  "method": "microcontraste_da_foto; relevo_aproximado; iluminacao_ampla_atenuada",
+  "opacityStatus": "opaco_por_tipo_comercial; nao_e_ensaio_de_bloqueio_de_luz",
+  "heightIsMeasured": false,
+  "physicalScaleKnown": false,
+  "normalConvention": "Unity tangent +Y",
+  "blackCoverageAtCutoff035": 0.0,
+  "mode": "Opaque",
+  "threadOpacity": 1.0,
+  "photoConfidence": "media",
+  "sourceSHA256": "49c0db81b88a7ec96f3b3b3c345657cc3261736cfcf8eb70cf4706f19d3646ed"
+}

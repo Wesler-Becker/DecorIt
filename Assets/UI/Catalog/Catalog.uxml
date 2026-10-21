@@ -1,0 +1,67 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="Catalog.uss" />
+  <ui:VisualElement name="root" class="screen">
+    <ui:VisualElement class="header">
+      <ui:Button name="backButton" text="‹" class="icon-button" />
+      <ui:VisualElement class="header-copy">
+        <ui:Label text="Configurar cortina" class="header-title" />
+        <ui:Label text="Personalize e confira o resultado" class="header-subtitle" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:ScrollView name="configurationScroll" class="content" mode="Vertical">
+      <ui:VisualElement class="card preview-card">
+        <ui:Label text="PRÉVIA AO VIVO" class="eyebrow" />
+        <ui:Image name="previewImage" class="preview-image" />
+      </ui:VisualElement>
+      <ui:VisualElement class="card">
+        <ui:Label text="Medidas · centímetros" class="section-title" />
+        <ui:VisualElement class="row">
+          <ui:TextField name="widthField" label="Largura" class="dimension-field" />
+          <ui:TextField name="heightField" label="Altura" class="dimension-field" />
+        </ui:VisualElement>
+        <ui:Label text="Painéis" class="field-title" />
+        <ui:VisualElement class="row">
+          <ui:Button name="singlePanel" text="Painel único" class="choice-button" />
+          <ui:Button name="doublePanel" text="Painel duplo" class="choice-button" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+      <ui:VisualElement class="card">
+        <ui:Label text="Estilo da cortina" class="section-title" />
+        <ui:VisualElement class="style-grid">
+          <ui:Button name="styleSmooth" text="Liso" class="choice-button" />
+          <ui:Button name="styleNatural" text="Natural" class="choice-button" />
+          <ui:Button name="styleWave" text="Wave" class="choice-button" />
+          <ui:Button name="styleCustom" text="Personalizado" class="choice-button" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+      <ui:VisualElement class="card">
+        <ui:Label text="Tecido" class="section-title" />
+        <ui:TextField name="materialSearch" label="Buscar" class="search-field" />
+        <ui:VisualElement name="materialGrid" class="material-grid" />
+        <ui:VisualElement class="row pager-row">
+          <ui:Button name="previousMaterials" text="‹ Anterior" class="quiet-button" />
+          <ui:Label name="materialPage" text="" class="page-label" />
+          <ui:Button name="nextMaterials" text="Próximo ›" class="quiet-button" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+      <ui:VisualElement name="customCard" class="card custom-card">
+        <ui:Label text="Caimento · ajuste ao seu gosto" class="section-title" />
+        <ui:Label name="foldsValue" class="slider-label" />
+        <ui:Slider name="foldsSlider" low-value="1" high-value="12" class="config-slider" />
+        <ui:Label name="depthValue" class="slider-label" />
+        <ui:Slider name="depthSlider" low-value="0.5" high-value="15" class="config-slider" />
+        <ui:Label name="profileValue" class="slider-label" />
+        <ui:Slider name="profileSlider" low-value="0.5" high-value="2" class="config-slider" />
+        <ui:Label name="naturalnessValue" class="slider-label" />
+        <ui:Slider name="naturalnessSlider" low-value="0" high-value="1" class="config-slider" />
+        <ui:Label name="openingValue" class="slider-label" />
+        <ui:Slider name="openingSlider" low-value="0" high-value="1" class="config-slider" />
+      </ui:VisualElement>
+      <ui:Label name="statusLabel" class="status-label" />
+    </ui:ScrollView>
+    <ui:VisualElement class="footer">
+      <ui:Label name="selectionSummary" class="selection-summary" />
+      <ui:Button name="applyButton" text="Usar esta cortina" class="primary-button" />
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>
