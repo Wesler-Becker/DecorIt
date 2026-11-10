@@ -4,9 +4,32 @@ $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $unityExport = Join-Path $projectRoot 'mobile\android\unityExport'
 
 $callerArgs = @('--project-path', $projectRoot, '--format', 'json', '--caller', 'plugin', '--skill', 'unity-cli')
-$exportMode = & unity command eval @callerArgs --code 'UnityEditor.EditorUserBuildSettings.exportAsGoogleAndroidProject = true; return UnityEditor.EditorUserBuildSettings.exportAsGoogleAndroidProject;'
-if ($LASTEXITCODE -ne 0 -or -not ($exportMode | ConvertFrom-Json).success) {
-  throw "Não foi possível habilitar a exportação Android do Unity: $exportMode"
+$exportMode = $null
+$exportModeEnabled = $false
+for ($attempt = 1; $attempt -le 3; $attempt++) {
+  $exportMode = & unity command eval @callerArgs --code 'UnityEditor.EditorUserBuildSettings.exportAsGoogleAndroidProject = true; return UnityEditor.EditorUserBuildSettings.exportAsGoogleAndroidProject;'
+  $evalExitCode = $LASTEXITCODE
+  $exportText = $exportMode -join [Environment]::NewLine
+  $exportResponse = $null
+  try { $exportResponse = ConvertFrom-Json -InputObject $exportText -ErrorAction Stop } catch { }
+
+  if ($evalExitCode -eq 0 -and $exportResponse.success) {
+    $exportModeEnabled = $true
+    break
+  }
+
+  $isTransientEditorTimeout = $exportText -match 'Main thread operation timed out after 5000ms'
+  if ($isTransientEditorTimeout -and $attempt -lt 3) {
+    Write-Warning "O Unity demorou a responder. Tentando novamente ($($attempt + 1)/3)..."
+    Start-Sleep -Seconds 2
+    continue
+  }
+
+  throw "Não foi possível habilitar a exportação Android do Unity: $exportText"
+}
+
+if (-not $exportModeEnabled) {
+  throw 'Não foi possível habilitar a exportação Android do Unity após três tentativas.'
 }
 
 $buildRequest = & unity command build @callerArgs --target Android --outputPath $unityExport --confirm true

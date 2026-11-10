@@ -97,6 +97,7 @@ public static class ARUIIconFactory
     public static void ConfigureCameraButton(Button button, string iconName, float size, Color background, Color iconColor)
     {
         if (button == null) return;
+        size *= 1.12f;
         RectTransform rect = button.transform as RectTransform;
         rect.sizeDelta = new Vector2(size, size);
         Image backgroundImage = button.GetComponent<Image>();

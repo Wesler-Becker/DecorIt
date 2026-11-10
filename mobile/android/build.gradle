@@ -30,6 +30,11 @@ subprojects {
     if (path == ":unityLibrary:xrmanifest.androidlib") {
         ext.set("react.newArchEnabled", "true")
     }
+    if (path == ":op-engineering_op-sqlite") {
+        afterEvaluate {
+            extensions.getByName("android").ndkPath = rootProject.ext.ndkPath
+        }
+    }
 }
 
 apply plugin: "com.facebook.react.rootproject"

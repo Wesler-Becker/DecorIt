@@ -82,33 +82,51 @@ public class ARPhotoCapture : MonoBehaviour
             string nomeArquivo =
                 "AR_Cortinas_" +
                 captureDate.ToString(
-                    "yyyyMMdd_HHmmss"
+                    "yyyyMMdd_HHmmss_fff"
                 ) +
                 ".png";
 
+            string clientFolder = GetSafePathSegment(ClientSession.SelectedClientId);
             string caminho =
                 Path.Combine(
                     Application.persistentDataPath,
+                    "DecorIt",
+                    "Fotos",
+                    clientFolder,
                     nomeArquivo
                 );
+
+            Directory.CreateDirectory(Path.GetDirectoryName(caminho));
 
             File.WriteAllBytes(
                 caminho,
                 dados
             );
 
-            bool photoSaved = UnityARHostBridge.IsHostedByReact && string.IsNullOrEmpty(VisitDraftSession.TargetRoomId)
-                ? ClientRepository.AddUnassignedPhoto(ClientSession.SelectedClientId, caminho, capturedAt)
-                : ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
+            bool photoSaved;
+            if (UnityARHostBridge.IsHostedByReact)
+            {
+                photoSaved = UnityARHostBridge.QueuePhotoCapture(
+                    ClientSession.SelectedClientId,
+                    VisitDraftSession.TargetRoomId,
+                    RecordSession.CurrentRecordId,
+                    caminho,
+                    VisitDraftSession.Current != null ? VisitDraftSession.Current.roomName : string.Empty,
+                    capturedAt);
+            }
+            else if (string.IsNullOrEmpty(VisitDraftSession.TargetRoomId))
+            {
+                photoSaved = ClientRepository.AddUnassignedPhoto(ClientSession.SelectedClientId, caminho, capturedAt);
+            }
+            else
+            {
+                photoSaved = ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
                     RecordSession.CurrentRecordId, caminho, capturedAt);
+            }
             if (photoSaved)
                 Debug.Log(string.IsNullOrEmpty(VisitDraftSession.TargetRoomId)
                     ? "Foto associada ao cliente: " + caminho
                     : "Foto associada ao registro: " + caminho);
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            SalvarAndroid(dados, nomeArquivo);
-#endif
 
             Debug.Log(
                 "Foto salva em: " + caminho
@@ -167,109 +185,18 @@ public class ARPhotoCapture : MonoBehaviour
         SceneManager.LoadScene(destination);
     }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-
-    private void SalvarAndroid(
-    byte[] dados,
-    string nomeArquivo)
-{
-    using (AndroidJavaClass unityPlayer =
-           new AndroidJavaClass(
-               "com.unity3d.player.UnityPlayer"))
+    private static string GetSafePathSegment(string value)
     {
-        using (AndroidJavaObject activity =
-               unityPlayer.GetStatic<AndroidJavaObject>(
-                   "currentActivity"))
+        if (string.IsNullOrWhiteSpace(value)) return "sem_cliente";
+
+        char[] invalidCharacters = Path.GetInvalidFileNameChars();
+        char[] characters = value.ToCharArray();
+        for (int index = 0; index < characters.Length; index++)
         {
-            using (AndroidJavaObject resolver =
-                   activity.Call<AndroidJavaObject>(
-                       "getContentResolver"))
-            {
-                // URI da coleção de imagens do MediaStore
-                using (AndroidJavaClass uriClass =
-                       new AndroidJavaClass(
-                           "android.net.Uri"))
-                {
-                    using (AndroidJavaObject collectionUri =
-                           uriClass.CallStatic<AndroidJavaObject>(
-                               "parse",
-                               "content://media/external/images/media"))
-                    {
-                        using (AndroidJavaObject values =
-                               new AndroidJavaObject(
-                                   "android.content.ContentValues"))
-                        {
-                            values.Call(
-                                "put",
-                                "_display_name",
-                                nomeArquivo
-                            );
-
-                            values.Call(
-                                "put",
-                                "mime_type",
-                                "image/png"
-                            );
-
-                            values.Call(
-                                "put",
-                                "relative_path",
-                                "Pictures/AR Cortinas"
-                            );
-
-                            // Cria o arquivo na Galeria
-                            using (AndroidJavaObject uri =
-                                   resolver.Call<AndroidJavaObject>(
-                                       "insert",
-                                       collectionUri,
-                                       values))
-                            {
-                                if (uri == null)
-                                {
-                                    Debug.LogError(
-                                        "Não foi possível criar o arquivo na Galeria."
-                                    );
-
-                                    return;
-                                }
-
-                                // Abre o arquivo para gravação
-                                using (AndroidJavaObject outputStream =
-                                       resolver.Call<AndroidJavaObject>(
-                                           "openOutputStream",
-                                           uri))
-                                {
-                                    if (outputStream == null)
-                                    {
-                                        Debug.LogError(
-                                            "Não foi possível abrir o arquivo para gravação."
-                                        );
-
-                                        return;
-                                    }
-
-                                    outputStream.Call(
-                                        "write",
-                                        dados
-                                    );
-
-                                    outputStream.Call(
-                                        "close"
-                                    );
-                                }
-
-                                Debug.Log(
-                                    "FOTO SALVA NA GALERIA: " +
-                                    uri.Call<string>("toString")
-                                );
-                            }
-                        }
-                    }
-                }
-            }
+            if (System.Array.IndexOf(invalidCharacters, characters[index]) >= 0)
+                characters[index] = '_';
         }
-    }
-}
 
-#endif
+        return new string(characters);
+    }
 }

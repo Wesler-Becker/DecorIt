@@ -88,7 +88,7 @@ function MainTabs() {
         tabBarLabelStyle: {fontSize: 11, fontWeight: '600'},
         tabBarIcon: ({color, size}) => route.name === 'AR Rápido' ? null : <TabIcon name={route.name} color={color} size={size} />,
         tabBarButton: route.name === 'AR Rápido' ? props => <Pressable {...props} onPress={() => {setClientQuery(''); setPickerVisible(true);}} style={[props.style, appStyles.quickCameraTab]} accessibilityRole="button" accessibilityLabel="Abrir câmera AR">
-          <View style={appStyles.quickCameraCircle}><Camera size={29} color="#FFFFFF" /></View><Text style={appStyles.quickCameraLabel}>AR</Text>
+          <View style={appStyles.quickCameraCircle}><Camera size={29} color="#FFFFFF" /></View><Text numberOfLines={1} allowFontScaling={false} style={appStyles.quickCameraLabel}>AR</Text>
         </Pressable> : undefined,
       })}>
       <Tabs.Screen name="Início" component={HomeScreen} />
@@ -153,7 +153,7 @@ export default function App() {
 const appStyles = StyleSheet.create({
   quickCameraTab: {flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -13, gap: 2},
   quickCameraCircle: {width: 55, height: 55, borderRadius: 20, backgroundColor: colors.blue, borderWidth: 3, borderColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', elevation: 7, shadowColor: colors.shadow, shadowOffset: {width: 0, height: 3}, shadowOpacity: 0.24, shadowRadius: 5},
-  quickCameraLabel: {fontSize: 10, fontWeight: '800', color: colors.blueDeep},
+  quickCameraLabel: {minWidth: 30, textAlign: 'center', includeFontPadding: false, fontSize: 11, fontWeight: '800', color: colors.blueDeep},
   quickModalBackdrop: {flex: 1, justifyContent: 'center', alignItems: 'center', padding: 22, backgroundColor: 'rgba(13,24,31,0.50)'},
   quickModalCard: {width: '100%', maxHeight: '78%', paddingHorizontal: 20, paddingTop: 19, paddingBottom: 22, borderRadius: 26, backgroundColor: '#FFFFFF', gap: 14, elevation: 12},
   quickModalHeading: {flexDirection: 'row', alignItems: 'center', gap: 12},

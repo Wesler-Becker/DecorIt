@@ -1,4 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
+import {AppState as ReactNativeAppState} from 'react-native';
 import {assignClientPhotoToRoom as moveClientPhotoToRoom, createId, createVisitRecord, validateRoomName} from '../data/clientDomain';
 import {loadClients, saveClients} from '../data/clientStorage';
 import type {ClientData, ClientDetails, RoomData, VisitDraft, VisitRecordData} from '../types';
@@ -6,6 +7,7 @@ import type {ClientData, ClientDetails, RoomData, VisitDraft, VisitRecordData} f
 type AppStateValue = {
   clients: ClientData[];
   ready: boolean;
+  loadError: string | null;
   reload: () => Promise<void>;
   addClient: (name: string, details?: Partial<ClientDetails>) => Promise<ClientData>;
   updateClient: (clientId: string, patch: Pick<ClientData, 'name'> & ClientDetails) => Promise<void>;
@@ -20,29 +22,48 @@ const AppStateContext = createContext<AppStateValue | null>(null);
 export function AppStateProvider({children}: React.PropsWithChildren) {
   const [clients, setClients] = useState<ClientData[]>([]);
   const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
 
   const reload = useCallback(async () => {
-    const loaded = await loadClients();
-    setClients(loaded);
-    setReady(true);
+    try {
+      const loaded = await loadClients();
+      setClients(loaded);
+      setLoadError(null);
+      setReady(true);
+    } catch (error) {
+      console.error('[DecorIt][storage] Falha ao carregar clientes, cômodos, registros e fotos.', error instanceof Error ? error.stack : String(error));
+      setLoadError('Não foi possível carregar os dados salvos. Tente novamente.');
+      throw error;
+    }
   }, []);
 
-  useEffect(() => { void reload(); }, [reload]);
+  useEffect(() => {
+    void reload().catch(() => undefined);
+    const subscription = ReactNativeAppState.addEventListener('change', state => {
+      if (state === 'active') void reload().catch(() => undefined);
+    });
+    return () => subscription.remove();
+  }, [reload]);
 
-  const mutate = useCallback(<T,>(operation: (current: ClientData[]) => {clients: ClientData[]; result: T}): Promise<T> => {
+  const mutate = useCallback(<T,>(operationName: string, operation: (current: ClientData[]) => {clients: ClientData[]; result: T}): Promise<T> => {
     const next = queue.current.then(async () => {
       const current = await loadClients();
       const outcome = operation(current);
       await saveClients(outcome.clients);
       setClients(outcome.clients);
+      setLoadError(null);
+      setReady(true);
       return outcome.result;
+    });
+    void next.catch(error => {
+      console.error(`[DecorIt][storage] Falha na operação ${operationName}.`, error instanceof Error ? error.stack : String(error));
     });
     queue.current = next.catch(() => undefined);
     return next;
   }, []);
 
-  const addClient = useCallback((name: string, details: Partial<ClientDetails> = {}) => mutate(current => {
+  const addClient = useCallback((name: string, details: Partial<ClientDetails> = {}) => mutate('addClient', current => {
     const client: ClientData = {
       id: createId(), name: name.trim(), phone: details.phone?.trim() || '', address: details.address?.trim() || '',
       postalCode: details.postalCode?.trim() || '', street: details.street?.trim() || '', complement: details.complement?.trim() || '',
@@ -52,7 +73,7 @@ export function AppStateProvider({children}: React.PropsWithChildren) {
     return {clients: [...current, client], result: client};
   }), [mutate]);
 
-  const updateClient = useCallback((clientId: string, patch: Pick<ClientData, 'name'> & ClientDetails) => mutate(current => ({
+  const updateClient = useCallback((clientId: string, patch: Pick<ClientData, 'name'> & ClientDetails) => mutate('updateClient', current => ({
     clients: current.map(client => client.id === clientId ? {
       ...client, ...patch,
       name: patch.name.trim(), phone: patch.phone.trim(), address: patch.address.trim(), postalCode: patch.postalCode.trim(),
@@ -62,7 +83,7 @@ export function AppStateProvider({children}: React.PropsWithChildren) {
     result: undefined,
   })), [mutate]);
 
-  const addRoom = useCallback((clientId: string, name: string, pendingPhotoPath?: string) => mutate(current => {
+  const addRoom = useCallback((clientId: string, name: string, pendingPhotoPath?: string) => mutate('addRoom', current => {
     const client = current.find(item => item.id === clientId);
     if (!client) throw new Error('Cliente não encontrado.');
     const validationError = validateRoomName(name, client.rooms);
@@ -73,7 +94,7 @@ export function AppStateProvider({children}: React.PropsWithChildren) {
     return {clients: updatedClients, result: room};
   }), [mutate]);
 
-  const addRecord = useCallback((clientId: string, roomId: string, draft: VisitDraft) => mutate(current => {
+  const addRecord = useCallback((clientId: string, roomId: string, draft: VisitDraft) => mutate('addRecord', current => {
     const record = createVisitRecord(draft);
     const found = current.some(client => client.id === clientId && client.rooms.some(room => room.id === roomId));
     if (!found) throw new Error('Cômodo não encontrado para este cliente.');
@@ -86,7 +107,7 @@ export function AppStateProvider({children}: React.PropsWithChildren) {
     };
   }), [mutate]);
 
-  const updateRecord = useCallback((clientId: string, roomId: string, recordId: string, patch: Partial<Pick<VisitRecordData, 'openingName' | 'notes'>>) => mutate(current => {
+  const updateRecord = useCallback((clientId: string, roomId: string, recordId: string, patch: Partial<Pick<VisitRecordData, 'openingName' | 'notes'>>) => mutate('updateRecord', current => {
     const found = current.some(client => client.id === clientId && client.rooms.some(room => room.id === roomId && room.records.some(record => record.id === recordId)));
     if (!found) throw new Error('Registro não encontrado para este cômodo.');
     return {
@@ -105,12 +126,12 @@ export function AppStateProvider({children}: React.PropsWithChildren) {
     };
   }), [mutate]);
 
-  const assignUnassignedPhoto = useCallback((clientId: string, path: string, roomId: string) => mutate(current => {
+  const assignUnassignedPhoto = useCallback((clientId: string, path: string, roomId: string) => mutate('assignUnassignedPhoto', current => {
     return {clients: moveClientPhotoToRoom(current, clientId, path, roomId), result: undefined};
   }), [mutate]);
 
-  const value = useMemo(() => ({clients, ready, reload, addClient, updateClient, addRoom, addRecord, updateRecord, assignUnassignedPhoto}),
-    [clients, ready, reload, addClient, updateClient, addRoom, addRecord, updateRecord, assignUnassignedPhoto]);
+  const value = useMemo(() => ({clients, ready, loadError, reload, addClient, updateClient, addRoom, addRecord, updateRecord, assignUnassignedPhoto}),
+    [clients, ready, loadError, reload, addClient, updateClient, addRoom, addRecord, updateRecord, assignUnassignedPhoto]);
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

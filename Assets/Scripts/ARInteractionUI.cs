@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ARInteractionUI : MonoBehaviour
 {
+    private const float UiScale = 1.12f;
+
     [Header("Controles existentes no Canvas")]
     [SerializeField] private Button btnPosicionar;
     [SerializeField] private Button btnAjustar;
@@ -16,15 +18,6 @@ public class ARInteractionUI : MonoBehaviour
     private static readonly Color Panel = new Color(0.035f, 0.055f, 0.075f, 0.91f);
     private static readonly Color SoftWhite = new Color(0.96f, 0.97f, 0.98f, 0.96f);
     private static readonly Color Accent = new Color(0.29f, 0.72f, 0.94f, 1f);
-    private static readonly Color[] FabricColors =
-    {
-        new Color(0.98f, 0.86f, 0.69f),
-        new Color(0.91f, 0.90f, 0.86f),
-        new Color(0.58f, 0.59f, 0.60f),
-        new Color(0.27f, 0.37f, 0.49f),
-        new Color(0.48f, 0.55f, 0.47f),
-    };
-    private static readonly string[] FabricNames = { "Areia", "Gelo", "Cinza", "Azul", "Sálvia" };
     private static readonly Color[] RodColors =
     {
         new Color(0.73f, 0.73f, 0.73f),
@@ -38,6 +31,7 @@ public class ARInteractionUI : MonoBehaviour
     private readonly List<string> fabricNames = new List<string>();
     private readonly List<string> fabricPaths = new List<string>();
     private readonly List<Image> fabricSwatches = new List<Image>();
+    private readonly List<GameObject> fabricOptionItems = new List<GameObject>();
     private readonly List<Image> rodSwatches = new List<Image>();
     private readonly List<Material> fabrics = new List<Material>();
     private readonly List<Material> rods = new List<Material>();
@@ -45,6 +39,11 @@ public class ARInteractionUI : MonoBehaviour
     private ARSurfaceUI surfaceUI;
     private GameObject menuPanel;
     private GameObject fabricTray;
+    private TMP_Text fabricTrayTitle;
+    private GameObject fabricSearchInputRoot;
+    private TMP_InputField fabricSearchInput;
+    private ScrollRect fabricScroll;
+    private RectTransform fabricScrollContent;
     private GameObject rodTray;
     private GameObject modelTray;
     private GameObject activeQuickSelector;
@@ -141,11 +140,11 @@ public class ARInteractionUI : MonoBehaviour
         Button addLast = CreateButton("AddLastCurtainButton", addOptionsPanel.transform,
             new Vector2(0f, 1f), new Vector2(12f, -10f), new Vector2(396f, 68f),
             new Color(0.12f, 0.17f, 0.21f, 0.96f), AddLastCurtain);
-        StyleMenuButton(addLast, "Adicionar última configuração", "Add");
+        StyleMenuButton(addLast, "Adicionar objeto", "Add");
         Button search = CreateButton("SearchCurtainButton", addOptionsPanel.transform,
             new Vector2(0f, 1f), new Vector2(12f, -90f), new Vector2(396f, 68f),
             new Color(0.12f, 0.17f, 0.21f, 0.96f), OpenCurtainCatalog);
-        StyleMenuButton(search, "Buscar cortina no catálogo", "Search");
+        StyleMenuButton(search, "Buscar no catálogo", "Search");
         addOptionsPanel.SetActive(false);
     }
 
@@ -158,6 +157,7 @@ public class ARInteractionUI : MonoBehaviour
     {
         if (addOptionsPanel != null) addOptionsPanel.SetActive(false);
         if (placementController != null) placementController.InitializeCurtainSettings();
+        if (placementController != null) placementController.PrepareToPlaceNewObject();
         modoPosicionar = true;
         modoAjustar = false;
         UpdateControlState();
@@ -166,6 +166,7 @@ public class ARInteractionUI : MonoBehaviour
     private void OpenCurtainCatalog()
     {
         if (addOptionsPanel != null) addOptionsPanel.SetActive(false);
+        ARSurfaceUI.PreserveVisibilityForCatalogReturn(surfaceUI != null && surfaceUI.PlanesVisible);
         CatalogSelectionSession.ReturnToAR = true;
         CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.LoadLast();
         SceneManager.LoadScene("Catalog");
@@ -216,13 +217,13 @@ public class ARInteractionUI : MonoBehaviour
 
     private float quickSelectorWidth;
 
-    private GameObject CreateQuickSelectorTray(string name, string title)
+    private GameObject CreateQuickSelectorTray(string name, string title, float height = 140f, float maxWidth = 640f)
     {
         Canvas canvas = GetComponentInParent<Canvas>();
         RectTransform canvasRect = canvas != null ? canvas.GetComponent<RectTransform>() : null;
         float canvasWidth = canvasRect != null ? canvasRect.rect.width : Screen.width;
-        quickSelectorWidth = Mathf.Clamp(canvasWidth - 500f, 220f, 580f);
-        GameObject tray = CreatePanel(name, overlayRoot, Vector2.zero, new Vector2(20f, 170f), new Vector2(quickSelectorWidth, 140f), Panel);
+        quickSelectorWidth = Mathf.Max(220f, Mathf.Min(canvasWidth - 40f, maxWidth));
+        GameObject tray = CreatePanel(name, overlayRoot, Vector2.zero, new Vector2(20f, 170f), new Vector2(quickSelectorWidth, height), Panel);
         TMP_Text heading = CreateText(name + "Title", tray.transform, title, 16f, new Color(0.8f, 0.85f, 0.89f), TextAlignmentOptions.Left);
         PlaceTopLeft(heading.rectTransform, new Vector2(20f, 8f), new Vector2(quickSelectorWidth - 40f, 24f));
         heading.fontStyle = FontStyles.Bold;
@@ -232,9 +233,71 @@ public class ARInteractionUI : MonoBehaviour
 
     private void BuildFabricTray()
     {
-        fabricTray = CreateQuickSelectorTray("FabricQuickSelector", "TECIDO  ·  TOQUE PARA TESTAR");
-        BuildHorizontalSelector(fabricTray.transform, "FabricSwatches", fabrics, fabricNames, fabricSwatches, -34f, SelectFabric,
-            new Vector2(quickSelectorWidth - 24f, 94f), new Vector2(0f, 1f));
+        fabricTray = CreateQuickSelectorTray("FabricQuickSelector", "TECIDO", 230f, 640f);
+        fabricSwatches.Clear();
+        fabricOptionItems.Clear();
+        fabricTrayTitle = fabricTray.transform.Find("FabricQuickSelectorTitle").GetComponent<TMP_Text>();
+        PlaceTopLeft(fabricTrayTitle.rectTransform, new Vector2(20f, 7f), new Vector2(125f, 40f));
+        float selectorWidth = quickSelectorWidth - 24f;
+        BuildHorizontalSelector(fabricTray.transform, "FabricSwatches", fabrics, fabricNames, fabricSwatches, -64f, SelectFabric,
+            new Vector2(selectorWidth, 156f), new Vector2(0f, 1f));
+        BuildFabricSearchInput();
+    }
+
+    private void BuildFabricSearchInput()
+    {
+        fabricSearchInputRoot = new GameObject("FabricSearchInput", typeof(RectTransform), typeof(Image), typeof(TMP_InputField));
+        fabricSearchInputRoot.transform.SetParent(fabricTray.transform, false);
+        RectTransform inputRect = fabricSearchInputRoot.GetComponent<RectTransform>();
+        inputRect.anchorMin = inputRect.anchorMax = new Vector2(0f, 1f);
+        inputRect.pivot = new Vector2(0f, 1f);
+        inputRect.anchoredPosition = new Vector2(158f, -5f) * UiScale;
+        inputRect.sizeDelta = new Vector2(quickSelectorWidth - 190f, 42f) * UiScale;
+
+        Image background = fabricSearchInputRoot.GetComponent<Image>();
+        background.sprite = ARUIIconFactory.RoundedSprite;
+        background.type = Image.Type.Sliced;
+        background.color = Ink;
+
+        TMP_InputField input = fabricSearchInputRoot.GetComponent<TMP_InputField>();
+        input.targetGraphic = background;
+        input.lineType = TMP_InputField.LineType.SingleLine;
+        input.characterLimit = 80;
+        input.caretColor = SoftWhite;
+        input.selectionColor = new Color(Accent.r, Accent.g, Accent.b, 0.45f);
+
+        GameObject textAreaObject = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
+        textAreaObject.transform.SetParent(fabricSearchInputRoot.transform, false);
+        RectTransform textAreaRect = textAreaObject.GetComponent<RectTransform>();
+        Stretch(textAreaRect, new Vector2(10f, 3f), new Vector2(-10f, -3f));
+        input.textViewport = textAreaRect;
+
+        TMP_Text text = CreateText("Text", textAreaObject.transform, string.Empty, 17f, SoftWhite, TextAlignmentOptions.MidlineLeft);
+        Stretch(text.rectTransform, Vector2.zero, Vector2.zero);
+        input.textComponent = text;
+
+        TMP_Text placeholder = CreateText("Placeholder", textAreaObject.transform, "Buscar tecido", 17f,
+            new Color(0.68f, 0.74f, 0.79f, 0.9f), TextAlignmentOptions.MidlineLeft);
+        placeholder.fontStyle = FontStyles.Italic;
+        Stretch(placeholder.rectTransform, Vector2.zero, Vector2.zero);
+        input.placeholder = placeholder;
+        input.onValueChanged.AddListener(FilterFabricOptions);
+        fabricSearchInput = input;
+        fabricSearchInputRoot.SetActive(true);
+    }
+
+    private void FilterFabricOptions(string query)
+    {
+        query = query != null ? query.Trim() : string.Empty;
+        for (int i = 0; i < fabricOptionItems.Count && i < fabricNames.Count; i++)
+        {
+            bool matches = string.IsNullOrEmpty(query) ||
+                fabricNames[i].IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0;
+            fabricOptionItems[i].SetActive(matches);
+        }
+
+        if (fabricScroll != null) fabricScroll.horizontalNormalizedPosition = 0f;
+        if (fabricScrollContent != null) LayoutRebuilder.MarkLayoutForRebuild(fabricScrollContent);
     }
 
     private void BuildRodTray()
@@ -320,40 +383,46 @@ public class ARInteractionUI : MonoBehaviour
 
     private void CreateMaterialPresets()
     {
-        Material baseFabric = placementController != null ? placementController.GetBaseFabricMaterial(false) : null;
         Material baseRod = placementController != null ? placementController.GetBaseFabricMaterial(true) : null;
-        if (baseFabric == null) baseFabric = CreateFallbackMaterial("Tecido base", FabricColors[0]);
         if (baseRod == null) baseRod = CreateFallbackMaterial("Varão base", RodColors[0]);
 
-        for (int i = 0; i < FabricNames.Length; i++)
-        {
-            Color color = i == 0 && baseFabric != null ? baseFabric.color : FabricColors[i];
-            fabrics.Add(CreateTintedMaterial(baseFabric, "Tecido " + FabricNames[i], color));
-            fabricNames.Add(FabricNames[i]);
-            fabricPaths.Add(string.Empty);
-        }
         CurtainMaterialCatalog catalog = Resources.Load<CurtainMaterialCatalog>("CurtainMaterials");
-        if (catalog != null)
+        if (catalog != null && catalog.entries != null)
             foreach (CurtainMaterialCatalog.Entry entry in catalog.entries)
             {
-                if (entry.material == null) continue;
+                if (entry == null || entry.material == null) continue;
                 fabrics.Add(entry.material);
                 fabricNames.Add(entry.displayName);
                 fabricPaths.Add(entry.assetPath);
             }
+
+        if (fabrics.Count == 0)
+        {
+            Material fallbackFabric = placementController != null
+                ? placementController.GetBaseFabricMaterial(false)
+                : null;
+            if (fallbackFabric == null) fallbackFabric = CreateFallbackMaterial("Tecido padrão", new Color(0.91f, 0.84f, 0.72f));
+            fabrics.Add(fallbackFabric);
+            fabricNames.Add("Tecido padrão");
+            fabricPaths.Add(string.Empty);
+        }
+
         for (int i = 0; i < RodNames.Length; i++)
         {
             Color color = i == 0 && baseRod != null ? baseRod.color : RodColors[i];
             rods.Add(CreateTintedMaterial(baseRod, "Varão " + RodNames[i], color));
         }
 
-        selectedFabricIndex = FindPresetIndex(FabricNames, VisitDraftSession.Current.fabricMaterialName);
-        int importedIndex = fabricPaths.FindIndex(path => !string.IsNullOrEmpty(path) && path == VisitDraftSession.Current.fabricMaterialPath);
-        if (importedIndex < 0) importedIndex = fabricNames.FindIndex(name => name == VisitDraftSession.Current.fabricMaterialName);
-        if (importedIndex >= 0) selectedFabricIndex = importedIndex;
+        selectedFabricIndex = fabricPaths.FindIndex(path =>
+            !string.IsNullOrEmpty(path) && path == VisitDraftSession.Current.fabricMaterialPath);
+        if (selectedFabricIndex < 0)
+            selectedFabricIndex = fabricNames.FindIndex(name =>
+                !string.IsNullOrEmpty(name) && name == VisitDraftSession.Current.fabricMaterialName);
+        if (selectedFabricIndex < 0 && CatalogSelectionSession.SelectedFabricMaterial != null)
+            selectedFabricIndex = fabrics.IndexOf(CatalogSelectionSession.SelectedFabricMaterial);
+        if (selectedFabricIndex < 0) selectedFabricIndex = 0;
+
         selectedRodIndex = FindPresetIndex(RodNames, VisitDraftSession.Current.rodMaterialName);
-        if (CatalogSelectionSession.SelectedFabricMaterial != null)
-            fabrics[selectedFabricIndex] = CatalogSelectionSession.SelectedFabricMaterial;
         if (CatalogSelectionSession.SelectedRodMaterial != null)
             rods[selectedRodIndex] = CatalogSelectionSession.SelectedRodMaterial;
         CatalogSelectionSession.SelectedFabricMaterial = fabrics[selectedFabricIndex];
@@ -422,15 +491,15 @@ public class ARInteractionUI : MonoBehaviour
         }
         text.gameObject.SetActive(true);
         text.text = label;
-        text.fontSize = 17f;
+        text.fontSize = 17f * UiScale;
         text.fontStyle = FontStyles.Bold;
         text.color = SoftWhite;
         text.alignment = TextAlignmentOptions.MidlineLeft;
         text.raycastTarget = false;
         text.rectTransform.anchorMin = Vector2.zero;
         text.rectTransform.anchorMax = Vector2.one;
-        text.rectTransform.offsetMin = new Vector2(string.IsNullOrEmpty(icon) ? 18f : 62f, 3f);
-        text.rectTransform.offsetMax = new Vector2(-12f, -3f);
+        text.rectTransform.offsetMin = new Vector2(string.IsNullOrEmpty(icon) ? 18f : 62f, 3f) * UiScale;
+        text.rectTransform.offsetMax = new Vector2(-12f, -3f) * UiScale;
 
         if (!string.IsNullOrEmpty(icon))
         {
@@ -444,8 +513,8 @@ public class ARInteractionUI : MonoBehaviour
             RectTransform iconRect = iconTransform as RectTransform;
             iconRect.anchorMin = iconRect.anchorMax = new Vector2(0f, 0.5f);
             iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.anchoredPosition = new Vector2(32f, 0f);
-            iconRect.sizeDelta = new Vector2(52f, 52f);
+            iconRect.anchoredPosition = new Vector2(32f, 0f) * UiScale;
+            iconRect.sizeDelta = new Vector2(52f, 52f) * UiScale;
             Image iconImage = iconTransform.GetComponent<Image>();
             ARUIIconFactory.SetIcon(iconImage, icon);
             iconImage.color = Accent;
@@ -506,13 +575,19 @@ public class ARInteractionUI : MonoBehaviour
         scroll.inertia = true;
         scroll.scrollSensitivity = 28f;
 
+        if (name == "FabricSwatches")
+        {
+            fabricScroll = scroll;
+            fabricScrollContent = contentRect;
+        }
+
         for (int i = 0; i < materials.Count; i++)
         {
             int index = i;
             GameObject item = new GameObject(labels[i], typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
             item.transform.SetParent(contentObject.transform, false);
             LayoutElement layoutElement = item.GetComponent<LayoutElement>();
-            float itemWidth = name == "FabricSwatches" ? 160f : 82f;
+            float itemWidth = name == "FabricSwatches" ? Mathf.Max(90f, (size.x - 30f) / 3f) : 82f;
             layoutElement.preferredWidth = itemWidth;
             layoutElement.preferredHeight = size.y - 4f;
             item.GetComponent<RectTransform>().sizeDelta = new Vector2(itemWidth, size.y - 4f);
@@ -521,6 +596,7 @@ public class ARInteractionUI : MonoBehaviour
             Button itemButton = item.GetComponent<Button>();
             itemButton.targetGraphic = itemBackground;
             itemButton.onClick.AddListener(() => onSelected(index));
+            if (name == "FabricSwatches") fabricOptionItems.Add(item);
 
             GameObject swatchObject = new GameObject("Swatch", typeof(RectTransform), typeof(Image), typeof(Outline));
             swatchObject.transform.SetParent(item.transform, false);
@@ -528,18 +604,23 @@ public class ARInteractionUI : MonoBehaviour
             swatchRect.anchorMin = swatchRect.anchorMax = new Vector2(0.5f, 1f);
             swatchRect.pivot = new Vector2(0.5f, 1f);
             swatchRect.anchoredPosition = new Vector2(0f, -4f);
-            swatchRect.sizeDelta = new Vector2(46f, 46f);
             Image swatch = swatchObject.GetComponent<Image>();
-            swatch.sprite = ARUIIconFactory.CircleSprite;
             Material material = materials[i];
             swatch.color = material.HasProperty("_BaseColor") ? material.GetColor("_BaseColor") : material.color;
             Texture2D texture = material.HasProperty("_BaseMap") ? material.GetTexture("_BaseMap") as Texture2D : material.mainTexture as Texture2D;
+            bool isFabricPreview = name == "FabricSwatches";
+            swatch.sprite = isFabricPreview ? ARUIIconFactory.RoundedSprite : ARUIIconFactory.CircleSprite;
+            swatch.type = Image.Type.Simple;
+            swatchRect.sizeDelta = isFabricPreview
+                ? new Vector2(itemWidth - 12f, 108f)
+                : Vector2.one * 46f;
+            swatch.preserveAspect = !isFabricPreview;
             if (texture != null)
             {
                 Sprite thumbnail = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 runtimeSwatchSprites.Add(thumbnail);
                 swatch.sprite = thumbnail;
-                swatch.preserveAspect = true;
+                swatch.preserveAspect = !isFabricPreview;
             }
             swatch.raycastTarget = false;
             Outline outline = swatchObject.GetComponent<Outline>();
@@ -568,8 +649,8 @@ public class ARInteractionUI : MonoBehaviour
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
         rect.anchorMin = rect.anchorMax = anchor;
         rect.pivot = anchor;
-        rect.anchoredPosition = position;
-        rect.sizeDelta = size;
+        rect.anchoredPosition = position * UiScale;
+        rect.sizeDelta = size * UiScale;
         Image image = buttonObject.GetComponent<Image>();
         image.sprite = ARUIIconFactory.RoundedSprite;
         image.type = Image.Type.Sliced;
@@ -587,8 +668,8 @@ public class ARInteractionUI : MonoBehaviour
         RectTransform rect = panel.GetComponent<RectTransform>();
         rect.anchorMin = rect.anchorMax = anchor;
         rect.pivot = anchor;
-        rect.anchoredPosition = position;
-        rect.sizeDelta = size;
+        rect.anchoredPosition = position * UiScale;
+        rect.sizeDelta = size * UiScale;
         Image image = panel.GetComponent<Image>();
         image.sprite = ARUIIconFactory.RoundedSprite;
         image.type = Image.Type.Sliced;
@@ -603,7 +684,7 @@ public class ARInteractionUI : MonoBehaviour
         TMP_Text text = textObject.GetComponent<TMP_Text>();
         text.font = TMP_Settings.defaultFontAsset;
         text.text = value;
-        text.fontSize = size;
+        text.fontSize = size * UiScale;
         text.color = color;
         text.alignment = alignment;
         text.enableAutoSizing = false;
@@ -623,8 +704,8 @@ public class ARInteractionUI : MonoBehaviour
     {
         rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
         rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(position.x, -position.y);
-        rect.sizeDelta = size;
+        rect.anchoredPosition = new Vector2(position.x, -position.y) * UiScale;
+        rect.sizeDelta = size * UiScale;
     }
 
     private void SetMenuVisible(bool visible)
@@ -728,6 +809,12 @@ public class ARInteractionUI : MonoBehaviour
     {
         modoAjustar = !modoAjustar;
         if (modoAjustar) modoPosicionar = false;
+        UpdateControlState();
+    }
+
+    public void ConfirmObjectPlacement()
+    {
+        modoPosicionar = false;
         UpdateControlState();
     }
 

@@ -35,14 +35,13 @@
         </ui:VisualElement>
       </ui:VisualElement>
       <ui:VisualElement class="card">
-        <ui:Label text="Tecido" class="section-title" />
-        <ui:TextField name="materialSearch" label="Buscar" class="search-field" />
-        <ui:VisualElement name="materialGrid" class="material-grid" />
-        <ui:VisualElement class="row pager-row">
-          <ui:Button name="previousMaterials" text="‹ Anterior" class="quiet-button" />
-          <ui:Label name="materialPage" text="" class="page-label" />
-          <ui:Button name="nextMaterials" text="Próximo ›" class="quiet-button" />
+        <ui:VisualElement class="fabric-header">
+          <ui:Label text="Tecido" class="section-title fabric-title" />
+          <ui:TextField name="materialSearch" label="Buscar" class="search-field" />
         </ui:VisualElement>
+        <ui:ScrollView name="materialScroll" class="material-scroll" mode="Vertical">
+          <ui:VisualElement name="materialGrid" class="material-grid" />
+        </ui:ScrollView>
       </ui:VisualElement>
       <ui:VisualElement name="customCard" class="card custom-card">
         <ui:Label text="Caimento · ajuste ao seu gosto" class="section-title" />

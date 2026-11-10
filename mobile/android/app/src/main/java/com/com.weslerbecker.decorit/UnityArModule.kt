@@ -12,6 +12,17 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
   override fun getName() = "UnityArModule"
 
   @ReactMethod
+  fun openCatalogPreview(promise: Promise) {
+    try {
+      val activity = context.currentActivity ?: throw IllegalStateException("O app não está em primeiro plano.")
+      UnityArLauncher.openCatalogPreview(activity)
+      promise.resolve(null)
+    } catch (error: Exception) {
+      promise.reject("UNITY_CATALOG_START_FAILED", error.message, error)
+    }
+  }
+
+  @ReactMethod
   fun openAR(payload: ReadableMap, promise: Promise) {
     try {
       val activity = context.currentActivity ?: throw IllegalStateException("O app não está em primeiro plano.")
@@ -31,6 +42,13 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
 }
 
 object UnityArLauncher {
+  fun openCatalogPreview(context: Context) {
+    val intent = Intent(context, ImmersiveUnityPlayerActivity::class.java)
+      .putExtra("decorit_rn_host", true)
+      .putExtra("decorit_catalog_preview", true)
+    context.startActivity(intent)
+  }
+
   fun open(context: Context, clientId: String?, roomId: String?, recordId: String?, draftJson: String?, quickAR: Boolean = false) {
     val intent = Intent(context, ImmersiveUnityPlayerActivity::class.java)
       .putExtra("decorit_rn_host", true)

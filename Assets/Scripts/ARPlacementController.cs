@@ -26,6 +26,7 @@ public class ARPlacementController : MonoBehaviour
     private float fallbackPlacementDistance = 2f;
 
     private GameObject spawnedObject;
+    private bool createNewObjectOnNextPlacement;
     private List<GameObject> modelOptions;
     private int modelIndex;
 
@@ -68,6 +69,11 @@ public class ARPlacementController : MonoBehaviour
         if (CatalogSelectionSession.SelectedRodMaterial == null)
             CatalogSelectionSession.SelectedRodMaterial = GetBaseFabricMaterial(true);
         CatalogSelectionSession.HasConfiguredCurtain = true;
+    }
+
+    public void PrepareToPlaceNewObject()
+    {
+        createNewObjectOnNextPlacement = true;
     }
 
     public string ActiveModelName => CurrentPrefab() != null ? CurrentPrefab().name : "Cortina";
@@ -158,7 +164,7 @@ public class ARPlacementController : MonoBehaviour
             Debug.Log("Sem plano detectado; posicionando à frente da câmera para ajuste manual.");
         }
 
-        if (spawnedObject == null)
+        if (spawnedObject == null || createNewObjectOnNextPlacement)
         {
             GameObject prefabToPlace = CatalogSelectionSession.SelectedCurtainPrefab != null
                 ? CatalogSelectionSession.SelectedCurtainPrefab
@@ -171,6 +177,7 @@ public class ARPlacementController : MonoBehaviour
             }
 
             spawnedObject = Instantiate(prefabToPlace, placementPose.position, placementPose.rotation);
+            createNewObjectOnNextPlacement = false;
             ApplyVisitSelection(spawnedObject);
             if (objectManipulator != null) objectManipulator.SetTargetObject(spawnedObject);
         }
@@ -178,6 +185,8 @@ public class ARPlacementController : MonoBehaviour
         {
             spawnedObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
         }
+
+        if (interactionUI != null) interactionUI.ConfirmObjectPlacement();
     }
 
     private bool TryGetCameraRelativePose(Vector2 screenPosition, out Pose pose)

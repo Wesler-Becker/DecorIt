@@ -51,11 +51,11 @@ const listKey = (item: {id: string}) => item.id;
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
-  const {clients, ready, reload} = useAppState();
+  const {clients, ready, loadError, reload} = useAppState();
   const recentRecords = useMemo(() => clients.flatMap(client => client.rooms.flatMap(room => room.records.map(record => ({client, room, record}))))
     .sort((a, b) => b.record.createdAt.localeCompare(a.record.createdAt)).slice(0, 3), [clients]);
 
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
 
   return (
     <Page title="DecorIt" subtitle="Projetos e visualização de ambientes">
@@ -86,7 +86,10 @@ export function HomeScreen() {
       </Card>
 
       <SectionTitle>Acompanhe os registros</SectionTitle>
-      {!ready ? <Card><Text style={styles.muted}>Carregando seus dados…</Text></Card> : recentRecords.length === 0 ? (
+      {!ready ? <Card>
+        <Text style={styles.muted}>{loadError || 'Carregando seus dados…'}</Text>
+        {loadError ? <Button label="Tentar novamente" variant="secondary" onPress={() => {void reload().catch(() => undefined);}} /> : null}
+      </Card> : recentRecords.length === 0 ? (
         <Card><EmptyState title="Nenhum registro ainda" description="Os registros criados nos cômodos dos clientes aparecerão aqui." /></Card>
       ) : recentRecords.map(({client, room, record}) => (
         <Pressable key={record.id} onPress={() => navigation.navigate('RoomDetail', {clientId: client.id, roomId: room.id})} style={({pressed}) => [styles.recentCard, pressed && styles.pressed]}>
@@ -101,12 +104,12 @@ export function HomeScreen() {
 
 export function ClientsScreen() {
   const navigation = useNavigation<Nav>();
-  const {clients, ready, reload} = useAppState();
+  const {clients, ready, loadError, reload} = useAppState();
   const [query, setQuery] = useState('');
   const [activeClient, setActiveClient] = useState<ClientData | null>(null);
   const [chooseRoom, setChooseRoom] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
 
   const filteredClients = useMemo(() => {
     const search = query.trim().toLocaleLowerCase('pt-BR');
@@ -136,12 +139,15 @@ export function ClientsScreen() {
         keyExtractor={listKey}
         contentContainerStyle={styles.listContent}
         keyboardShouldPersistTaps="handled"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => {setRefreshing(true); await reload(); setRefreshing(false);}} tintColor={colors.blue} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => {setRefreshing(true); try {await reload();} catch {} finally {setRefreshing(false);}}} tintColor={colors.blue} />}
         ListHeaderComponent={<View style={styles.listHeader}>
           <View style={styles.searchBox}><Search size={22} color={colors.muted} /><TextInput value={query} onChangeText={setQuery} placeholder="Buscar nome, telefone ou endereço" placeholderTextColor="#99A5AC" style={styles.searchInput} clearButtonMode="while-editing" /></View>
           <Text style={styles.listHint}>Toque em um cliente para abrir o perfil. Use ⋯ para outras ações.</Text>
         </View>}
-        ListEmptyComponent={ready ? <Card><EmptyState title={query ? 'Nenhum resultado' : 'Sua lista começa aqui'} description={query ? 'Tente buscar por outro nome ou telefone.' : 'Cadastre o primeiro cliente para organizar cômodos, registros e fotos.'} action={<Button label="Cadastrar cliente" icon={<Plus size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('ClientForm', {})} />} /></Card> : <Card><Text style={styles.muted}>Carregando clientes…</Text></Card>}
+        ListEmptyComponent={ready ? <Card><EmptyState title={query ? 'Nenhum resultado' : 'Sua lista começa aqui'} description={query ? 'Tente buscar por outro nome ou telefone.' : 'Cadastre o primeiro cliente para organizar cômodos, registros e fotos.'} action={<Button label="Cadastrar cliente" icon={<Plus size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('ClientForm', {})} />} /></Card> : <Card>
+          <Text style={styles.muted}>{loadError || 'Carregando clientes…'}</Text>
+          {loadError ? <Button label="Tentar novamente" variant="secondary" onPress={() => {void reload().catch(() => undefined);}} /> : null}
+        </Card>}
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
         renderItem={({item}) => <ClientCard client={item} onOpen={() => navigation.navigate('ClientProfile', {clientId: item.id})} onActions={() => {setActiveClient(item); setChooseRoom(false);}} />}
       />
@@ -272,7 +278,7 @@ export function ClientProfileScreen() {
   const [section, setSection] = useState<'rooms' | 'photos'>('rooms');
   const [photoToAssign, setPhotoToAssign] = useState<PhotoItem | null>(null);
   const [startingAR, setStartingAR] = useState(false);
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
   const client = clients.find(item => item.id === clientId);
   const photos = useMemo(() => client ? collectPhotos([client]) : [], [client]);
 
@@ -345,7 +351,7 @@ export function RoomDetailScreen() {
   const {clientId, roomId} = route.params as {clientId: string; roomId: string};
   const {clients, reload, assignUnassignedPhoto} = useAppState();
   const [photoToAssign, setPhotoToAssign] = useState<PhotoItem | null>(null);
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
   const client = clients.find(item => item.id === clientId);
   const room = client?.rooms.find(item => item.id === roomId);
   const records = useMemo(() => [...(room?.records || [])].sort((a, b) => b.createdAt.localeCompare(a.createdAt)), [room]);
@@ -379,7 +385,7 @@ export function RecordDetailScreen() {
   const route = useRoute<any>();
   const {clientId, roomId, recordId} = route.params as {clientId: string; roomId: string; recordId: string};
   const {clients, reload, updateRecord} = useAppState();
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
   const client = clients.find(item => item.id === clientId);
   const room = client?.rooms.find(item => item.id === roomId);
   const record = room?.records.find(item => item.id === recordId);
@@ -456,7 +462,7 @@ export function PhotosScreen() {
   const navigation = useNavigation<Nav>();
   const {clients, reload, assignUnassignedPhoto} = useAppState();
   const [photoToAssign, setPhotoToAssign] = useState<PhotoItem | null>(null);
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
   const photos = useMemo(() => collectPhotos(clients), [clients]);
   const rooms = clients.find(client => client.id === photoToAssign?.clientId)?.rooms || [];
   return <Page title="Fotos" subtitle="Imagens de todos os clientes, com ou sem cômodo" scroll={false}>
@@ -558,10 +564,47 @@ function formatPhotoCaptureDate(value: string): string {
 export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}) {
   const navigation = useNavigation<Nav>();
   const {draft, setDraft, catalogChoice, setCatalogChoice} = useVisitDraft();
+  const [previewStatus, setPreviewStatus] = useState<'idle' | 'opening' | 'opened' | 'ready' | 'error'>('idle');
+  const previewOpened = useRef(false);
   const [category, setCategory] = useState<'Cortinas' | 'Persianas' | 'Acessórios'>(draft?.productCategory === 'Persianas' ? 'Persianas' : catalogChoice.productCategory === 'Persianas' ? 'Persianas' : 'Cortinas');
   const [panelType, setPanelType] = useState<'SinglePanel' | 'DoublePanel'>(draft?.panelType || catalogChoice.panelType);
   const [fabric, setFabric] = useState(draft?.fabricMaterialName || catalogChoice.fabricMaterialName);
   const [rod, setRod] = useState(draft?.rodMaterialName || catalogChoice.rodMaterialName);
+
+  const openPreview = useCallback(async () => {
+    if (Platform.OS !== 'android') {
+      setPreviewStatus('error');
+      return;
+    }
+    const module = NativeModules.UnityArModule;
+    if (!module?.openCatalogPreview) {
+      setPreviewStatus('error');
+      return;
+    }
+    setPreviewStatus('opening');
+    previewOpened.current = true;
+    try {
+      await module.openCatalogPreview();
+      setPreviewStatus('opened');
+    } catch {
+      previewOpened.current = false;
+      setPreviewStatus('error');
+    }
+  }, []);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'active' && previewOpened.current) {
+        previewOpened.current = false;
+        setPreviewStatus('ready');
+      }
+    });
+    return () => subscription.remove();
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    if (!selectionMode) void openPreview();
+  }, [openPreview, selectionMode]));
 
   const apply = () => {
     const choice = {productCategory: category, modelName: 'CurtainPrefab', panelType, fabricMaterialName: fabric, fabricMaterialPath: 'Assets/Materials/CurtainFabric.mat', rodMaterialName: rod, rodMaterialPath: 'Assets/Materials/RodMaterial.mat'} as const;
@@ -571,6 +614,22 @@ export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}
     else Alert.alert('Seleção atualizada', 'A seleção estará disponível ao iniciar um registro.');
   };
   const available = category === 'Cortinas';
+
+  if (!selectionMode) {
+    return <Page title="Catálogo" subtitle="Prévia 3D dos modelos e materiais">
+      <Card>
+        <View style={styles.catalogPreviewIntro}>
+          <View style={styles.catalogPreviewIcon}><Sofa size={28} color={colors.blue} /></View>
+          <View style={{flex: 1}}>
+            <Text style={styles.rowTitle}>Visualização do produto</Text>
+            <Text style={styles.rowDetail}>Explore as medidas, o caimento e os tecidos na prévia 3D.</Text>
+          </View>
+        </View>
+      </Card>
+      {previewStatus === 'error' ? <Card><Text style={styles.rowDetail}>{Platform.OS === 'android' ? 'Não foi possível abrir a prévia 3D. Atualize o app para uma versão que inclua o catálogo Unity.' : 'A prévia 3D está disponível no app Android.'}</Text></Card> : null}
+      <Button label="Abrir prévia 3D" icon={<Sparkles size={22} color="#FFFFFF" />} onPress={() => {void openPreview();}} loading={previewStatus === 'opening' || previewStatus === 'opened'} />
+    </Page>;
+  }
 
   return <Page title={selectionMode ? 'Modelo e materiais' : 'Catálogo'} subtitle={selectionMode ? 'Escolha o que será aplicado na visualização em AR' : 'Modelos e materiais pré-definidos'} navigation={selectionMode ? navigation : undefined}>
     <View style={styles.pillRow}>{(['Cortinas', 'Persianas', 'Acessórios'] as const).map(item => <Pill key={item} label={item} selected={category === item} onPress={() => setCategory(item)} />)}</View>
@@ -672,10 +731,10 @@ export function UnityARScreen() {
   const [opening, setOpening] = useState(false);
   const [error, setError] = useState('');
   const autoOpened = useRef(false);
-  useFocusEffect(useCallback(() => { void reload(); }, [reload]));
+  useFocusEffect(useCallback(() => { void reload().catch(() => undefined); }, [reload]));
   useEffect(() => {
     const subscription = AppState.addEventListener('change', state => {
-      if (state === 'active') void reload();
+      if (state === 'active') void reload().catch(() => undefined);
     });
     return () => subscription.remove();
   }, [reload]);
@@ -853,6 +912,8 @@ const styles = StyleSheet.create({
   recordPhotoCount: {fontSize: 10, color: colors.blue, fontWeight: '800'},
   recordNotes: {fontSize: 12, lineHeight: 17, color: colors.ink, marginTop: 2},
   formCardTitle: {fontSize: 17, fontWeight: '800', color: colors.ink},
+  catalogPreviewIntro: {flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4},
+  catalogPreviewIcon: {width: 52, height: 52, borderRadius: 17, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   pillRow: {flexDirection: 'row', gap: 8, flexWrap: 'wrap'},
   modelCard: {padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 17, borderWidth: 1, borderColor: '#C7DBE4', backgroundColor: colors.bluePale},
   modelMark: {width: 48, height: 48, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center'},

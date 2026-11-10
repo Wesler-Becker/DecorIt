@@ -7,14 +7,16 @@ Este diretório contém o aplicativo React Native/TypeScript, o projeto Android 
 - `App.tsx`: navegação raiz, abas e atalho de AR rápido.
 - `src/screens.tsx`: telas React Native.
 - `src/state/`: estado do app e rascunhos de registro.
-- `src/data/`: persistência local e regras de clientes, cômodos, registros e fotos.
+- `src/data/`: persistência SQLite local (OP-SQLite + Drizzle), esquema e regras de clientes, cômodos, registros e fotos.
+- `drizzle/`: migrations versionadas aplicadas na inicialização; gere novas migrations com `npm run db:generate`.
 - `android/`: integração nativa Android/Unity e configuração Gradle.
 - `scripts/export-unity-library.ps1`: exporta o projeto Unity para `android/unityExport/` e prepara o módulo para a build combinada.
+- `scripts/atualizar-release.ps1`: exporta Unity, compila o Release, pergunta qual dispositivo usar se houver mais de um, instala com `adb install -r` e abre o app; aceita `-DeviceId` e `-SkipUnityExport`.
 - `scripts/restore-android-clients.ps1`: restaura um backup local de clientes para um aparelho conectado por ADB, com verificações para evitar sobrescrever dados existentes.
 
 ## Desenvolvimento
 
-Instale dependências com `npm ci`, exporte a biblioteca Unity com `.\scripts\export-unity-library.ps1` e então inicie o Metro com `npm start`. A partir de `android/`, use o Gradle Wrapper para compilar e instalar Debug ou gerar Release. Os comandos detalhados e os requisitos estão no [guia principal](../README.md).
+Instale dependências com `npm ci`, exporte a biblioteca Unity com `.\scripts\export-unity-library.ps1` e então inicie o Metro com `npm start`. Para gerar e instalar um Release de uma vez, execute `.\scripts\atualizar-release.ps1` a partir deste diretório. Os comandos detalhados e os requisitos estão no [guia principal](../README.md).
 
 As verificações JavaScript/TypeScript podem ser executadas neste diretório:
 

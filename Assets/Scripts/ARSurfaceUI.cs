@@ -16,9 +16,23 @@ public class ARSurfaceUI : MonoBehaviour
     [SerializeField]
     private Color corAtiva = new Color(1f, 0.92f, 0.5f);
 
-    private bool superficiesVisiveis = true;
+    private static bool? visibilidadeAoRetornarDoCatalogo;
+    private bool superficiesVisiveis;
 
     public bool PlanesVisible => superficiesVisiveis;
+
+    public static void PreserveVisibilityForCatalogReturn(bool visible)
+    {
+        visibilidadeAoRetornarDoCatalogo = visible;
+    }
+
+    private void Awake()
+    {
+        // New AR sessions start with planes hidden. A trip to the catalog is the
+        // only scene change that restores the current choice.
+        superficiesVisiveis = visibilidadeAoRetornarDoCatalogo ?? false;
+        visibilidadeAoRetornarDoCatalogo = null;
+    }
 
     public void HideLegacyButton()
     {
@@ -27,29 +41,30 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void Start()
     {
-        RectTransform rect = btnSuperficies.transform as RectTransform;
-        rect.anchoredPosition = new Vector2(-95f, 0f);
-        rect.sizeDelta = new Vector2(136f, 132f);
-        ARUIIconFactory.ConfigureButton(btnSuperficies, "Planes", "Planos", 58f, 22f);
-        btnSuperficies.onClick.AddListener(AlternarSuperficies);
+        if (btnSuperficies != null)
+        {
+            RectTransform rect = btnSuperficies.transform as RectTransform;
+            rect.anchoredPosition = new Vector2(-95f, 0f);
+            rect.sizeDelta = new Vector2(136f, 132f);
+            ARUIIconFactory.ConfigureButton(btnSuperficies, "Planes", "Planos", 58f, 22f);
+            btnSuperficies.onClick.AddListener(AlternarSuperficies);
+        }
 
         // Monitora novos planos detectados
-        planeManager.trackablesChanged.AddListener(
-            OnPlanosAlterados
-        );
+        if (planeManager != null)
+            planeManager.trackablesChanged.AddListener(OnPlanosAlterados);
 
+        AtualizarPlanos();
         AtualizarInterface();
     }
 
     private void OnDestroy()
     {
-        btnSuperficies.onClick.RemoveListener(
-            AlternarSuperficies
-        );
+        if (btnSuperficies != null)
+            btnSuperficies.onClick.RemoveListener(AlternarSuperficies);
 
-        planeManager.trackablesChanged.RemoveListener(
-            OnPlanosAlterados
-        );
+        if (planeManager != null)
+            planeManager.trackablesChanged.RemoveListener(OnPlanosAlterados);
     }
 
     private void AlternarSuperficies()
@@ -78,6 +93,7 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void AtualizarPlanos()
     {
+        if (planeManager == null) return;
         foreach (var plane in planeManager.trackables)
         {
             plane.gameObject.SetActive(
@@ -88,6 +104,7 @@ public class ARSurfaceUI : MonoBehaviour
 
     private void AtualizarInterface()
     {
-        ARUIIconFactory.SetSelected(btnSuperficies, superficiesVisiveis);
+        if (btnSuperficies != null)
+            ARUIIconFactory.SetSelected(btnSuperficies, superficiesVisiveis);
     }
 }

@@ -35,7 +35,20 @@ local.properties
 android/unityExport*/
 *.keystore
 !debug.keystore
+*.jks
+*.p12
+*.p8
+*.pem
+*.mobileprovision
+*.provisionprofile
+**/keystore.properties
+**/key.properties
+**/.env
+**/.env.*
+!**/.env.example
 .kotlin/
+captures/
+.externalNativeBuild/
 
 # node.js
 #

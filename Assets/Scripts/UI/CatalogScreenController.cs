@@ -13,7 +13,6 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     private readonly List<CurtainMaterialCatalog.Entry> materials = new List<CurtainMaterialCatalog.Entry>();
     private readonly List<CurtainMaterialCatalog.Entry> filteredMaterials = new List<CurtainMaterialCatalog.Entry>();
-    private readonly List<Button> materialButtons = new List<Button>();
     private CurtainViewSettings working;
     private CurtainMaterialCatalog.Entry selectedMaterial;
     private Material selectedRod;
@@ -28,7 +27,7 @@ public sealed class CatalogScreenController : MonoBehaviour
     private TextField heightField;
     private TextField materialSearch;
     private VisualElement materialGrid;
-    private Label materialPage;
+    private ScrollView materialScroll;
     private Label selectionSummary;
     private Label statusLabel;
     private VisualElement customCard;
@@ -37,14 +36,12 @@ public sealed class CatalogScreenController : MonoBehaviour
     private Button singlePanel;
     private Button doublePanel;
     private readonly Button[] styleButtons = new Button[4];
-    private Button previousMaterials;
-    private Button nextMaterials;
-    private int materialPageIndex;
-    private const int MaterialPageSize = 9;
+    private bool previewOnly;
 
     private void Start()
     {
         if (document == null) document = GetComponent<UIDocument>();
+        previewOnly = UnityARHostBridge.IsCatalogPreview;
         root = document.rootVisualElement;
         root.RegisterCallback<GeometryChangedEvent>(_ => ApplySafeAreaInsets());
         CacheElements();
@@ -85,19 +82,19 @@ public sealed class CatalogScreenController : MonoBehaviour
     private void CacheElements()
     {
         scroll = root.Q<ScrollView>("configurationScroll");
+        scroll.verticalScrollerVisibility = ScrollerVisibility.Hidden;
         previewImage = root.Q<Image>("previewImage");
         widthField = root.Q<TextField>("widthField");
         heightField = root.Q<TextField>("heightField");
         materialSearch = root.Q<TextField>("materialSearch");
         materialGrid = root.Q<VisualElement>("materialGrid");
-        materialPage = root.Q<Label>("materialPage");
+        materialScroll = root.Q<ScrollView>("materialScroll");
+        materialScroll.verticalScrollerVisibility = ScrollerVisibility.Hidden;
         selectionSummary = root.Q<Label>("selectionSummary");
         statusLabel = root.Q<Label>("statusLabel");
         customCard = root.Q<VisualElement>("customCard");
         singlePanel = root.Q<Button>("singlePanel");
         doublePanel = root.Q<Button>("doublePanel");
-        previousMaterials = root.Q<Button>("previousMaterials");
-        nextMaterials = root.Q<Button>("nextMaterials");
         styleButtons[0] = root.Q<Button>("styleSmooth");
         styleButtons[1] = root.Q<Button>("styleNatural");
         styleButtons[2] = root.Q<Button>("styleWave");
@@ -137,7 +134,17 @@ public sealed class CatalogScreenController : MonoBehaviour
     private void BindEvents()
     {
         root.Q<Button>("backButton").clicked += Back;
-        root.Q<Button>("applyButton").clicked += ApplySelection;
+        Button applyButton = root.Q<Button>("applyButton");
+        if (previewOnly)
+        {
+            applyButton.style.display = DisplayStyle.None;
+            root.Q<Label>(className: "header-title").text = "Prévia do catálogo";
+            root.Q<Label>(className: "header-subtitle").text = "Explore os materiais e confira o resultado";
+        }
+        else
+        {
+            applyButton.clicked += ApplySelection;
+        }
         singlePanel.clicked += () => SetPanelType("SinglePanel");
         doublePanel.clicked += () => SetPanelType("DoublePanel");
         for (int i = 0; i < styleButtons.Length; i++)
@@ -149,9 +156,7 @@ public sealed class CatalogScreenController : MonoBehaviour
         heightField.isDelayed = true;
         widthField.RegisterValueChangedCallback(_ => ReadDimensions());
         heightField.RegisterValueChangedCallback(_ => ReadDimensions());
-        materialSearch.RegisterValueChangedCallback(_ => { materialPageIndex = 0; RefreshMaterials(); });
-        previousMaterials.clicked += () => ChangeMaterialPage(-1);
-        nextMaterials.clicked += () => ChangeMaterialPage(1);
+        materialSearch.RegisterValueChangedCallback(_ => RefreshMaterials());
         for (int i = 0; i < sliders.Length; i++)
         {
             int index = i;
@@ -189,7 +194,7 @@ public sealed class CatalogScreenController : MonoBehaviour
             Quaternion.Euler(35f, -25f, 0f), 1.35f);
         CreatePreviewLight("CurtainCatalogFillLight", previewRoot.transform, previewLayer,
             Quaternion.Euler(18f, 145f, 0f), 0.55f);
-        previewTexture = new RenderTexture(768, 480, 16, RenderTextureFormat.ARGB32)
+        previewTexture = new RenderTexture(840, 600, 16, RenderTextureFormat.ARGB32)
         {
             name = "Curtain Catalog Preview", hideFlags = HideFlags.DontSave, filterMode = FilterMode.Bilinear
         };
@@ -284,13 +289,6 @@ public sealed class CatalogScreenController : MonoBehaviour
         PersistWorking();
     }
 
-    private void ChangeMaterialPage(int direction)
-    {
-        int pageCount = Mathf.Max(1, Mathf.CeilToInt(filteredMaterials.Count / (float)MaterialPageSize));
-        materialPageIndex = (materialPageIndex + direction + pageCount) % pageCount;
-        RefreshMaterials();
-    }
-
     private void RefreshMaterials()
     {
         string query = materialSearch.value?.Trim() ?? string.Empty;
@@ -298,31 +296,31 @@ public sealed class CatalogScreenController : MonoBehaviour
         foreach (CurtainMaterialCatalog.Entry entry in materials)
             if (string.IsNullOrEmpty(query) || entry.displayName.IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0)
                 filteredMaterials.Add(entry);
-        int pageCount = Mathf.Max(1, Mathf.CeilToInt(filteredMaterials.Count / (float)MaterialPageSize));
-        materialPageIndex = Mathf.Clamp(materialPageIndex, 0, pageCount - 1);
         materialGrid.Clear();
-        materialButtons.Clear();
-        int first = materialPageIndex * MaterialPageSize;
-        for (int i = first; i < Mathf.Min(first + MaterialPageSize, filteredMaterials.Count); i++)
+        foreach (CurtainMaterialCatalog.Entry entry in filteredMaterials)
         {
-            CurtainMaterialCatalog.Entry entry = filteredMaterials[i];
-            Button choice = new Button { name = "Material_" + i, text = string.Empty };
+            Button choice = new Button { name = "Material_" + entry.displayName, text = string.Empty };
             choice.AddToClassList("material-choice");
             if (entry == selectedMaterial) choice.AddToClassList("selected");
             var swatch = new Image { name = "Swatch" };
             swatch.AddToClassList("material-swatch");
+            swatch.scaleMode = ScaleMode.ScaleAndCrop;
             Texture2D texture = GetMaterialTexture(entry.material);
             if (texture != null) swatch.image = texture;
             else swatch.style.backgroundColor = GetMaterialColor(entry.material);
             choice.Add(swatch);
-            choice.Add(new Label(entry.displayName));
+            Label label = new Label(entry.displayName);
+            label.AddToClassList("material-name");
+            choice.Add(label);
             choice.clicked += () => SelectMaterial(entry);
             materialGrid.Add(choice);
-            materialButtons.Add(choice);
         }
-        materialPage.text = filteredMaterials.Count == 0
-            ? "Nenhum tecido encontrado"
-            : $"{materialPageIndex + 1} / {pageCount} · {filteredMaterials.Count} tecidos";
+        if (filteredMaterials.Count == 0)
+        {
+            Label empty = new Label("Nenhum tecido encontrado");
+            empty.AddToClassList("material-empty");
+            materialGrid.Add(empty);
+        }
     }
 
     private static Texture2D GetMaterialTexture(Material material)
@@ -406,11 +404,15 @@ public sealed class CatalogScreenController : MonoBehaviour
         previewCamera.transform.LookAt(bounds.center);
     }
 
-    private void PersistWorking() => CurtainViewSettingsStore.SaveLast(working);
+    private void PersistWorking()
+    {
+        if (!previewOnly) CurtainViewSettingsStore.SaveLast(working);
+    }
     private void SetStatus(string message) { if (statusLabel != null) statusLabel.text = message; }
 
     public void ApplySelection()
     {
+        if (previewOnly) return;
         ReadDimensions();
         if (!TryPositive(widthField.value, out _) || !TryPositive(heightField.value, out _)) return;
         PersistWorking();
@@ -436,6 +438,11 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     public void Back()
     {
+        if (previewOnly)
+        {
+            UnityARHostBridge.ReturnToReactHost();
+            return;
+        }
         PersistWorking();
         if (CatalogSelectionSession.ReturnToAR)
         {
@@ -458,7 +465,7 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (working != null) PersistWorking();
+        if (working != null && !previewOnly) PersistWorking();
         if (previewObject != null) Destroy(previewObject);
         if (previewRoot != null) Destroy(previewRoot);
         if (previewCamera != null && previewCamera.targetTexture != null) previewCamera.targetTexture = null;

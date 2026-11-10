@@ -85,6 +85,17 @@ Se o Android SDK estiver em outro local, ajuste o caminho do `adb` ou adicione `
 
 ## Gerar uma build Release
 
+Para exportar a biblioteca Unity, compilar, instalar no único dispositivo ADB conectado e abrir o app com um comando, use o script:
+
+```powershell
+Set-Location 'E:\Unity\DecorIt\mobile'
+.\scripts\atualizar-release.ps1
+```
+
+O script não precisa do Metro. Se houver mais de um emulador/aparelho conectado, ele mostra uma lista e pergunta em qual instalar; para escolher sem prompt, informe `-DeviceId emulator-5554`. Se as mudanças forem somente no React Native e a exportação Unity já estiver atualizada, passe `-SkipUnityExport` para pular a exportação.
+
+Para compilar sem instalar, ou acompanhar cada etapa manualmente, exporte primeiro a biblioteca Unity e então execute o Gradle conforme abaixo.
+
 Depois de exportar a biblioteca Unity, gere o APK sem depender do Metro:
 
 ```powershell
@@ -120,7 +131,11 @@ npm run lint
 
 ## Dados e integração Unity
 
-O armazenamento local mantém clientes, cômodos, registros e caminhos de fotos no formato já usado pelo aplicativo Unity. O módulo nativo Android passa o contexto do cliente e do registro para o Unity ao abrir a câmera AR. Ao sair do Unity, o resultado e as fotos ficam disponíveis para as telas React Native.
+O aplicativo usa SQLite local através de OP-SQLite, com esquema e consultas tipados pelo Drizzle ORM. O esquema está em `mobile/src/data/schema.ts`; as migrations do Drizzle ficam em `mobile/drizzle/` e são aplicadas ao iniciar o app. Para gerar uma migration após alterar o esquema, execute `npm run db:generate` dentro de `mobile`.
+
+Na primeira inicialização com essa versão, clientes, cômodos, registros e metadados de fotos existentes em `clients.json` são importados uma única vez para `decorit.db`. O JSON original e seu backup são mantidos como cópia da migração. Os arquivos PNG permanecem no armazenamento privado do app; o banco guarda os caminhos e metadados.
+
+Ao abrir a Unity, o Android passa o contexto do cliente e do registro. Fotos capturadas durante o AR são colocadas em uma fila de eventos compartilhada no armazenamento do app; quando o React Native volta ao primeiro plano, importa esses eventos para o SQLite. Assim, a Unity não altera o JSON legado durante o fluxo integrado.
 
 O catálogo de materiais usado no Unity é construído a partir de `Assets/DecorItCurtains/Materials/Active`; suas texturas estão em `Assets/DecorItCurtains/Textures`. A documentação sobre escala, materiais e geração da cortina procedural está em [`Docs/CurtainMaterials.md`](Docs/CurtainMaterials.md) e [`Docs/ProceduralCurtains.md`](Docs/ProceduralCurtains.md).
 
