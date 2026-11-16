@@ -181,8 +181,7 @@ public class ARPhotoCapture : MonoBehaviour
     private void ReturnFromAR()
     {
         if (UnityARHostBridge.ReturnToReactHost()) return;
-        string destination = string.IsNullOrEmpty(VisitDraftSession.TargetRoomId) ? "Home" : "RoomDetail";
-        SceneManager.LoadScene(destination);
+        SceneManager.LoadScene("AR_Test");
     }
 
     private static string GetSafePathSegment(string value)

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -89,20 +87,13 @@ public static class CatalogSceneBuilder
 
     private static void AddBuildScenes()
     {
-        const string homePath = "Assets/Scenes/Home.unity";
-        const string visitPath = "Assets/Scenes/NewVisit.unity";
+        const string bootstrapPath = "Assets/Scenes/UnityBootstrap.unity";
         const string arPath = "Assets/Scenes/AR_Test.unity";
-        List<EditorBuildSettingsScene> scenes = EditorBuildSettings.scenes
-            .Where(scene => scene.path != homePath && scene.path != visitPath &&
-                            scene.path != ScenePath && scene.path != arPath).ToList();
-        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(homePath) != null)
-            scenes.Insert(0, new EditorBuildSettingsScene(homePath, true));
-        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(visitPath) != null)
-            scenes.Insert(1, new EditorBuildSettingsScene(visitPath, true));
-        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null)
-            scenes.Insert(2, new EditorBuildSettingsScene(ScenePath, true));
-        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(arPath) != null)
-            scenes.Insert(3, new EditorBuildSettingsScene(arPath, true));
-        EditorBuildSettings.scenes = scenes.ToArray();
+        EditorBuildSettings.scenes = new[]
+        {
+            new EditorBuildSettingsScene(bootstrapPath, true),
+            new EditorBuildSettingsScene(ScenePath, true),
+            new EditorBuildSettingsScene(arPath, true),
+        };
     }
 }

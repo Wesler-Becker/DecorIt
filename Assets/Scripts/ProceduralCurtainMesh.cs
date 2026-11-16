@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>A hanging fabric surface, in metres, with its origin at the top centre.</summary>
 [ExecuteAlways]
@@ -60,10 +61,23 @@ public class ProceduralCurtainMesh : MonoBehaviour
     private int cachedColumns = -1;
     private int cachedRows = -1;
     private bool rebuildRequested;
+    private MeshRenderer meshRenderer;
+    private Vector3[] triangleCenters;
+    private uint[] triangleSortKeys;
+    private int[] triangleOrder;
+    private int[] triangleSortBuffer;
+    private readonly int[] sortCounts = new int[256];
+    private int[] sortedTriangles;
+    private Vector3 lastSortDirection;
+    private bool sortDirty = true;
+
+    public Bounds LocalMeshBounds => generatedMesh != null ? generatedMesh.bounds : new Bounds();
 
     private void OnEnable()
     {
         rebuildRequested = true;
+        RenderPipelineManager.beginCameraRendering += BeforeCameraRendering;
+        Camera.onPreCull += BeforeBuiltInCamera;
     }
 
     private void Update()
@@ -160,8 +174,80 @@ public class ProceduralCurtainMesh : MonoBehaviour
         generatedMesh.RecalculateNormals();
         generatedMesh.RecalculateTangents();
         generatedMesh.RecalculateBounds();
+        for (int triangle = 0; triangle < triangleCenters.Length; triangle++)
+        {
+            int first = triangle * 3;
+            triangleCenters[triangle] = (vertices[triangles[first]] + vertices[triangles[first + 1]] +
+                vertices[triangles[first + 2]]) / 3f;
+        }
+        sortDirty = true;
         if (meshFilter.sharedMesh != generatedMesh)
             meshFilter.sharedMesh = generatedMesh;
+    }
+
+    private void BeforeCameraRendering(ScriptableRenderContext context, Camera camera) => SortTransparentTriangles(camera);
+
+    private void BeforeBuiltInCamera(Camera camera)
+    {
+        if (GraphicsSettings.currentRenderPipeline == null) SortTransparentTriangles(camera);
+    }
+
+    private void SortTransparentTriangles(Camera camera)
+    {
+        if (camera == null || generatedMesh == null || !isActiveAndEnabled ||
+            (camera.cullingMask & (1 << gameObject.layer)) == 0) return;
+        if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();
+        Material material = meshRenderer.sharedMaterial;
+        if (!meshRenderer.enabled || material == null || material.renderQueue <= 2500 ||
+            (material.HasProperty("_ZWrite") && material.GetFloat("_ZWrite") > 0.5f)) return;
+
+        // Unity sorts transparent renderers, not the folds inside each mesh.
+        // Reorder only indices, retaining normals/UVs, when the view direction changes.
+        Vector3 direction = transform.localToWorldMatrix.transpose.MultiplyVector(camera.transform.forward).normalized;
+        if (!sortDirty && (direction - lastSortDirection).sqrMagnitude < 0.00000001f) return;
+        for (int triangle = 0; triangle < triangleCenters.Length; triangle++)
+        {
+            float depth = -Vector3.Dot(triangleCenters[triangle], direction);
+            uint bits = unchecked((uint)System.BitConverter.SingleToInt32Bits(depth));
+            triangleSortKeys[triangle] = bits ^ ((bits & 0x80000000u) != 0 ? uint.MaxValue : 0x80000000u);
+            triangleOrder[triangle] = triangle;
+        }
+        // Four stable byte passes keep the cost linear and reuse every buffer.
+        // Float keys retain full precision, unlike coarse depth buckets.
+        int[] sourceOrder = triangleOrder;
+        int[] targetOrder = triangleSortBuffer;
+        for (int shift = 0; shift < 32; shift += 8)
+        {
+            System.Array.Clear(sortCounts, 0, sortCounts.Length);
+            for (int i = 0; i < sourceOrder.Length; i++)
+                sortCounts[(triangleSortKeys[sourceOrder[i]] >> shift) & 255u]++;
+            int offset = 0;
+            for (int bucket = 0; bucket < sortCounts.Length; bucket++)
+            {
+                int count = sortCounts[bucket];
+                sortCounts[bucket] = offset;
+                offset += count;
+            }
+            for (int i = 0; i < sourceOrder.Length; i++)
+            {
+                uint bucket = (triangleSortKeys[sourceOrder[i]] >> shift) & 255u;
+                targetOrder[sortCounts[bucket]++] = sourceOrder[i];
+            }
+            int[] swap = sourceOrder;
+            sourceOrder = targetOrder;
+            targetOrder = swap;
+        }
+        for (int triangle = 0; triangle < triangleOrder.Length; triangle++)
+        {
+            int source = triangleOrder[triangle] * 3;
+            int target = triangle * 3;
+            sortedTriangles[target] = triangles[source];
+            sortedTriangles[target + 1] = triangles[source + 1];
+            sortedTriangles[target + 2] = triangles[source + 2];
+        }
+        generatedMesh.SetTriangles(sortedTriangles, 0, false);
+        lastSortDirection = direction;
+        sortDirty = false;
     }
 
     private Vector3 EvaluatePosition(float u, float v, float span, float depth,
@@ -256,6 +342,11 @@ public class ProceduralCurtainMesh : MonoBehaviour
         previousRestRow = new Vector3[columns + 1];
         verticalLengths = new float[columns + 1];
         triangles = new int[columns * rows * 6];
+        triangleCenters = new Vector3[triangles.Length / 3];
+        triangleSortKeys = new uint[triangleCenters.Length];
+        triangleOrder = new int[triangleCenters.Length];
+        triangleSortBuffer = new int[triangleCenters.Length];
+        sortedTriangles = new int[triangles.Length];
         int triangle = 0;
         for (int y = 0; y < rows; y++)
         {
@@ -296,6 +387,8 @@ public class ProceduralCurtainMesh : MonoBehaviour
 
     private void OnDisable()
     {
+        RenderPipelineManager.beginCameraRendering -= BeforeCameraRendering;
+        Camera.onPreCull -= BeforeBuiltInCamera;
         ReleaseMesh();
     }
 

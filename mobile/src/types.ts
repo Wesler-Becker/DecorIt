@@ -48,6 +48,33 @@ export type ClientData = {
 
 export type ClientDetails = Pick<ClientData, 'phone' | 'address' | 'postalCode' | 'street' | 'complement' | 'neighborhood' | 'city' | 'state' | 'observations'>;
 
+export type CurtainLayerSettings = {
+  widthCentimeters: number;
+  heightCentimeters: number;
+  panelType: 'SinglePanel' | 'DoublePanel';
+  supportIndex: number;
+  spacingMillimeters: number;
+  fabricStyle: string;
+  fabricMaterialPath: string;
+  fabricMaterialName: string;
+  foldsPerMeter: number;
+  foldDepthCentimeters: number;
+  foldProfile: number;
+  naturalness: number;
+  seed: number;
+};
+
+export type CurtainSettings = {
+  modelName: string;
+  supportType: 'Rod' | 'Rail';
+  doubleSupport: boolean;
+  opening: number;
+  secondaryOpening: number;
+  rodMaterialPath: string;
+  rodMaterialName: string;
+  layers: CurtainLayerSettings[];
+};
+
 export type VisitDraft = {
   clientName: string;
   phone: string;
@@ -65,6 +92,7 @@ export type VisitDraft = {
   fabricMaterialPath: string;
   rodMaterialName: string;
   rodMaterialPath: string;
+  curtainSettings?: CurtainSettings;
 };
 
 export type PhotoItem = PhotoData & {

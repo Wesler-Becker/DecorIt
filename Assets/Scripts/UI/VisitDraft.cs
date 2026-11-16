@@ -26,6 +26,7 @@ public sealed class VisitDraft
     public float fabricNaturalness = 0.8f;
     public int fabricSeed = 17;
     public float opening;
+    public CurtainViewSettings curtainSettings;
 }
 
 public static class VisitDraftSession

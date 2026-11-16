@@ -44,23 +44,28 @@ public class ARPlacementController : MonoBehaviour
 
         VisitDraft draft = VisitDraftSession.Current ?? new VisitDraft();
         VisitDraftSession.Current = draft;
-        CurtainViewSettings settings = CurtainViewSettingsStore.LoadLast();
+        CurtainViewSettings settings = draft.curtainSettings != null && draft.curtainSettings.layers != null &&
+            draft.curtainSettings.layers.Count > 0
+            ? CurtainViewSettingsStore.FromDraft(draft) : CurtainViewSettingsStore.LoadLast();
+        CurtainLayerViewSettings frontLayer = settings.GetLayer(0);
 
         // A room's fresh measurements take precedence over the saved curtain dimensions.
         if (draft.widthCentimeters > 0f && draft.heightCentimeters > 0f)
         {
-            settings.widthCentimeters = draft.widthCentimeters;
-            settings.heightCentimeters = draft.heightCentimeters;
+            frontLayer.widthCentimeters = draft.widthCentimeters;
+            frontLayer.heightCentimeters = draft.heightCentimeters;
             if (!string.IsNullOrEmpty(draft.fabricMaterialPath) &&
                 draft.fabricMaterialPath != "Assets/Materials/CurtainFabric.mat")
             {
-                settings.fabricMaterialPath = draft.fabricMaterialPath;
-                settings.fabricMaterialName = draft.fabricMaterialName;
+                frontLayer.fabricMaterialPath = draft.fabricMaterialPath;
+                frontLayer.fabricMaterialName = draft.fabricMaterialName;
             }
         }
 
+        settings.SyncLegacyFromFrontLayer();
         CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(settings);
         CurtainViewSettingsStore.ApplyToDraft(settings, draft);
+        UnityARHostBridge.SaveLastViewConfig();
         CatalogSelectionSession.SelectedCurtainPrefab = FindModel(settings.modelName);
         CatalogSelectionSession.SelectedFabricMaterial = CurtainViewSettingsStore.ResolveFabric(
             settings.fabricMaterialPath, settings.fabricMaterialName);
@@ -222,14 +227,22 @@ public class ARPlacementController : MonoBehaviour
             CurtainViewSettingsStore.FromDraft(selection);
         curtain.ApplySettings(settings);
 
+        settings.EnsureLayers();
+        for (int i = 0; i < settings.layers.Count; i++)
+        {
+            CurtainLayerViewSettings layer = settings.layers[i];
+            Material material = CurtainViewSettingsStore.ResolveFabric(
+                layer.fabricMaterialPath, layer.fabricMaterialName);
+            if (material == null && i == 0) material = CatalogSelectionSession.SelectedFabricMaterial;
+            if (material != null) curtain.SetLayerMaterial(i, material);
+        }
+
         foreach (MeshRenderer mesh in placedObject.GetComponentsInChildren<MeshRenderer>(true))
         {
             string partName = mesh.gameObject.name;
             if ((partName.Contains("RodBody") || partName.Contains("Finial")) &&
                 CatalogSelectionSession.SelectedRodMaterial != null)
                 mesh.sharedMaterial = CatalogSelectionSession.SelectedRodMaterial;
-            else if (CatalogSelectionSession.SelectedFabricMaterial != null)
-                mesh.sharedMaterial = CatalogSelectionSession.SelectedFabricMaterial;
         }
     }
 
@@ -264,7 +277,15 @@ public class ARPlacementController : MonoBehaviour
         CatalogSelectionSession.SelectedFabricMaterial = material;
         VisitDraftSession.Current.fabricMaterialName = displayName;
         VisitDraftSession.Current.fabricMaterialPath = assetPath;
-        ApplyMaterialToSpawnedObject(material, false);
+        CurtainViewSettings settings = CatalogSelectionSession.CurrentConfiguration ??
+            CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current);
+        CurtainLayerViewSettings frontLayer = settings.GetLayer(0);
+        frontLayer.fabricMaterialName = displayName;
+        frontLayer.fabricMaterialPath = assetPath;
+        settings.SyncLegacyFromFrontLayer();
+        CatalogSelectionSession.CurrentConfiguration = settings;
+        CurtainController curtain = spawnedObject != null ? spawnedObject.GetComponent<CurtainController>() : null;
+        if (curtain != null) curtain.SetLayerMaterial(0, material);
         PersistCurrentSelection();
     }
 
@@ -352,8 +373,29 @@ public class ARPlacementController : MonoBehaviour
     private static void PersistCurrentSelection()
     {
         VisitDraft draft = VisitDraftSession.Current;
+        CurtainViewSettings settings = CatalogSelectionSession.CurrentConfiguration ??
+            CurtainViewSettingsStore.FromDraft(draft);
+        settings.opening = draft.opening;
+        CurtainLayerViewSettings frontLayer = settings.GetLayer(0);
+        frontLayer.widthCentimeters = draft.widthCentimeters > 0f ? draft.widthCentimeters : frontLayer.widthCentimeters;
+        frontLayer.heightCentimeters = draft.heightCentimeters > 0f ? draft.heightCentimeters : frontLayer.heightCentimeters;
+        frontLayer.panelType = draft.panelType;
+        frontLayer.fabricStyle = draft.fabricStyle;
+        frontLayer.fabricMaterialName = draft.fabricMaterialName;
+        frontLayer.fabricMaterialPath = draft.fabricMaterialPath;
+        frontLayer.foldsPerMeter = draft.foldsPerMeter;
+        frontLayer.foldDepthCentimeters = draft.foldDepthCentimeters;
+        frontLayer.foldProfile = draft.foldProfile;
+        frontLayer.naturalness = draft.fabricNaturalness;
+        frontLayer.seed = draft.fabricSeed;
+        settings.modelName = draft.modelName;
+        settings.rodMaterialName = draft.rodMaterialName;
+        settings.rodMaterialPath = draft.rodMaterialPath;
+        settings.SyncLegacyFromFrontLayer();
+        CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(settings);
+        CurtainViewSettingsStore.ApplyToDraft(settings, draft);
         UnityARHostBridge.SaveLastViewConfig();
-        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(draft));
+        CurtainViewSettingsStore.SaveLast(settings);
         ClientRepository.UpdateCurrentRecordSelection(
             ClientSession.SelectedClientId,
             VisitDraftSession.TargetRoomId,

@@ -28,9 +28,19 @@ public static class UnityARHostBridge
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         ReadLaunchData();
-        if (IsHostedByReact)
-            SceneManager.LoadScene(IsCatalogPreview ? "Catalog" : "AR_Test");
+        string targetScene = IsHostedByReact && IsCatalogPreview ? "Catalog" : "AR_Test";
+        LoadStartupScene(targetScene);
+#else
+        if (SceneManager.GetActiveScene().name == "UnityBootstrap")
+            LoadStartupScene("AR_Test");
 #endif
+    }
+
+    private static void LoadStartupScene(string sceneName)
+    {
+        if (SceneManager.GetActiveScene().name == sceneName) return;
+        Debug.Log("Unity bootstrap abrindo a cena " + sceneName + ".");
+        SceneManager.LoadScene(sceneName);
     }
 
     public static void ReadLaunchData()

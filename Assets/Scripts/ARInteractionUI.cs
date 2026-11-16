@@ -67,7 +67,7 @@ public class ARInteractionUI : MonoBehaviour
 
     private void Start()
     {
-        placementController = FindFirstObjectByType<ARPlacementController>();
+        placementController = FindAnyObjectByType<ARPlacementController>();
         if (placementController != null) placementController.InitializeCurtainSettings();
         surfaceUI = GetComponent<ARSurfaceUI>();
         if (btnPosicionar == null || btnAjustar == null || btnModoGesto == null)
@@ -752,7 +752,6 @@ public class ARInteractionUI : MonoBehaviour
         CatalogSelectionSession.SelectedFabricMaterial = fabrics[index];
         VisitDraftSession.Current.fabricMaterialName = fabricNames[index];
         VisitDraftSession.Current.fabricMaterialPath = fabricPaths[index];
-        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current));
         if (placementController != null) placementController.ApplyFabricMaterial(fabrics[index], fabricNames[index], fabricPaths[index]);
         UpdateSelection();
     }
@@ -763,7 +762,6 @@ public class ARInteractionUI : MonoBehaviour
         CatalogSelectionSession.SelectedRodMaterial = rods[index];
         VisitDraftSession.Current.rodMaterialName = RodNames[index];
         VisitDraftSession.Current.rodMaterialPath = string.Empty;
-        CurtainViewSettingsStore.SaveLast(CurtainViewSettingsStore.FromDraft(VisitDraftSession.Current));
         if (placementController != null) placementController.ApplyRodMaterial(rods[index], RodNames[index]);
         UpdateSelection();
     }

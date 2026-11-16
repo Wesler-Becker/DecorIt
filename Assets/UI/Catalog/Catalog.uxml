@@ -13,8 +13,36 @@
         <ui:Label text="PRÉVIA AO VIVO" class="eyebrow" />
         <ui:Image name="previewImage" class="preview-image" />
       </ui:VisualElement>
+      <ui:VisualElement class="card layer-card">
+        <ui:Label text="Suporte" class="section-title" />
+        <ui:VisualElement class="row">
+          <ui:Button name="supportRod" text="Varão" class="choice-button" />
+          <ui:Button name="supportRail" text="Trilho" class="choice-button" />
+        </ui:VisualElement>
+        <ui:VisualElement class="row support-count-row">
+          <ui:Button name="supportSingle" text="Simples" class="choice-button" />
+          <ui:Button name="supportDouble" text="Duplo" class="choice-button" />
+        </ui:VisualElement>
+        <ui:Label name="supportHint" class="help-text" />
+      </ui:VisualElement>
+      <ui:VisualElement class="card layer-card">
+        <ui:Label text="Camadas de tecido" class="section-title" />
+        <ui:VisualElement class="layer-tabs-row">
+          <ui:ScrollView name="layerTabsScroll" class="layer-tabs-scroll" mode="Horizontal">
+            <ui:VisualElement name="layerTabs" class="layer-tabs" />
+          </ui:ScrollView>
+          <ui:Button name="addLayerButton" text="+" class="add-layer-button" />
+        </ui:VisualElement>
+        <ui:Label name="activeLayerLabel" class="field-title" />
+        <ui:VisualElement name="layerGroup" class="row">
+          <ui:Button name="groupFront" text="Varão 1 · frente" class="choice-button" />
+          <ui:Button name="groupBack" text="Varão 2 · trás" class="choice-button" />
+        </ui:VisualElement>
+        <ui:TextField name="layerSpacingField" label="Folga à frente · mm" class="spacing-field" />
+        <ui:Label name="spacingHint" class="help-text" />
+      </ui:VisualElement>
       <ui:VisualElement class="card">
-        <ui:Label text="Medidas · centímetros" class="section-title" />
+        <ui:Label text="Medidas desta camada · cm" class="section-title" />
         <ui:VisualElement class="row">
           <ui:TextField name="widthField" label="Largura" class="dimension-field" />
           <ui:TextField name="heightField" label="Altura" class="dimension-field" />
@@ -26,7 +54,7 @@
         </ui:VisualElement>
       </ui:VisualElement>
       <ui:VisualElement class="card">
-        <ui:Label text="Estilo da cortina" class="section-title" />
+        <ui:Label text="Estilo da camada" class="section-title" />
         <ui:VisualElement class="style-grid">
           <ui:Button name="styleSmooth" text="Liso" class="choice-button" />
           <ui:Button name="styleNatural" text="Natural" class="choice-button" />
@@ -35,13 +63,20 @@
         </ui:VisualElement>
       </ui:VisualElement>
       <ui:VisualElement class="card">
-        <ui:VisualElement class="fabric-header">
-          <ui:Label text="Tecido" class="section-title fabric-title" />
-          <ui:TextField name="materialSearch" label="Buscar" class="search-field" />
-        </ui:VisualElement>
-        <ui:ScrollView name="materialScroll" class="material-scroll" mode="Vertical">
-          <ui:VisualElement name="materialGrid" class="material-grid" />
-        </ui:ScrollView>
+        <ui:Label name="openingValue" class="section-title" />
+        <ui:Slider name="openingSlider" low-value="0" high-value="1" class="config-slider" />
+        <ui:Label name="openingHint" class="help-text" />
+      </ui:VisualElement>
+      <ui:VisualElement class="card fabric-card">
+        <ui:Label text="Tecido da camada" class="section-title" />
+        <ui:Button name="selectedFabricButton" class="selected-fabric-button">
+          <ui:Image name="selectedFabricSwatch" class="selected-fabric-swatch" />
+          <ui:VisualElement class="selected-fabric-copy">
+            <ui:Label text="EM USO" class="selected-fabric-eyebrow" />
+            <ui:Label name="selectedFabricName" class="selected-fabric-name" />
+          </ui:VisualElement>
+          <ui:Label text="Trocar ›" class="selected-fabric-action" />
+        </ui:Button>
       </ui:VisualElement>
       <ui:VisualElement name="customCard" class="card custom-card">
         <ui:Label text="Caimento · ajuste ao seu gosto" class="section-title" />
@@ -53,14 +88,28 @@
         <ui:Slider name="profileSlider" low-value="0.5" high-value="2" class="config-slider" />
         <ui:Label name="naturalnessValue" class="slider-label" />
         <ui:Slider name="naturalnessSlider" low-value="0" high-value="1" class="config-slider" />
-        <ui:Label name="openingValue" class="slider-label" />
-        <ui:Slider name="openingSlider" low-value="0" high-value="1" class="config-slider" />
+        <ui:Button name="varyDrapeButton" text="Variar caimento desta camada" class="choice-button" />
       </ui:VisualElement>
       <ui:Label name="statusLabel" class="status-label" />
     </ui:ScrollView>
     <ui:VisualElement class="footer">
       <ui:Label name="selectionSummary" class="selection-summary" />
       <ui:Button name="applyButton" text="Usar esta cortina" class="primary-button" />
+    </ui:VisualElement>
+    <ui:VisualElement name="materialPicker" class="material-picker">
+      <ui:VisualElement class="material-dialog">
+        <ui:VisualElement class="material-picker-header">
+          <ui:VisualElement class="material-picker-copy">
+            <ui:Label text="Escolher tecido" class="material-picker-title" />
+            <ui:Label text="Selecione um material para esta camada" class="material-picker-subtitle" />
+          </ui:VisualElement>
+          <ui:Button name="closeMaterialPicker" text="×" class="close-picker-button" />
+        </ui:VisualElement>
+        <ui:TextField name="materialSearch" label="Buscar" class="search-field" />
+        <ui:ScrollView name="materialScroll" class="material-scroll" mode="Vertical">
+          <ui:VisualElement name="materialGrid" class="material-grid" />
+        </ui:ScrollView>
+      </ui:VisualElement>
     </ui:VisualElement>
   </ui:VisualElement>
 </ui:UXML>
