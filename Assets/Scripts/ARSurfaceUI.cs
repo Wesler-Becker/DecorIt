@@ -16,22 +16,13 @@ public class ARSurfaceUI : MonoBehaviour
     [SerializeField]
     private Color corAtiva = new Color(1f, 0.92f, 0.5f);
 
-    private static bool? visibilidadeAoRetornarDoCatalogo;
     private bool superficiesVisiveis;
 
     public bool PlanesVisible => superficiesVisiveis;
 
-    public static void PreserveVisibilityForCatalogReturn(bool visible)
-    {
-        visibilidadeAoRetornarDoCatalogo = visible;
-    }
-
     private void Awake()
     {
-        // New AR sessions start with planes hidden. A trip to the catalog is the
-        // only scene change that restores the current choice.
-        superficiesVisiveis = visibilidadeAoRetornarDoCatalogo ?? false;
-        visibilidadeAoRetornarDoCatalogo = null;
+        superficiesVisiveis = false;
     }
 
     public void HideLegacyButton()
@@ -84,22 +75,26 @@ public class ARSurfaceUI : MonoBehaviour
     {
         // Aplica o estado atual também aos novos planos
         foreach (var plane in args.added)
-        {
-            plane.gameObject.SetActive(
-                superficiesVisiveis
-            );
-        }
+            SetPlaneVisibility(plane, superficiesVisiveis);
+        foreach (var plane in args.updated)
+            SetPlaneVisibility(plane, superficiesVisiveis);
+    }
+
+    public void RefreshVisibility() { AtualizarPlanos(); AtualizarInterface(); }
+
+    private static void SetPlaneVisibility(ARPlane plane, bool visible)
+    {
+        // AR Foundation can reactivate a trackable or toggle its renderer when
+        // tracking changes. Suppress drawing independently, without stopping detection.
+        foreach (Renderer renderer in plane.GetComponentsInChildren<Renderer>(true))
+            renderer.forceRenderingOff = !visible;
     }
 
     private void AtualizarPlanos()
     {
         if (planeManager == null) return;
         foreach (var plane in planeManager.trackables)
-        {
-            plane.gameObject.SetActive(
-                superficiesVisiveis
-            );
-        }
+            SetPlaneVisibility(plane, superficiesVisiveis);
     }
 
     private void AtualizarInterface()

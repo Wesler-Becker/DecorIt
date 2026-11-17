@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ActivityIndicator, Alert, Dimensions, FlatList, Linking, Modal, Pressable, StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
-import {createNavigationContainerRef, NavigationContainer} from '@react-navigation/native';
+import {createNavigationContainerRef, NavigationContainer, DefaultTheme, DarkTheme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {initialWindowMetrics, SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -20,7 +20,7 @@ import {
   VisitScreen,
 } from './src/screens';
 import {AppStateProvider, DraftProvider} from './src/state/AppState';
-import {colors} from './src/theme';
+import {ThemeProvider, useTheme, type ThemeColors} from './src/theme';
 import {openQuickAR} from './src/quickAR';
 import {useAppState} from './src/state/AppState';
 import type {MainTabParamList, RootStackParamList} from './src/types';
@@ -39,6 +39,8 @@ function navigateToQuickARClient(url: string | null) {
 }
 
 function MainTabs() {
+  const {colors} = useTheme();
+  const appStyles = React.useMemo(() => createStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
   const {clients, addClient} = useAppState();
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -79,7 +81,7 @@ function MainTabs() {
         tabBarActiveTintColor: colors.blue,
         tabBarInactiveTintColor: colors.muted,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: colors.surface,
           borderTopColor: colors.line,
           height: 72 + insets.bottom,
           paddingTop: 7,
@@ -88,7 +90,7 @@ function MainTabs() {
         tabBarLabelStyle: {fontSize: 11, fontWeight: '600'},
         tabBarIcon: ({color, size}) => route.name === 'AR Rápido' ? null : <TabIcon name={route.name} color={color} size={size} />,
         tabBarButton: route.name === 'AR Rápido' ? props => <Pressable {...props} onPress={() => {setClientQuery(''); setPickerVisible(true);}} style={[props.style, appStyles.quickCameraTab]} accessibilityRole="button" accessibilityLabel="Abrir câmera AR">
-          <View style={appStyles.quickCameraCircle}><Camera size={29} color="#FFFFFF" /></View><Text numberOfLines={1} allowFontScaling={false} style={appStyles.quickCameraLabel}>AR</Text>
+          <View style={appStyles.quickCameraCircle}><Camera size={29} color={colors.onPrimary} /></View><Text numberOfLines={1} allowFontScaling={false} style={appStyles.quickCameraLabel}>AR</Text>
         </Pressable> : undefined,
       })}>
       <Tabs.Screen name="Início" component={HomeScreen} />
@@ -101,8 +103,8 @@ function MainTabs() {
       <Pressable style={appStyles.quickModalBackdrop} onPress={() => setPickerVisible(false)}>
         <Pressable style={appStyles.quickModalCard} onPress={event => event.stopPropagation()}>
           <View style={appStyles.quickModalHeading}><View style={{flex: 1}}><Text style={appStyles.quickModalTitle}>Visualizar em AR</Text><Text style={appStyles.quickModalHint}>Escolha o cliente para salvar as fotos.</Text></View><Pressable onPress={() => setPickerVisible(false)} style={appStyles.quickModalClose} accessibilityRole="button" accessibilityLabel="Fechar"><X size={22} color={colors.muted} /></Pressable></View>
-          <View style={appStyles.quickSearch}><Search size={21} color={colors.muted} /><TextInput value={clientQuery} onChangeText={setClientQuery} placeholder="Buscar cliente pelo nome" placeholderTextColor="#99A5AC" style={appStyles.quickSearchInput} autoCapitalize="words" autoFocus /></View>
-          {matches.length ? <FlatList data={matches} keyExtractor={client => client.id} keyboardShouldPersistTaps="handled" style={appStyles.quickClientList} renderItem={({item}) => <Pressable onPress={() => {void launch(item);}} disabled={launching} style={appStyles.quickClientRow}><View style={appStyles.quickClientAvatar}><Text style={appStyles.quickClientInitial}>{item.name.trim().charAt(0).toLocaleUpperCase('pt-BR')}</Text></View><View style={{flex: 1}}><Text style={appStyles.quickClientName}>{item.name}</Text>{item.phone ? <Text style={appStyles.quickClientPhone}>{item.phone}</Text> : null}</View>{launching ? <ActivityIndicator color={colors.blue} /> : <ChevronRight size={22} color={colors.muted} />}</Pressable>} /> : <View style={appStyles.quickNoResults}><Text style={appStyles.quickNoResultsTitle}>{clientQuery.trim() ? 'Nenhum cliente encontrado com esse nome.' : 'Ainda não há clientes cadastrados.'}</Text>{clientQuery.trim() ? <Pressable onPress={() => {void createAndLaunch();}} disabled={launching} style={appStyles.quickCreateButton}>{launching ? <ActivityIndicator color="#FFFFFF" /> : <UserPlus size={21} color="#FFFFFF" />}<Text style={appStyles.quickCreateText}>Criar “{clientQuery.trim()}” e abrir a câmera</Text></Pressable> : null}</View>}
+          <View style={appStyles.quickSearch}><Search size={21} color={colors.muted} /><TextInput value={clientQuery} onChangeText={setClientQuery} placeholder="Buscar cliente pelo nome" placeholderTextColor={colors.muted} style={appStyles.quickSearchInput} autoCapitalize="words" autoFocus /></View>
+          {matches.length ? <FlatList data={matches} keyExtractor={client => client.id} keyboardShouldPersistTaps="handled" style={appStyles.quickClientList} renderItem={({item}) => <Pressable onPress={() => {void launch(item);}} disabled={launching} style={appStyles.quickClientRow}><View style={appStyles.quickClientAvatar}><Text style={appStyles.quickClientInitial}>{item.name.trim().charAt(0).toLocaleUpperCase('pt-BR')}</Text></View><View style={{flex: 1}}><Text style={appStyles.quickClientName}>{item.name}</Text>{item.phone ? <Text style={appStyles.quickClientPhone}>{item.phone}</Text> : null}</View>{launching ? <ActivityIndicator color={colors.blue} /> : <ChevronRight size={22} color={colors.muted} />}</Pressable>} /> : <View style={appStyles.quickNoResults}><Text style={appStyles.quickNoResultsTitle}>{clientQuery.trim() ? 'Nenhum cliente encontrado com esse nome.' : 'Ainda não há clientes cadastrados.'}</Text>{clientQuery.trim() ? <Pressable onPress={() => {void createAndLaunch();}} disabled={launching} style={appStyles.quickCreateButton}>{launching ? <ActivityIndicator color={colors.onPrimary} /> : <UserPlus size={21} color={colors.onPrimary} />}<Text style={appStyles.quickCreateText}>Criar “{clientQuery.trim()}” e abrir a câmera</Text></Pressable> : null}</View>}
         </Pressable>
       </Pressable>
     </Modal>
@@ -113,6 +115,11 @@ function MainTabs() {
 function QuickARPlaceholder() { return null; }
 
 export default function App() {
+  return <ThemeProvider><AppContent /></ThemeProvider>;
+}
+
+function AppContent() {
+  const {colors} = useTheme();
   useEffect(() => {
     const subscription = Linking.addEventListener('url', event => navigateToQuickARClient(event.url));
     void Linking.getInitialURL().then(url => navigateToQuickARClient(url ?? null));
@@ -121,10 +128,10 @@ export default function App() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics ?? {frame: {x: 0, y: 0, width: Dimensions.get('window').width, height: Dimensions.get('window').height}, insets: {top: 0, right: 0, bottom: 0, left: 0}}}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={colors.background === '#0D161C' ? 'light-content' : 'dark-content'} />
       <AppStateProvider>
         <DraftProvider>
-          <NavigationContainer ref={navigationRef} onReady={() => {
+          <NavigationContainer theme={{...(colors.background === '#0D161C' ? DarkTheme : DefaultTheme), colors: {...(colors.background === '#0D161C' ? DarkTheme : DefaultTheme).colors, background: colors.background, card: colors.surface, text: colors.ink, primary: colors.blue, border: colors.line}}} ref={navigationRef} onReady={() => {
             if (pendingQuickARClientId) {
               navigationRef.navigate('ClientProfile', {clientId: pendingQuickARClientId});
               pendingQuickARClientId = null;
@@ -150,27 +157,26 @@ export default function App() {
   );
 }
 
-const appStyles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   quickCameraTab: {flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: -13, gap: 2},
-  quickCameraCircle: {width: 55, height: 55, borderRadius: 20, backgroundColor: colors.blue, borderWidth: 3, borderColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', elevation: 7, shadowColor: colors.shadow, shadowOffset: {width: 0, height: 3}, shadowOpacity: 0.24, shadowRadius: 5},
+  quickCameraCircle: {width: 55, height: 55, borderRadius: 999, backgroundColor: colors.blue, borderWidth: 3, borderColor: colors.surface, alignItems: 'center', justifyContent: 'center', elevation: 7, shadowColor: colors.shadow, shadowOffset: {width: 0, height: 3}, shadowOpacity: 0.24, shadowRadius: 5},
   quickCameraLabel: {minWidth: 30, textAlign: 'center', includeFontPadding: false, fontSize: 11, fontWeight: '800', color: colors.blueDeep},
   quickModalBackdrop: {flex: 1, justifyContent: 'center', alignItems: 'center', padding: 22, backgroundColor: 'rgba(13,24,31,0.50)'},
-  quickModalCard: {width: '100%', maxHeight: '78%', paddingHorizontal: 20, paddingTop: 19, paddingBottom: 22, borderRadius: 26, backgroundColor: '#FFFFFF', gap: 14, elevation: 12},
+  quickModalCard: {width: '100%', maxHeight: '78%', paddingHorizontal: 16, paddingTop: 19, paddingBottom: 22, borderRadius: 26, backgroundColor: colors.surface, gap: 14, elevation: 12},
   quickModalHeading: {flexDirection: 'row', alignItems: 'center', gap: 12},
   quickModalTitle: {fontSize: 20, color: colors.ink, fontWeight: '800'},
   quickModalHint: {fontSize: 13, color: colors.muted, marginTop: 3},
-  quickModalClose: {width: 42, height: 42, borderRadius: 14, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center'},
-  quickSearch: {height: 50, borderRadius: 15, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.background, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14},
+  quickModalClose: {width: 42, height: 42, borderRadius: 18, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center'},
+  quickSearch: {height: 50, borderRadius: 22, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.background, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14},
   quickSearchInput: {flex: 1, color: colors.ink, fontSize: 15, paddingVertical: 0},
   quickClientList: {flexGrow: 0, maxHeight: 360},
   quickClientRow: {minHeight: 62, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: colors.line},
-  quickClientAvatar: {width: 40, height: 40, borderRadius: 14, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  quickClientAvatar: {width: 40, height: 40, borderRadius: 18, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   quickClientInitial: {fontSize: 16, color: colors.blue, fontWeight: '800'},
   quickClientName: {fontSize: 15, color: colors.ink, fontWeight: '700'},
   quickClientPhone: {fontSize: 12, color: colors.muted, marginTop: 2},
   quickNoResults: {gap: 12, paddingVertical: 10},
   quickNoResultsTitle: {fontSize: 14, color: colors.muted},
-  quickCreateButton: {minHeight: 50, borderRadius: 15, paddingHorizontal: 15, backgroundColor: colors.blue, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9},
-  quickCreateText: {fontSize: 14, fontWeight: '800', color: '#FFFFFF'},
+  quickCreateButton: {minHeight: 50, borderRadius: 22, paddingHorizontal: 15, backgroundColor: colors.blue, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9},
+  quickCreateText: {fontSize: 14, fontWeight: '800', color: colors.onPrimary},
 });
-

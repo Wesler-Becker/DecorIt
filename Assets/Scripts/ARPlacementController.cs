@@ -48,7 +48,8 @@ public class ARPlacementController : MonoBehaviour
 
     public void InitializeCurtainSettings()
     {
-        if (CatalogSelectionSession.HasConfiguredCurtain)
+        if (CatalogSelectionSession.HasConfiguredCurtain && CatalogSelectionSession.CurrentConfiguration != null &&
+            CatalogSelectionSession.SelectedCurtainPrefab != null)
             return;
 
         VisitDraft draft = VisitDraftSession.Current ?? new VisitDraft();
@@ -72,10 +73,12 @@ public class ARPlacementController : MonoBehaviour
         }
 
         settings.SyncLegacyFromFrontLayer();
+        CatalogSelectionSession.SelectedCurtainPrefab = FindModel(settings.modelName);
+        if (CatalogSelectionSession.SelectedCurtainPrefab != null)
+            settings.modelName = CatalogSelectionSession.SelectedCurtainPrefab.name;
         CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(settings);
         CurtainViewSettingsStore.ApplyToDraft(settings, draft);
-        UnityARHostBridge.SaveLastViewConfig();
-        CatalogSelectionSession.SelectedCurtainPrefab = FindModel(settings.modelName);
+        CurtainViewSettingsStore.SaveLast(settings);
         CatalogSelectionSession.SelectedFabricMaterial = CurtainViewSettingsStore.ResolveFabric(
             settings.fabricMaterialPath, settings.fabricMaterialName);
         if (CatalogSelectionSession.SelectedFabricMaterial == null)
@@ -88,6 +91,18 @@ public class ARPlacementController : MonoBehaviour
     public void PrepareToPlaceNewObject()
     {
         createNewObjectOnNextPlacement = true;
+    }
+
+    public void ApplyCatalogSelection()
+    {
+        if (spawnedObject != null)
+        {
+            ApplyVisitSelection(spawnedObject);
+            createNewObjectOnNextPlacement = false;
+            if (objectManipulator != null) objectManipulator.SetTargetObject(spawnedObject);
+        }
+        else PrepareToPlaceNewObject();
+        if (interactionUI != null) interactionUI.ResumeAfterCatalog(spawnedObject != null);
     }
 
     public string ActiveModelName => CurrentPrefab() != null ? CurrentPrefab().name : "Cortina";
@@ -147,6 +162,7 @@ public class ARPlacementController : MonoBehaviour
     {
         if (UnityARHostBridge.IsPhotoOnly && !UnityARHostBridge.IsQuickAR) return;
         if (!createNewObjectOnNextPlacement) return;
+        InitializeCurtainSettings();
 
         // Só permite posicionar se o modo estiver ativo
         if (interactionUI != null &&

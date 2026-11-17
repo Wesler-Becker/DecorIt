@@ -28,6 +28,12 @@ O app usa AR Foundation e ARCore no Android. Permissão de câmera, serviços de
 
 A aba **Catálogo** abre a prévia sem confirmar uma seleção. Ao acessá-lo pelo fluxo AR, é possível configurar e usar a cortina na câmera. A prévia acompanha a rolagem e pode ser recolhida.
 
+Ao abrir a configuração dentro do AR, a sessão de rastreamento e os objetos permanecem carregados.
+Concluir ou voltar aplica as alterações ao objeto selecionado, preservando posição, rotação e escala;
+os demais objetos continuam como estavam. Sem objeto posicionado, a volta prepara um único posicionamento.
+A escolha de mostrar ou ocultar os planos também permanece. O primeiro posicionamento usa a última
+configuração disponível no modelo procedural; o antigo prefab básico de teste foi removido.
+
 A configuração permite medidas e painéis por camada, até oito camadas, tecidos, estilos de prega, caimento, distância entre camadas e suporte por varão ou trilho. O suporte pode ser simples ou duplo. No duplo, as camadas são atribuídas a um dos suportes e as camadas do mesmo grupo compartilham a abertura. A distância é medida entre os planos centrais; para impedir interseção, pregas podem ser comprimidas. A busca de tecidos procura em qualquer parte do nome e ignora acentos e maiúsculas.
 
 Os materiais atualmente fazem parte do projeto e do catálogo Unity. Upload de modelos ou tecidos pelo usuário e sincronização remota não estão implementados. Para o funcionamento interno das camadas e limitações da simulação, consulte [Cortinas procedurais](ProceduralCurtains.md).

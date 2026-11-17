@@ -76,6 +76,13 @@ Em Android, `SecureFieldsModule` usa AES-GCM com chave AES de 256 bits gerada no
 
 ## AR e geração da cortina
 
+`ARCatalogSession` carrega o catálogo de forma aditiva quando ele é aberto na câmera.
+Durante a configuração, suspende os controles AR e os Canvas, mantendo o rastreamento e
+os objetos na cena original. Ao retornar, aplica a configuração ao alvo de `ARPlacementController`
+e descarrega apenas o catálogo. `ARSurfaceUI` usa `Renderer.forceRenderingOff` nos planos,
+incluindo planos atualizados, para controlar a exibição sem desativar os trackables.
+`Tools/Curtains/VerifyARCatalogFlow.cs` verifica esse fluxo em Play Mode com cenas temporárias.
+
 O posicionamento usa um raycast do AR Foundation quando encontra um plano e, caso contrário, posiciona à frente da câmera a uma distância padrão. A orientação inicial mantém a cortina em pé. Uma solicitação de **Adicionar objeto** autoriza um posicionamento; os gestos de edição atuam no objeto selecionado. A visualização dos planos começa oculta e a escolha é preservada ao ir ao catálogo e voltar à câmera.
 
 `CurtainViewSettings` guarda dimensões, suporte e camadas; `CurtainController` configura os painéis e suportes; `ProceduralCurtainMesh` gera as malhas. O catálogo usa UI Toolkit e uma câmera com `RenderTexture` para a prévia. Ele funciona em modo de configuração ou de prévia, este sem botão de confirmação. Os materiais ativos são referenciados pelo catálogo Unity em `Resources`; consulte [Cortinas procedurais](ProceduralCurtains.md) e [Materiais](CurtainMaterials.md) para detalhes.

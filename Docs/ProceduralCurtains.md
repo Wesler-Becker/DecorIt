@@ -44,6 +44,23 @@ voltar ao suporte simples, todas usam a abertura do suporte 1; a atribuição do
 grupos e a abertura do suporte 2 são preservadas para quando o duplo for reativado.
 A ordem das camadas dentro de cada grupo segue a ordem das abas.
 
+O trilho usa um perfil em C com canal voltado para baixo, de 18 mm de profundidade
+e 12 mm de altura. A face inferior fica 20 mm acima do topo do tecido, independentemente
+do deslocamento do varão. Pequenos deslizantes com cabeça achatada, haste curta e
+argola fechada em D pendem desse canal; no duplo, uma chapa superior une os dois canais.
+As argolas acompanham o recolhimento dos painéis
+e formam uma única malha, com um material plástico compartilhado e sem projetar sombras.
+O suporte mantém o acabamento selecionado.
+
+Para evitar que os perfis do trilho duplo se atravessem, os eixos dos canais respeitam
+um mínimo de 20 mm entre si. Isso não aumenta o espaçamento configurado dos tecidos;
+pequenas conexões ligam as argolas aos pontos de fixação na borda superior das pregas.
+Esse modelo é uma aproximação visual de trilho com deslizantes, sem simulação mecânica.
+
+A verificação de geometria está em `Tools/Curtains/VerifyRailModel.cs` e pode ser executada
+pelo comando `unity command run_script --file Tools/Curtains/VerifyRailModel.cs --entry VerifyRailModel.Run`.
+Ela valida os canais, as alturas e a troca entre trilho e varão, e gera prévias em `Temp/RailReview`.
+
 **Distância entre camadas**, em milímetros, é a distância entre os planos centrais
 do tecido selecionado e do anterior, com mínimo de **2 mm**. As pregas são
 comprimidas em profundidade quando necessário para não atravessar a camada vizinha;

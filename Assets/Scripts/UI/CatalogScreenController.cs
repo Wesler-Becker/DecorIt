@@ -62,7 +62,10 @@ public sealed class CatalogScreenController : MonoBehaviour
         previewOnly = UnityARHostBridge.IsCatalogPreview;
         root = document.rootVisualElement;
         screen = root.Q<VisualElement>("root");
-        root.style.backgroundColor = new Color(0.157f, 0.408f, 0.573f, 1f);
+        screen.EnableInClassList("dark", UnityARHostBridge.IsDarkTheme);
+        root.style.backgroundColor = UnityARHostBridge.IsDarkTheme
+            ? new Color(13f / 255f, 22f / 255f, 28f / 255f, 1f)
+            : new Color(245f / 255f, 247f / 255f, 248f / 255f, 1f);
         root.RegisterCallback<GeometryChangedEvent>(_ => ApplySafeAreaInsets());
         CacheElements();
         LoadMaterials();
@@ -245,7 +248,9 @@ public sealed class CatalogScreenController : MonoBehaviour
         const int previewLayer = 2;
         previewRoot = new GameObject("CurtainCatalogPreview") { hideFlags = HideFlags.DontSave };
         previewRoot.layer = previewLayer;
+        SceneManager.MoveGameObjectToScene(previewRoot, gameObject.scene);
         previewObject = Instantiate(curtainPrefab, Vector3.zero, Quaternion.identity);
+        SceneManager.MoveGameObjectToScene(previewObject, gameObject.scene);
         previewObject.name = "CurtainPreviewModel";
         previewObject.hideFlags = HideFlags.DontSave;
         SetLayerRecursively(previewObject.transform, previewLayer);
@@ -687,6 +692,7 @@ public sealed class CatalogScreenController : MonoBehaviour
         UnityARHostBridge.SaveLastViewConfig();
         if (CatalogSelectionSession.ReturnToAR)
         {
+            if (ARCatalogSession.ReturnToAR()) return;
             CatalogSelectionSession.ReturnToAR = false;
             CatalogSelectionSession.ReturnToVisit = false;
             SceneManager.LoadScene("AR_Test");
@@ -708,6 +714,8 @@ public sealed class CatalogScreenController : MonoBehaviour
         PersistWorking();
         if (CatalogSelectionSession.ReturnToAR)
         {
+            CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(working);
+            if (ARCatalogSession.ReturnToAR()) return;
             CatalogSelectionSession.ReturnToAR = false;
             CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.LoadLast();
             SceneManager.LoadScene("AR_Test");

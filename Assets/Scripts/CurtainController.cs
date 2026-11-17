@@ -63,11 +63,16 @@ public class CurtainController : MonoBehaviour
     private float secondaryOpening;
     private Mesh rodMesh;
     private Mesh railMesh;
+    private Transform railBackplate;
+    private Mesh railBackplateMesh;
     private Transform secondRod;
     private Transform secondLeftFinial;
     private Transform secondRightFinial;
-    private readonly List<Transform> railHooks = new List<Transform>();
-    private int usedRailHooks;
+    private Transform railHooksRoot;
+    private Mesh railHooksMesh;
+    private Material railHookMaterial;
+    private readonly List<Vector3> railHookVertices = new List<Vector3>();
+    private readonly List<int> railHookTriangles = new List<int>();
     public const float MinimumLayerClearanceMillimeters = 2f;
 
     private sealed class PanelGroup
@@ -422,12 +427,7 @@ public class CurtainController : MonoBehaviour
         if (rodBody == null) return;
         if (rodMesh == null) rodMesh = rodBody.GetComponent<MeshFilter>().sharedMesh;
         if (supportType == "Rail" && railMesh == null)
-        {
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.SetActive(false);
-            railMesh = cube.GetComponent<MeshFilter>().sharedMesh;
-            if (Application.isPlaying) Destroy(cube); else DestroyImmediate(cube);
-        }
+            railMesh = CurtainRailGeometry.CreateProfile();
         if (doubleSupport && secondRod == null)
         {
             secondRod = CloneSupport(rodBody, "RodBody_2");
@@ -457,9 +457,33 @@ public class CurtainController : MonoBehaviour
                 count++;
             }
             depth = count > 0 ? depth / count : support == 0 ? 0.12f : previousSupportDepth - 0.12f;
+            if (supportType == "Rail" && support == 1)
+                depth = Mathf.Min(depth, previousSupportDepth - CurtainRailGeometry.Depth - .002f);
             UpdateRod(body, left, right, width > 0f ? width : widthCm / 100f, depth);
             previousSupportDepth = depth;
         }
+        UpdateRailBackplate();
+    }
+
+    private void UpdateRailBackplate()
+    {
+        bool visible = supportType == "Rail" && doubleSupport && secondRod != null;
+        if (railBackplate != null) railBackplate.gameObject.SetActive(visible);
+        if (!visible) return;
+        if (railBackplate == null)
+        {
+            var item = new GameObject("DoubleRailBackplate", typeof(MeshFilter), typeof(MeshRenderer));
+            if (!Application.isPlaying) item.hideFlags = HideFlags.HideAndDontSave;
+            railBackplate = item.transform;
+            railBackplate.SetParent(rodBody.parent, false);
+            railBackplateMesh = CurtainRailGeometry.CreateBackplate();
+            item.GetComponent<MeshFilter>().sharedMesh = railBackplateMesh;
+        }
+        railBackplate.gameObject.layer = rodBody.gameObject.layer;
+        railBackplate.GetComponent<MeshRenderer>().sharedMaterial = rodBody.GetComponent<MeshRenderer>().sharedMaterial;
+        Vector3 front = rodBody.localPosition, back = secondRod.localPosition;
+        railBackplate.localPosition = new Vector3(0, front.y + CurtainRailGeometry.Height / 2 + .0006f, (front.z + back.z) / 2);
+        railBackplate.localScale = new Vector3(Mathf.Max(rodBody.localScale.x, secondRod.localScale.x), .0012f, Mathf.Abs(front.z - back.z) + CurtainRailGeometry.Depth);
     }
 
     private Transform CloneSupport(Transform source, string partName)
@@ -473,23 +497,42 @@ public class CurtainController : MonoBehaviour
 
     private void UpdateRailHooks()
     {
-        usedRailHooks = 0;
-        if (supportType == "Rail" && rodBody != null && rodMesh != null)
+        bool visible = supportType == "Rail" && rodBody != null;
+        if (railHooksRoot != null) railHooksRoot.gameObject.SetActive(visible);
+        if (!visible) return;
+        if (railHooksRoot == null)
         {
-            for (int i = 0; i < layerSettings.Count; i++)
-            {
-                CurtainLayerViewSettings layer = layerSettings[i];
-                Transform rail = doubleSupport && layer.supportIndex == 1 ? secondRod : rodBody;
-                if (rail == null) continue;
-                PanelGroup group = panelGroups[i];
-                float closedWidth = layer.widthCentimeters / 100f;
-                AddPanelRailHooks(group.single, rail, layer.foldsPerMeter, closedWidth);
-                AddPanelRailHooks(group.left, rail, layer.foldsPerMeter, closedWidth / 2f);
-                AddPanelRailHooks(group.right, rail, layer.foldsPerMeter, closedWidth / 2f);
-            }
+            var item = new GameObject("RailCarriersAndHooks", typeof(MeshFilter), typeof(MeshRenderer));
+            if (!Application.isPlaying) item.hideFlags = HideFlags.HideAndDontSave;
+            railHooksRoot = item.transform;
+            railHooksRoot.SetParent(transform, false);
+            railHooksMesh = new Mesh { name = "Curtain combined rail hooks", hideFlags = HideFlags.HideAndDontSave };
+            item.GetComponent<MeshFilter>().sharedMesh = railHooksMesh;
+            railHookMaterial = new Material(rodBody.GetComponent<MeshRenderer>().sharedMaterial) { name = "Rail white plastic carriers", hideFlags = HideFlags.HideAndDontSave };
+            railHookMaterial.color = new Color(.92f,.93f,.92f,1f);
+            if (railHookMaterial.HasProperty("_Metallic")) railHookMaterial.SetFloat("_Metallic", 0f);
+            if (railHookMaterial.HasProperty("_Smoothness")) railHookMaterial.SetFloat("_Smoothness", .3f);
+            var renderer = item.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = railHookMaterial;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
         }
-        for (int i = usedRailHooks; i < railHooks.Count; i++)
-            if (railHooks[i] != null) railHooks[i].gameObject.SetActive(false);
+        railHooksRoot.gameObject.layer = gameObject.layer;
+        railHookVertices.Clear();
+        railHookTriangles.Clear();
+        for (int i = 0; i < layerSettings.Count; i++)
+        {
+            CurtainLayerViewSettings layer = layerSettings[i];
+            Transform rail = doubleSupport && layer.supportIndex == 1 ? secondRod : rodBody;
+            if (rail == null) continue;
+            PanelGroup group = panelGroups[i];
+            float closedWidth = layer.widthCentimeters / 100f;
+            GetStyleValues(layer, out float density, out _, out _, out _);
+            AddPanelRailHooks(group.single, rail, density, closedWidth);
+            AddPanelRailHooks(group.left, rail, density, closedWidth / 2f);
+            AddPanelRailHooks(group.right, rail, density, closedWidth / 2f);
+        }
+        CurtainRailGeometry.Apply(railHooksMesh, railHookVertices, railHookTriangles);
     }
 
     private void AddPanelRailHooks(ProceduralCurtainMesh panel, Transform rail, float density, float closedWidth)
@@ -498,30 +541,12 @@ public class CurtainController : MonoBehaviour
         int count = Mathf.Clamp(Mathf.CeilToInt(closedWidth * density) + 1, 2, 32);
         for (int i = 0; i < count; i++)
         {
-            Transform hook;
-            if (usedRailHooks < railHooks.Count) hook = railHooks[usedRailHooks];
-            else
-            {
-                var item = new GameObject("RodBody_RailHook", typeof(MeshFilter), typeof(MeshRenderer));
-                item.layer = gameObject.layer;
-                if (!Application.isPlaying) item.hideFlags = HideFlags.HideAndDontSave;
-                item.GetComponent<MeshFilter>().sharedMesh = rodMesh;
-                hook = item.transform;
-                railHooks.Add(hook);
-            }
-            usedRailHooks++;
-            hook.SetParent(panel.transform, false);
-            hook.gameObject.SetActive(true);
-            hook.gameObject.layer = panel.gameObject.layer;
-            hook.GetComponent<MeshRenderer>().sharedMaterial = rail.GetComponent<MeshRenderer>().sharedMaterial;
-            Vector3 start = panel.GetTopPoint((float)i / (count - 1));
-            Vector3 railPoint = panel.transform.InverseTransformPoint(rail.TransformPoint(new Vector3(
-                0f, -0.5f, 0f)));
-            Vector3 end = new Vector3(start.x, railPoint.y, railPoint.z);
-            Vector3 delta = end - start;
-            hook.localPosition = (start + end) * 0.5f;
-            hook.localRotation = Quaternion.FromToRotation(Vector3.up, delta.normalized);
-            hook.localScale = new Vector3(0.006f, delta.magnitude * 0.5f, 0.006f);
+            Vector3 railPoint = transform.InverseTransformPoint(rail.position);
+            float targetDepth = panel.transform.InverseTransformPoint(rail.position).z;
+            Vector3 start = panel.GetRailAttachmentPoint((float)i / (count - 1), .45f / (count - 1), targetDepth);
+            start = transform.InverseTransformPoint(panel.transform.TransformPoint(start));
+            Vector3 carrier = new Vector3(start.x, railPoint.y - CurtainRailGeometry.Height / 2f + CurtainRailGeometry.CarrierInset, railPoint.z);
+            CurtainRailGeometry.Hook(railHookVertices, railHookTriangles, Matrix4x4.Translate(carrier), start);
         }
     }
 
@@ -530,10 +555,10 @@ public class CurtainController : MonoBehaviour
         float rodLength = curtainWidth + rodExtraWidth;
         bool rail = supportType == "Rail";
         body.GetComponent<MeshFilter>().sharedMesh = rail ? railMesh : rodMesh;
-        body.localScale = rail ? new Vector3(rodLength, rodDiameter, rodDiameter) :
+        body.localScale = rail ? new Vector3(rodLength, 1f, 1f) :
             new Vector3(rodDiameter, rodLength / 2f, rodDiameter);
         body.localRotation = rail ? Quaternion.identity : Quaternion.Euler(0f, 0f, 90f);
-        body.localPosition = new Vector3(0f, rodHeightOffset, depth);
+        body.localPosition = new Vector3(0f, rail ? CurtainRailGeometry.FabricGap + CurtainRailGeometry.Height / 2f : rodHeightOffset, depth);
         float finialOffset = rodLength / 2f + finialSize / 2f;
         if (left == null || right == null) return;
         left.localPosition = new Vector3(-finialOffset, rodHeightOffset, depth);
@@ -556,14 +581,24 @@ public class CurtainController : MonoBehaviour
         DestroyGeneratedSupport(secondRod);
         DestroyGeneratedSupport(secondLeftFinial);
         DestroyGeneratedSupport(secondRightFinial);
-        foreach (Transform hook in railHooks) DestroyGeneratedSupport(hook);
-        railHooks.Clear();
+        DestroyGeneratedSupport(railHooksRoot);
+        DestroyGeneratedSupport(railBackplate);
+        DestroyGeneratedAsset(railBackplateMesh);
+        DestroyGeneratedAsset(railMesh);
+        DestroyGeneratedAsset(railHooksMesh);
+        DestroyGeneratedAsset(railHookMaterial);
     }
 
     private static void DestroyGeneratedSupport(Transform part)
     {
         if (part == null) return;
         if (Application.isPlaying) Destroy(part.gameObject); else DestroyImmediate(part.gameObject);
+    }
+
+    private static void DestroyGeneratedAsset(Object asset)
+    {
+        if (asset == null) return;
+        if (Application.isPlaying) Destroy(asset); else DestroyImmediate(asset);
     }
 
     private static void DestroyGeneratedPanel(ProceduralCurtainMesh panel)

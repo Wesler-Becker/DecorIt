@@ -80,6 +80,24 @@ public class ProceduralCurtainMesh : MonoBehaviour
         return vertices[column];
     }
 
+    public Vector3 GetRailAttachmentPoint(float fraction, float halfWindow, float targetDepth)
+    {
+        if (vertices == null || cachedColumns <= 0) return Vector3.zero;
+        int first = Mathf.Clamp(Mathf.RoundToInt((fraction - halfWindow) * cachedColumns), 0, cachedColumns);
+        int last = Mathf.Clamp(Mathf.RoundToInt((fraction + halfWindow) * cachedColumns), first, cachedColumns);
+        Vector3 best = GetTopPoint(fraction);
+        for (int i = first; i < last; i++)
+        {
+            Vector3 a = vertices[i], b = vertices[i + 1];
+            float t = Mathf.Abs(b.z - a.z) > .000001f ? Mathf.Clamp01((targetDepth - a.z) / (b.z - a.z)) : 0f;
+            Vector3 point = Vector3.Lerp(a, b, t);
+            float distance = Mathf.Abs(point.z - targetDepth);
+            if (distance < Mathf.Abs(best.z - targetDepth) ||
+                (distance < .00001f && Mathf.Abs(point.x - GetTopPoint(fraction).x) < Mathf.Abs(best.x - GetTopPoint(fraction).x))) best = point;
+        }
+        return best;
+    }
+
     public void LimitDepth(float maximumAbsoluteDepth)
     {
         if (generatedMesh == null || vertices == null) return;

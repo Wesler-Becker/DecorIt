@@ -2,6 +2,8 @@
 
 Este diretório contém o aplicativo React Native/TypeScript, o projeto Android que hospeda a biblioteca Unity e os scripts auxiliares. Para os passos completos de instalação, execução e geração de APK, consulte o [README principal](../README.md).
 
+O alvo atual é Android; a estrutura inicial iOS e o Gemfile foram retirados. Mantenha `patches/`: o `postinstall` aplica correções de ligação nativa necessárias para as dependências Android. Consulte a [revisão dos arquivos versionados](../Docs/RevisaoRepositorio.md) para os critérios de limpeza.
+
 ## Organização
 
 - `App.tsx`: navegação raiz, abas e atalho de AR rápido.

@@ -44,6 +44,14 @@ public class ARObjectManipulator : MonoBehaviour
     public void SetTargetObject(GameObject obj)
     {
         targetObject = obj;
+        wasDragging = false;
+        wasUsingTwoFingers = false;
+    }
+
+    private void OnDisable()
+    {
+        wasDragging = false;
+        wasUsingTwoFingers = false;
     }
 
     private void Update()

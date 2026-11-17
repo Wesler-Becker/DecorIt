@@ -152,9 +152,7 @@ npm run lint
 
 O aplicativo usa SQLite local através de OP-SQLite, com esquema e consultas tipados pelo Drizzle ORM. O esquema está em `mobile/src/data/schema.ts`; as migrations do Drizzle ficam em `mobile/drizzle/` e são aplicadas ao iniciar o app. Para gerar uma migration após alterar o esquema, execute `npm run db:generate` dentro de `mobile`.
 
-Nome, contato, endereço, observações e abertura do registro são protegidos por AES-GCM com chave gerada no Android Keystore. Os outros campos e os arquivos PNG não são criptografados por essa implementação. Desinstalar o app remove seus dados e a chave; não há recuperação de backup configurada. Arquivos JSON antigos do app são removidos na inicialização, conforme a decisão de descartar esses dados de desenvolvimento.
-
-A proteção dos campos foi implementada para Android; o armazenamento do aplicativo ainda precisa de uma implementação equivalente para iOS.
+Nome, contato, endereço, observações e abertura do registro são protegidos por AES-GCM com chave gerada no Android Keystore. Os outros campos e os arquivos PNG não são criptografados por essa implementação. Desinstalar o app remove seus dados e a chave; não há recuperação de backup configurada.
 
 Ao abrir a Unity, o Android passa o contexto do cliente e do registro. Fotos capturadas são associadas ao cliente em uma transação SQLite, e a última configuração da cortina é guardada em campos do banco. JSON é usado somente como formato temporário de comunicação entre componentes e nas respostas da API externa.
 
@@ -165,5 +163,6 @@ O catálogo de materiais usado no Unity é construído a partir de `Assets/Decor
 - [Guia do aplicativo mobile](mobile/README.md)
 - [Arquitetura, persistência e segurança](Docs/Arquitetura.md)
 - [Funcionalidades e fluxos](Docs/Funcionalidades.md)
+- [Interface visual e temas](Docs/InterfaceVisual.md)
 - [Revisão dos materiais de cortina](Docs/CurtainMaterials.md)
 - [Cortinas procedurais](Docs/ProceduralCurtains.md)

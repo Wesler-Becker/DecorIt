@@ -1,6 +1,0 @@
-{
-  "name": "DecorIt.Curtains.Editor",
-  "rootNamespace": "DecorIt.Curtains.Editor",
-  "includePlatforms": ["Editor"],
-  "autoReferenced": true
-}

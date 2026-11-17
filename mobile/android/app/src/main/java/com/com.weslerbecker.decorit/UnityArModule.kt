@@ -48,10 +48,19 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
 }
 
 object UnityArLauncher {
+  private fun isDarkTheme(context: Context): Boolean = runCatching {
+    android.database.sqlite.SQLiteDatabase.openDatabase(context.getDatabasePath("decorit.db").path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY).use { db ->
+      db.rawQuery("SELECT value FROM app_meta WHERE key = 'ui_theme'", null).use { cursor ->
+        cursor.moveToFirst() && cursor.getString(0) == "dark"
+      }
+    }
+  }.getOrDefault(false)
+
   fun openCatalogPreview(context: Context) {
     val intent = Intent(context, ImmersiveUnityPlayerActivity::class.java)
       .putExtra("decorit_rn_host", true)
       .putExtra("decorit_catalog_preview", true)
+      .putExtra("decorit_dark_theme", isDarkTheme(context))
     context.startActivity(intent)
   }
 
@@ -63,6 +72,7 @@ object UnityArLauncher {
       .putExtra("decorit_record_id", recordId)
       .putExtra("decorit_draft_json", draftJson)
       .putExtra("decorit_quick_ar", quickAR)
+      .putExtra("decorit_dark_theme", isDarkTheme(context))
     context.startActivity(intent)
   }
 }

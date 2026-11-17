@@ -14,10 +14,10 @@ public class ARInteractionUI : MonoBehaviour
     [SerializeField] private Button btnModoGesto;
     [SerializeField] private TMP_Text textoModoGesto;
 
-    private static readonly Color Ink = new Color(0.06f, 0.09f, 0.12f, 0.94f);
-    private static readonly Color Panel = new Color(0.035f, 0.055f, 0.075f, 0.91f);
+    private static readonly Color Ink = new Color(22f / 255f, 35f / 255f, 44f / 255f, 0.94f);
+    private static readonly Color Panel = new Color(13f / 255f, 22f / 255f, 28f / 255f, 0.94f);
     private static readonly Color SoftWhite = new Color(0.96f, 0.97f, 0.98f, 0.96f);
-    private static readonly Color Accent = new Color(0.29f, 0.72f, 0.94f, 1f);
+    private static readonly Color Accent = new Color(40f / 255f, 104f / 255f, 137f / 255f, 1f);
     private static readonly Color[] RodColors =
     {
         new Color(0.73f, 0.73f, 0.73f),
@@ -166,10 +166,8 @@ public class ARInteractionUI : MonoBehaviour
     private void OpenCurtainCatalog()
     {
         if (addOptionsPanel != null) addOptionsPanel.SetActive(false);
-        ARSurfaceUI.PreserveVisibilityForCatalogReturn(surfaceUI != null && surfaceUI.PlanesVisible);
-        CatalogSelectionSession.ReturnToAR = true;
-        CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.LoadLast();
-        SceneManager.LoadScene("Catalog");
+        if (placementController != null) placementController.InitializeCurtainSettings();
+        ARCatalogSession.Open(placementController);
     }
 
     private Button CreateGestureButton(string name, string icon, float x, System.Action action)
@@ -813,6 +811,16 @@ public class ARInteractionUI : MonoBehaviour
     public void ConfirmObjectPlacement()
     {
         modoPosicionar = false;
+        UpdateControlState();
+    }
+
+    public void ResumeAfterCatalog(bool hasObject)
+    {
+        modoPosicionar = !hasObject;
+        if (!hasObject) modoAjustar = false;
+        selectedFabricIndex = fabricPaths.FindIndex(path => path == VisitDraftSession.Current.fabricMaterialPath);
+        selectedRodIndex = FindPresetIndex(RodNames, VisitDraftSession.Current.rodMaterialName);
+        UpdateSelection();
         UpdateControlState();
     }
 

@@ -15,6 +15,13 @@
 #
 .utmp/
 
+# Local review copies, generated deliveries and platforms outside the Android scope
+/tmp/
+/Deliverables/
+/mobile/ios/
+/mobile/Gemfile
+/mobile/Gemfile.lock
+
 # Operating-system files
 .DS_Store
 Thumbs.db

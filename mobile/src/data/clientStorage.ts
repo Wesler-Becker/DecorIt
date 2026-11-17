@@ -17,6 +17,16 @@ type AppDatabase = OPSQLiteDatabase<typeof schema> & {$client: ReturnType<typeof
 let databasePromise: Promise<AppDatabase> | null = null;
 let storageTaskQueue: Promise<void> = Promise.resolve();
 
+export async function loadThemePreference(): Promise<string> {
+  const db = await getDatabase();
+  return String(db.$client.executeSync("SELECT value FROM app_meta WHERE key = 'ui_theme'").rows[0]?.value || 'light');
+}
+
+export async function saveThemePreference(value: 'light' | 'dark'): Promise<void> {
+  const db = await getDatabase();
+  await db.$client.execute("INSERT INTO app_meta (key, value) VALUES ('ui_theme', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", [value]);
+}
+
 async function removeOldJsonFiles(): Promise<void> {
   const base = Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath;
   if (!base) return;

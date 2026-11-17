@@ -1346,8 +1346,6 @@ MonoBehaviour:
   btnAjustar: {fileID: 1392617764}
   btnModoGesto: {fileID: 292387580}
   textoModoGesto: {fileID: 437058354}
-  corInativa: {r: 1, g: 1, b: 1, a: 1}
-  corAtiva: {r: 1, g: 0.92, b: 0.5, a: 1}
 --- !u!114 &1080965683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1630,9 +1628,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ARPlacementController
   raycastManager: {fileID: 1137400612}
-  objectToPlace: {fileID: 1460976451586105414, guid: 716b3f78c924e1343967b3632e86b455, type: 3}
+  objectToPlace: {fileID: 8223589973230322697, guid: 0b7d4ad631326e64f9e18678d270e712, type: 3}
   interactionUI: {fileID: 1080965682}
   objectManipulator: {fileID: 1137400618}
+  fallbackPlacementDistance: 2
 --- !u!114 &1137400618
 MonoBehaviour:
   m_ObjectHideFlags: 0

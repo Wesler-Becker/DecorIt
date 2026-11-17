@@ -78,4 +78,6 @@ com uma amostra real. As fontes foram solicitadas com repetição contínua, mas
 não representam um escaneamento têxtil com bordas calibradas. Superfícies transparentes com pregas muito sobrepostas
 podem apresentar limitações de ordenação da mistura de transparência.
 
-A cópia anterior à revisão foi preservada em `tmp/curtain-review/original-DecorItCurtains`.
+A cópia anterior à revisão foi preservada localmente em `tmp/curtain-review/original-DecorItCurtains`.
+Essa pasta é um backup de trabalho ignorado pelo Git; ela não é necessária para reconstruir
+ou compilar o aplicativo. As fontes de reconstrução versionadas ficam em `ArtSource/Curtains`.

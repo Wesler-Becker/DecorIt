@@ -10,6 +10,7 @@ public static class UnityARHostBridge
     public static bool IsPhotoOnly { get; private set; }
     public static bool IsQuickAR { get; private set; }
     public static bool IsCatalogPreview { get; private set; }
+    public static bool IsDarkTheme { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void OpenRequestedARScene()
@@ -41,6 +42,7 @@ public static class UnityARHostBridge
             using (var intent = activity.Call<AndroidJavaObject>("getIntent"))
             {
                 IsHostedByReact = intent.Call<bool>("getBooleanExtra", "decorit_rn_host", false);
+                IsDarkTheme = intent.Call<bool>("getBooleanExtra", "decorit_dark_theme", false);
                 IsPhotoOnly = IsHostedByReact && string.IsNullOrEmpty(intent.Call<string>("getStringExtra", "decorit_room_id"));
                 IsQuickAR = IsHostedByReact && intent.Call<bool>("getBooleanExtra", "decorit_quick_ar", false);
                 IsCatalogPreview = IsHostedByReact && intent.Call<bool>("getBooleanExtra", "decorit_catalog_preview", false);

@@ -34,6 +34,7 @@ import {
   Sofa,
   Sparkles,
   UserRound,
+  UserPlus,
   Users,
   X,
 } from 'lucide-react-native';
@@ -43,13 +44,15 @@ import {composeClientAddress, formatBrazilianPhone, formatBrazilianPostalCode} f
 import {photoFileUri} from './data/clientStorage';
 import {openQuickAR} from './quickAR';
 import {useAppState, useVisitDraft} from './state/AppState';
-import {colors, radius} from './theme';
+import {useTheme, radius, type ThemeColors} from './theme';
 import type {ClientData, MainTabParamList, PhotoItem, RootStackParamList, RoomData} from './types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 const listKey = (item: {id: string}) => item.id;
 
 export function HomeScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const {clients, ready, loadError, reload} = useAppState();
   const recentRecords = useMemo(() => clients.flatMap(client => client.rooms.flatMap(room => room.records.map(record => ({client, room, record}))))
@@ -60,30 +63,29 @@ export function HomeScreen() {
   return (
     <Page title="DecorIt" subtitle="Projetos e visualização de ambientes">
       <View style={styles.welcomeRow}>
-        <View><Text style={styles.eyebrow}>SEU ESPAÇO DE TRABALHO</Text><Text style={styles.welcomeTitle}>Olá! Vamos planejar{ '\n' }um novo ambiente?</Text></View>
+        <View style={{flex: 1}}><Text style={styles.eyebrow}>SEU ESPAÇO DE TRABALHO</Text><Text style={styles.welcomeTitle}>Olá! Vamos planejar{ '\n' }um novo ambiente?</Text></View>
         <View style={styles.welcomeIcon}><Sofa size={26} color={colors.blue} /></View>
       </View>
 
       <Pressable onPress={() => navigation.navigate('MainTabs', {screen: 'Clientes'})} style={({pressed}) => [styles.hero, pressed && styles.pressed]}>
         <View style={styles.heroTop}><View style={styles.heroIcon}><Sparkles size={22} color={colors.gold} /></View><Text style={styles.heroTag}>VISUALIZAÇÃO EM AR</Text></View>
         <Text style={styles.heroTitle}>Veja cortinas e persianas{ '\n'}no espaço do cliente</Text>
-        <View style={styles.heroAction}><Text style={styles.heroActionText}>Abrir clientes</Text><ArrowRight size={22} color="#FFFFFF" /></View>
+        <Text style={styles.heroDescription}>Posicione modelos virtuais com medidas reais durante a visita.</Text>
+        <View style={styles.heroAction}><Text style={styles.heroActionText}>Abrir clientes</Text><ArrowRight size={22} color="#1F526E" /></View>
       </Pressable>
 
       <View style={styles.statRow}>
         <Card style={styles.statCard}><View style={[styles.statIcon, {backgroundColor: colors.bluePale}]}><Users size={22} color={colors.blue} /></View><Text style={styles.statValue}>{ready ? clients.length : '—'}</Text><Text style={styles.statLabel}>clientes</Text></Card>
-        <Card style={styles.statCard}><View style={[styles.statIcon, {backgroundColor: colors.goldPale}]}><ClipboardList size={22} color="#9A7429" /></View><Text style={styles.statValue}>{clients.reduce((n, client) => n + client.rooms.reduce((sum, room) => sum + room.records.length, 0), 0)}</Text><Text style={styles.statLabel}>registros</Text></Card>
-        <Card style={styles.statCard}><View style={[styles.statIcon, {backgroundColor: '#E9F3EE'}]}><DoorOpen size={22} color={colors.green} /></View><Text style={styles.statValue}>{clients.reduce((n, client) => n + client.rooms.length, 0)}</Text><Text style={styles.statLabel}>cômodos</Text></Card>
+        <Card style={styles.statCard}><View style={[styles.statIcon, {backgroundColor: colors.goldPale}]}><ClipboardList size={22} color={colors.gold} /></View><Text style={styles.statValue}>{clients.reduce((n, client) => n + client.rooms.reduce((sum, room) => sum + room.records.length, 0), 0)}</Text><Text style={styles.statLabel}>registros</Text></Card>
+        <Card style={styles.statCard}><View style={[styles.statIcon, {backgroundColor: colors.greenPale}]}><DoorOpen size={22} color={colors.green} /></View><Text style={styles.statValue}>{clients.reduce((n, client) => n + client.rooms.length, 0)}</Text><Text style={styles.statLabel}>cômodos</Text></Card>
       </View>
 
       <SectionTitle trailing={<Pressable onPress={() => navigation.navigate('MainTabs', {screen: 'Clientes'})}><Text style={styles.seeAll}>Ver clientes</Text></Pressable>}>Acesso rápido</SectionTitle>
-      <Card style={styles.actionCard}>
-        <LinkRow label="Cadastrar cliente" detail="Comece pelo nome; os outros dados são opcionais" onPress={() => navigation.navigate('ClientForm', {})} />
-        <View style={styles.divider} />
-        <LinkRow label="Modelos e materiais" detail="Cortinas, persianas e acessórios" onPress={() => navigation.navigate('MainTabs', {screen: 'Catálogo'})} />
-        <View style={styles.divider} />
-        <LinkRow label="Todas as fotos" detail="Imagens registradas em qualquer cômodo" onPress={() => navigation.navigate('MainTabs', {screen: 'Fotos'})} />
-      </Card>
+      <View style={styles.quickActions}>
+        <Pressable style={styles.quickAction} onPress={() => navigation.navigate('ClientForm', {})} accessibilityRole="button"><View style={styles.quickActionIcon}><UserPlus size={24} color={colors.blue} /></View><Text style={styles.quickActionLabel}>{"Cadastrar\ncliente"}</Text></Pressable>
+        <Pressable style={styles.quickAction} onPress={() => navigation.navigate('MainTabs', {screen: 'Catálogo'})} accessibilityRole="button"><View style={styles.quickActionIcon}><Sparkles size={24} color={colors.blue} /></View><Text style={styles.quickActionLabel}>{"Modelos e\ntecidos"}</Text></Pressable>
+        <Pressable style={styles.quickAction} onPress={() => navigation.navigate('MainTabs', {screen: 'Fotos'})} accessibilityRole="button"><View style={styles.quickActionIcon}><Images size={24} color={colors.blue} /></View><Text style={styles.quickActionLabel}>{"Todas as\nfotos"}</Text></Pressable>
+      </View>
 
       <SectionTitle>Acompanhe os registros</SectionTitle>
       {!ready ? <Card>
@@ -103,6 +105,8 @@ export function HomeScreen() {
 }
 
 export function ClientsScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const {clients, ready, loadError, reload} = useAppState();
   const [query, setQuery] = useState('');
@@ -127,12 +131,12 @@ export function ClientsScreen() {
         {text: 'Agora não', style: 'cancel'},
         {text: 'Criar cômodo', onPress: () => navigation.navigate('NewRoom', {clientId: client.id})},
       ]);
-    } else setChooseRoom(true);
+    } else {setActiveClient(client); setChooseRoom(true);}
   };
 
   return (
     <Page title="Clientes" subtitle={`${clients.length} ${clients.length === 1 ? 'cliente cadastrado' : 'clientes cadastrados'}`} scroll={false} action={
-      <Pressable onPress={() => navigation.navigate('ClientForm', {})} style={styles.addHeaderButton} accessibilityRole="button" accessibilityLabel="Novo cliente"><Plus size={22} color="#FFFFFF" /></Pressable>
+      <Pressable onPress={() => navigation.navigate('ClientForm', {})} style={styles.addHeaderButton} accessibilityRole="button" accessibilityLabel="Novo cliente"><Plus size={22} color={colors.onPrimary} /></Pressable>
     }>
       <FlatList
         data={filteredClients}
@@ -141,15 +145,15 @@ export function ClientsScreen() {
         keyboardShouldPersistTaps="handled"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => {setRefreshing(true); try {await reload();} catch {} finally {setRefreshing(false);}}} tintColor={colors.blue} />}
         ListHeaderComponent={<View style={styles.listHeader}>
-          <View style={styles.searchBox}><Search size={22} color={colors.muted} /><TextInput value={query} onChangeText={setQuery} placeholder="Buscar nome, telefone ou endereço" placeholderTextColor="#99A5AC" style={styles.searchInput} clearButtonMode="while-editing" /></View>
+          <View style={styles.searchBox}><Search size={22} color={colors.muted} /><TextInput value={query} onChangeText={setQuery} placeholder="Buscar nome, telefone ou endereço" placeholderTextColor={colors.muted} style={styles.searchInput} clearButtonMode="while-editing" /></View>
           <Text style={styles.listHint}>Toque em um cliente para abrir o perfil. Use ⋯ para outras ações.</Text>
         </View>}
-        ListEmptyComponent={ready ? <Card><EmptyState title={query ? 'Nenhum resultado' : 'Sua lista começa aqui'} description={query ? 'Tente buscar por outro nome ou telefone.' : 'Cadastre o primeiro cliente para organizar cômodos, registros e fotos.'} action={<Button label="Cadastrar cliente" icon={<Plus size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('ClientForm', {})} />} /></Card> : <Card>
+        ListEmptyComponent={ready ? <Card><EmptyState title={query ? 'Nenhum resultado' : 'Sua lista começa aqui'} description={query ? 'Tente buscar por outro nome ou telefone.' : 'Cadastre o primeiro cliente para organizar cômodos, registros e fotos.'} action={<Button label="Cadastrar cliente" icon={<Plus size={22} color={colors.onPrimary} />} onPress={() => navigation.navigate('ClientForm', {})} />} /></Card> : <Card>
           <Text style={styles.muted}>{loadError || 'Carregando clientes…'}</Text>
           {loadError ? <Button label="Tentar novamente" variant="secondary" onPress={() => {void reload().catch(() => undefined);}} /> : null}
         </Card>}
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        renderItem={({item}) => <ClientCard client={item} onOpen={() => navigation.navigate('ClientProfile', {clientId: item.id})} onActions={() => {setActiveClient(item); setChooseRoom(false);}} />}
+        renderItem={({item}) => <ClientCard client={item} onOpen={() => navigation.navigate('ClientProfile', {clientId: item.id})} onRecord={() => startRecord(item)} onActions={() => {setActiveClient(item); setChooseRoom(false);}} />}
       />
       <Modal visible={Boolean(activeClient)} transparent animationType="fade" onRequestClose={() => {setActiveClient(null); setChooseRoom(false);}}>
         <Pressable style={styles.modalBackdrop} onPress={() => {setActiveClient(null); setChooseRoom(false);}}>
@@ -171,7 +175,9 @@ export function ClientsScreen() {
   );
 }
 
-function ClientCard({client, onOpen, onActions}: {client: ClientData; onOpen: () => void; onActions: () => void}) {
+function ClientCard({client, onOpen, onActions, onRecord}: {client: ClientData; onOpen: () => void; onActions: () => void; onRecord: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   return (
     <Card style={styles.clientCard}>
       <Pressable onPress={onOpen} style={({pressed}) => [styles.clientOpen, pressed && styles.pressed]} accessibilityRole="button" accessibilityLabel={`Abrir perfil de ${client.name}`}>
@@ -187,11 +193,17 @@ function ClientCard({client, onOpen, onActions}: {client: ClientData; onOpen: ()
         <View style={styles.addressLine}><MapPin size={14} color={colors.muted} /><Text numberOfLines={1} style={styles.addressText}>{client.address || 'Endereço não informado'}</Text></View>
         <Pressable onPress={event => {event.stopPropagation(); onActions();}} hitSlop={8} style={styles.moreButton} accessibilityRole="button" accessibilityLabel={`Ações de ${client.name}`}><Ellipsis size={21} color={colors.ink} /></Pressable>
       </View>
+      <View style={styles.clientActions}>
+        <Pressable onPress={onOpen} style={styles.clientAction} accessibilityRole="button"><Text style={styles.clientActionText}>Abrir perfil</Text><ChevronRight size={18} color={colors.blue} /></Pressable>
+        <Pressable onPress={onRecord} style={[styles.clientAction, {backgroundColor: colors.bluePale}]} accessibilityRole="button"><Plus size={18} color={colors.blue} /><Text style={styles.clientActionText}>Criar registro</Text></Pressable>
+      </View>
     </Card>
   );
 }
 
 export function ClientFormScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const clientId = route.params?.clientId as string | undefined;
@@ -265,12 +277,14 @@ export function ClientFormScreen() {
       <TextField label="Estado" value={state} onChangeText={setState} placeholder="Estado" />
       <TextField label="Observações" value={observations} onChangeText={setObservations} placeholder="Informações adicionais sobre o cliente" multiline />
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      <Button label={clientId ? 'Salvar alterações' : 'Cadastrar cliente'} onPress={save} loading={saving} icon={clientId ? <Check size={22} color="#FFFFFF" /> : <Plus size={22} color="#FFFFFF" />} />
+      <Button label={clientId ? 'Salvar alterações' : 'Cadastrar cliente'} onPress={save} loading={saving} icon={clientId ? <Check size={22} color={colors.onPrimary} /> : <Plus size={22} color={colors.onPrimary} />} />
     </Card>
   </Page>;
 }
 
 export function ClientProfileScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const clientId = route.params?.clientId as string;
@@ -305,13 +319,15 @@ export function ClientProfileScreen() {
     </View>
     {section === 'rooms' ? <>
       <SectionTitle trailing={<Pressable onPress={() => navigation.navigate('NewRoom', {clientId})} style={styles.inlineAdd}><Plus size={15} color={colors.blue} /><Text style={styles.seeAll}>Novo cômodo</Text></Pressable>}>Ambientes</SectionTitle>
-      {client.rooms.length === 0 ? <Card><EmptyState title="Nenhum cômodo cadastrado" description="Crie um cômodo para organizar medidas, registros e fotos deste cliente." action={<Button label="Criar cômodo" icon={<Plus size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('NewRoom', {clientId})} />} /></Card> : client.rooms.map(room => <RoomCard key={room.id} room={room} onPress={() => navigation.navigate('RoomDetail', {clientId, roomId: room.id})} />)}
+      {client.rooms.length === 0 ? <Card><EmptyState title="Nenhum cômodo cadastrado" description="Crie um cômodo para organizar medidas, registros e fotos deste cliente." action={<Button label="Criar cômodo" icon={<Plus size={22} color={colors.onPrimary} />} onPress={() => navigation.navigate('NewRoom', {clientId})} />} /></Card> : client.rooms.map(room => <RoomCard key={room.id} room={room} onPress={() => navigation.navigate('RoomDetail', {clientId, roomId: room.id})} />)}
     </> : photos.length === 0 ? <Card><EmptyState title="Nenhuma foto registrada" description="As imagens feitas durante a visualização em AR aparecerão aqui, sem distinção de cômodo." /></Card> : <PhotoGrid photos={photos} onOpenRoom={photo => photo.roomId ? navigation.navigate('RoomDetail', {clientId: photo.clientId, roomId: photo.roomId}) : undefined} onOpenRecord={photo => photo.roomId && photo.recordId ? navigation.navigate('RecordDetail', {clientId: photo.clientId, roomId: photo.roomId, recordId: photo.recordId}) : undefined} onIdentify={photo => setPhotoToAssign(photo)} />}
     <PhotoRoomAssignmentModal photo={photoToAssign} rooms={client.rooms} onClose={() => setPhotoToAssign(null)} onSelect={async room => {if (!photoToAssign) return; try {await assignUnassignedPhoto(photoToAssign.clientId, photoToAssign.path, room.id); setPhotoToAssign(null);} catch (cause) {Alert.alert('Não foi possível identificar a foto', cause instanceof Error ? cause.message : 'Tente novamente.');}}} onCreateRoom={() => {if (photoToAssign) navigation.navigate('NewRoom', {clientId, pendingPhotoPath: photoToAssign.path}); setPhotoToAssign(null);}} />
   </Page>;
 }
 
 function RoomCard({room, onPress}: {room: RoomData; onPress: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const photoCount = room.photos.length + room.records.reduce((n, record) => n + record.photos.length, 0);
   return <Pressable onPress={onPress} style={({pressed}) => [styles.roomCard, pressed && styles.pressed]}>
     <View style={styles.roomIcon}><DoorOpen size={21} color={colors.blue} /></View>
@@ -321,6 +337,8 @@ function RoomCard({room, onPress}: {room: RoomData; onPress: () => void}) {
 }
 
 export function NewRoomScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const clientId = route.params?.clientId as string;
@@ -340,12 +358,14 @@ export function NewRoomScreen() {
   return <Page title="Novo cômodo" subtitle={client?.name || 'Cliente'} navigation={navigation}>
     <Card style={styles.formCard}><View style={styles.formIntro}><View style={styles.roomIcon}><DoorOpen size={22} color={colors.blue} /></View><View style={{flex: 1}}><Text style={styles.rowTitle}>Qual ambiente vamos organizar?</Text><Text style={styles.rowDetail}>O registro e as fotos ficarão associados a este cômodo.</Text></View></View>
       <TextField label="Nome do cômodo" value={name} onChangeText={setName} placeholder="Ex.: Sala de estar" required />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}<Button label="Criar cômodo" icon={<Plus size={22} color="#FFFFFF" />} onPress={save} loading={saving} />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}<Button label="Criar cômodo" icon={<Plus size={22} color={colors.onPrimary} />} onPress={save} loading={saving} />
     </Card>
   </Page>;
 }
 
 export function RoomDetailScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const {clientId, roomId} = route.params as {clientId: string; roomId: string};
@@ -367,12 +387,12 @@ export function RoomDetailScreen() {
 
   if (!client || !room) return <Page title="Cômodo" navigation={navigation}><EmptyState title="Cômodo não encontrado" description="Volte ao perfil do cliente e selecione outro ambiente." /></Page>;
 
-  return <Page title={room.name} subtitle={client.name} navigation={navigation} action={!isUnassignedRoom(room) ? <Pressable onPress={create} style={styles.addHeaderButton} accessibilityRole="button" accessibilityLabel="Criar registro"><Plus size={22} color="#FFFFFF" /></Pressable> : undefined}>
+  return <Page title={room.name} subtitle={client.name} navigation={navigation} action={!isUnassignedRoom(room) ? <Pressable onPress={create} style={styles.addHeaderButton} accessibilityRole="button" accessibilityLabel="Criar registro"><Plus size={22} color={colors.onPrimary} /></Pressable> : undefined}>
     {isUnassignedRoom(room) ? <Card><Text style={styles.rowDetail}>Estas fotos ainda não foram associadas a um cômodo. Abra uma foto e escolha “Identificar cômodo” para organizá-la.</Text></Card> : <>
       <View style={styles.roomSummary}><View style={styles.roomIcon}><DoorOpen size={22} color={colors.blue} /></View><View style={{flex: 1}}><Text style={styles.rowTitle}>Registros deste ambiente</Text><Text style={styles.rowDetail}>Medidas, modelo escolhido e fotos ficam vinculados aqui.</Text></View></View>
-      <Button label="Criar registro neste cômodo" icon={<Plus size={22} color="#FFFFFF" />} onPress={create} />
+      <Button label="Criar registro neste cômodo" icon={<Plus size={22} color={colors.onPrimary} />} onPress={create} />
       <SectionTitle trailing={<Text style={styles.countBadge}>{records.length}</Text>}>Histórico</SectionTitle>
-      {records.length === 0 ? <Card><EmptyState title="Nenhum registro neste cômodo" description="Comece uma visita para salvar medidas, produto escolhido e imagens da visualização em AR." action={<Button label="Criar primeiro registro" onPress={create} icon={<Plus size={22} color="#FFFFFF" />} />} /></Card> : records.map(record => <RecordCard key={record.id} record={record} onPress={() => navigation.navigate('RecordDetail', {clientId, roomId, recordId: record.id})} />)}
+      {records.length === 0 ? <Card><EmptyState title="Nenhum registro neste cômodo" description="Comece uma visita para salvar medidas, produto escolhido e imagens da visualização em AR." action={<Button label="Criar primeiro registro" onPress={create} icon={<Plus size={22} color={colors.onPrimary} />} />} /></Card> : records.map(record => <RecordCard key={record.id} record={record} onPress={() => navigation.navigate('RecordDetail', {clientId, roomId, recordId: record.id})} />)}
     </>}
     <SectionTitle trailing={<Text style={styles.countBadge}>{photos.length}</Text>}>Fotos do cômodo</SectionTitle>
     {photos.length ? <PhotoGrid photos={photos} onOpenRecord={photo => photo.recordId ? navigation.navigate('RecordDetail', {clientId, roomId, recordId: photo.recordId}) : undefined} onIdentify={photo => setPhotoToAssign(photo)} /> : <Card><Text style={styles.muted}>As fotos feitas em AR aparecerão neste cômodo e também na aba Fotos.</Text></Card>}
@@ -381,6 +401,8 @@ export function RoomDetailScreen() {
 }
 
 export function RecordDetailScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const {clientId, roomId, recordId} = route.params as {clientId: string; roomId: string; recordId: string};
@@ -406,7 +428,7 @@ export function RecordDetailScreen() {
       <SummaryRow label="Modelo" value={`${record.modelName} · ${record.panelType === 'SinglePanel' ? 'Painel único' : 'Painel duplo'}`} />
       <SummaryRow label="Tecido" value={record.fabricMaterialName || 'Não informado'} />
       <SummaryRow label="Varão" value={record.rodMaterialName || 'Não informado'} />
-      <Button label="Abrir visualização AR" icon={<Camera size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('UnityAR', {clientId, roomId, recordId, autoOpen: true})} />
+      <Button label="Abrir visualização AR" icon={<Camera size={22} color={colors.onPrimary} />} onPress={() => navigation.navigate('UnityAR', {clientId, roomId, recordId, autoOpen: true})} />
     </Card>
     <SectionTitle trailing={<Text style={styles.countBadge}>{photos.length}</Text>}>Fotos deste registro</SectionTitle>
     {photos.length ? <PhotoGrid photos={photos} /> : <Card><Text style={styles.muted}>As fotos capturadas durante esta visualização em AR aparecerão aqui.</Text></Card>}
@@ -414,6 +436,8 @@ export function RecordDetailScreen() {
 }
 
 function EditableRecordField({label, value, placeholder, multiline = false, onSave}: {label: string; value: string; placeholder: string; multiline?: boolean; onSave: (value: string) => Promise<void>}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value || '');
   const startEditing = () => {
@@ -446,6 +470,8 @@ function EditableRecordField({label, value, placeholder, multiline = false, onSa
 }
 
 function RecordCard({record, onPress}: {record: ClientData['rooms'][number]['records'][number]; onPress: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const date = record.createdAt ? new Date(record.createdAt) : null;
   const dateLabel = date && !Number.isNaN(date.valueOf()) ? date.toLocaleDateString('pt-BR', {day: '2-digit', month: 'short', year: 'numeric'}) : 'Registro';
   return <Pressable onPress={onPress} style={({pressed}) => [styles.recordCard, pressed && styles.pressed]}>
@@ -459,6 +485,8 @@ function RecordCard({record, onPress}: {record: ClientData['rooms'][number]['rec
 }
 
 export function PhotosScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const {clients, reload, assignUnassignedPhoto} = useAppState();
   const [photoToAssign, setPhotoToAssign] = useState<PhotoItem | null>(null);
@@ -472,6 +500,8 @@ export function PhotosScreen() {
 }
 
 function PhotoRoomAssignmentModal({photo, rooms, onClose, onSelect, onCreateRoom}: {photo: PhotoItem | null; rooms: RoomData[]; onClose: () => void; onSelect: (room: RoomData) => void | Promise<void>; onCreateRoom: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const availableRooms = rooms.filter(room => !isUnassignedRoom(room));
   return <Modal visible={Boolean(photo)} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
     <Pressable style={styles.identifyModalBackdrop} onPress={onClose}>
@@ -486,10 +516,14 @@ function PhotoRoomAssignmentModal({photo, rooms, onClose, onSelect, onCreateRoom
 }
 
 function PhotoGrid({photos, onOpenRoom, onOpenRecord, onIdentify}: {photos: PhotoItem[]; onOpenRoom?: (photo: PhotoItem) => void; onOpenRecord?: (photo: PhotoItem) => void; onIdentify?: (photo: PhotoItem) => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   return <View style={styles.photoGrid}>{photos.map((photo, index) => <View key={`${photo.path}-${index}`} style={styles.photoGridCell}><PhotoTile photo={photo} photos={photos} initialIndex={index} onOpenRoom={onOpenRoom} onOpenRecord={onOpenRecord} onIdentify={onIdentify} /></View>)}</View>;
 }
 
 function PhotoTile({photo, photos, initialIndex, onOpenRoom, onOpenRecord, onIdentify}: {photo: PhotoItem; photos: PhotoItem[]; initialIndex: number; onOpenRoom?: (photo: PhotoItem) => void; onOpenRecord?: (photo: PhotoItem) => void; onIdentify?: (photo: PhotoItem) => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const imageUri = photo.path ? photoFileUri(photo.path) : '';
 
@@ -521,6 +555,8 @@ function PhotoPager({photos, initialIndex, onClose, onOpenRoom, onOpenRecord, on
 }
 
 function PhotoViewerPage({photo, width, height, onClose, onOpenRoom, onOpenRecord, onIdentify}: {photo: PhotoItem; width: number; height: number; onClose: () => void; onOpenRoom?: (photo: PhotoItem) => void; onOpenRecord?: (photo: PhotoItem) => void; onIdentify?: (photo: PhotoItem) => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const [about, setAbout] = useState(false);
   const imageUri = photo.path ? photoFileUri(photo.path) : '';
   const captureDate = formatPhotoCaptureDate(photo.capturedAt || photo.path || photo.createdAt);
@@ -562,6 +598,8 @@ function formatPhotoCaptureDate(value: string): string {
 }
 
 export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const {draft, setDraft, catalogChoice, setCatalogChoice} = useVisitDraft();
   const [previewStatus, setPreviewStatus] = useState<'idle' | 'opening' | 'opened' | 'ready' | 'error'>('idle');
@@ -627,7 +665,7 @@ export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}
         </View>
       </Card>
       {previewStatus === 'error' ? <Card><Text style={styles.rowDetail}>{Platform.OS === 'android' ? 'Não foi possível abrir a prévia 3D. Atualize o app para uma versão que inclua o catálogo Unity.' : 'A prévia 3D está disponível no app Android.'}</Text></Card> : null}
-      <Button label="Abrir prévia 3D" icon={<Sparkles size={22} color="#FFFFFF" />} onPress={() => {void openPreview();}} loading={previewStatus === 'opening' || previewStatus === 'opened'} />
+      <Button label="Abrir prévia 3D" icon={<Sparkles size={22} color={colors.onPrimary} />} onPress={() => {void openPreview();}} loading={previewStatus === 'opening' || previewStatus === 'opened'} />
     </Page>;
   }
 
@@ -641,19 +679,25 @@ export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}
       <MaterialChoice label="Tecido" detail="CurtainFabric" color="#FFE3BF" selected={fabric === 'CurtainFabric'} onPress={() => setFabric('CurtainFabric')} />
       <MaterialChoice label="Varão e ponteiras" detail="RodMaterial" color="#B6B8BA" selected={rod === 'RodMaterial'} onPress={() => setRod('RodMaterial')} />
     </>}
-    {selectionMode ? <Button label="Aplicar seleção" icon={<Check size={22} color="#FFFFFF" />} onPress={apply} disabled={!available} /> : <Button label="Usar no próximo registro" icon={<Check size={22} color="#FFFFFF" />} onPress={apply} disabled={!available} />}
+    {selectionMode ? <Button label="Aplicar seleção" icon={<Check size={22} color={colors.onPrimary} />} onPress={apply} disabled={!available} /> : <Button label="Usar no próximo registro" icon={<Check size={22} color={colors.onPrimary} />} onPress={apply} disabled={!available} />}
   </Page>;
 }
 
 function ChoiceButton({label, selected, onPress}: {label: string; selected: boolean; onPress: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   return <Pressable onPress={onPress} style={[styles.choiceButton, selected && styles.choiceButtonSelected]}><Text style={[styles.choiceText, selected && styles.choiceTextSelected]}>{label}</Text></Pressable>;
 }
 
 function MaterialChoice({label, detail, color, selected, onPress}: {label: string; detail: string; color: string; selected: boolean; onPress: () => void}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   return <Pressable onPress={onPress} style={[styles.materialCard, selected && styles.materialSelected]}><View style={[styles.swatch, {backgroundColor: color}]} /><View style={{flex: 1}}><Text style={styles.rowTitle}>{label}</Text><Text style={styles.rowDetail}>{detail}</Text></View>{selected ? <Check size={22} color={colors.green} /> : null}</Pressable>;
 }
 
 export function VisitScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const {clientId, roomId: initialRoomId} = route.params as {clientId: string; roomId?: string};
@@ -693,7 +737,7 @@ export function VisitScreen() {
 
   return <Page title="Novo registro" subtitle={client.name} navigation={navigation}>
     <View style={styles.stepRow}>{['Dados do registro', 'Revisão'].map((label, index) => <View key={label} style={styles.stepItem}><View style={[styles.stepDot, index <= step && styles.stepDotActive]}><Text style={[styles.stepNumber, index <= step && styles.stepNumberActive]}>{index < step ? '✓' : index + 1}</Text></View><Text style={[styles.stepLabel, index === step && styles.stepLabelActive]}>{label}</Text></View>)}</View>
-    {!room ? <Card><Text style={styles.formTitle}>Em qual cômodo será este registro?</Text><Text style={styles.rowDetail}>Todo registro fica associado a um ambiente do cliente.</Text><View style={{height: 10}} />{client.rooms.length === 0 ? <Button label="Cadastrar um cômodo" icon={<Plus size={22} color="#FFFFFF" />} onPress={() => navigation.navigate('NewRoom', {clientId})} /> : client.rooms.map(item => <LinkRow key={item.id} label={item.name} detail={`${item.records.length} registros`} onPress={() => {setRoomId(item.id); setDraft({...createEmptyDraft(client, item), ...catalogChoice});}} />)}</Card> : null}
+    {!room ? <Card><Text style={styles.formTitle}>Em qual cômodo será este registro?</Text><Text style={styles.rowDetail}>Todo registro fica associado a um ambiente do cliente.</Text><View style={{height: 10}} />{client.rooms.length === 0 ? <Button label="Cadastrar um cômodo" icon={<Plus size={22} color={colors.onPrimary} />} onPress={() => navigation.navigate('NewRoom', {clientId})} /> : client.rooms.map(item => <LinkRow key={item.id} label={item.name} detail={`${item.records.length} registros`} onPress={() => {setRoomId(item.id); setDraft({...createEmptyDraft(client, item), ...catalogChoice});}} />)}</Card> : null}
     {room && draft ? <>
       {step === 0 ? <Card style={styles.formCard}>
         <Text style={styles.formTitle}>Dados do registro</Text>
@@ -711,7 +755,7 @@ export function VisitScreen() {
       {step === 1 ? <Card style={styles.formCard}><Text style={styles.formTitle}>Confira o registro</Text><SummaryRow label="Cliente" value={client.name} /><SummaryRow label="Cômodo" value={room.name} /><SummaryRow label="Abertura" value={draft.openingName || 'Não informada'} /><SummaryRow label="Medidas" value={`${draft.widthCentimeters} × ${draft.heightCentimeters} cm`} /><SummaryRow label="Modelo" value={`${draft.modelName} · ${draft.panelType === 'SinglePanel' ? 'Painel único' : 'Painel duplo'}`} /><SummaryRow label="Materiais" value={`${draft.fabricMaterialName} · ${draft.rodMaterialName}`} /><SummaryRow label="Observações" value={draft.visitNotes || 'Nenhuma'} /></Card> : null}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <View style={styles.wizardActions}>{step > 0 ? <View style={{flex: 1}}><Button label="Voltar aos dados" variant="secondary" onPress={() => setStep(0)} /></View> : <View style={{flex: 1}}><Button label="Cancelar" variant="quiet" onPress={() => navigation.goBack()} /></View>}
-        {step === 0 ? <View style={{flex: 1}}><Button label="Revisar" icon={<ArrowRight size={22} color="#FFFFFF" />} onPress={next} /></View> : <View style={{flex: 1}}><Button label="Salvar registro" icon={<Check size={22} color="#FFFFFF" />} onPress={() => save(false)} loading={saving} /></View>}
+        {step === 0 ? <View style={{flex: 1}}><Button label="Revisar" icon={<ArrowRight size={22} color={colors.onPrimary} />} onPress={next} /></View> : <View style={{flex: 1}}><Button label="Salvar registro" icon={<Check size={22} color={colors.onPrimary} />} onPress={() => save(false)} loading={saving} /></View>}
       </View>
       {step === 1 ? <Button label="Salvar e visualizar em AR" variant="secondary" icon={<Camera size={22} color={colors.blue} />} onPress={() => save(true)} loading={saving} /> : null}
     </> : null}
@@ -719,10 +763,14 @@ export function VisitScreen() {
 }
 
 function SummaryRow({label, value}: {label: string; value: string}) {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   return <View style={styles.summaryRow}><Text style={styles.summaryLabel}>{label}</Text><Text style={styles.summaryValue}>{value}</Text></View>;
 }
 
 export function UnityARScreen() {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const params = route.params as {clientId: string; roomId?: string; recordId?: string; autoOpen?: boolean};
@@ -742,7 +790,7 @@ export function UnityARScreen() {
   const room = client?.rooms.find(item => item.id === params.roomId);
   const record = room?.records.find(item => item.id === params.recordId);
 
-  const openUnity = async () => {
+  const openUnity = useCallback(async () => {
     setError('');
     if (Platform.OS !== 'android') {
       setError('A experiência AR integrada está disponível apenas no aplicativo Android neste momento.');
@@ -772,20 +820,20 @@ export function UnityARScreen() {
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Não foi possível abrir a cena AR.');
     } finally {setOpening(false);}
-  };
+  }, [client, room, record, params.clientId, params.roomId, params.recordId]);
 
   useEffect(() => {
     if (params.autoOpen && !autoOpened.current) {
       autoOpened.current = true;
       void openUnity();
     }
-  }, [params.autoOpen]);
+  }, [params.autoOpen, openUnity]);
 
   return <Page title={photoOnly ? 'Foto do cliente' : 'Visualização em AR'} subtitle={photoOnly ? (client?.name || 'Cliente') : `${client?.name || 'Cliente'} · ${room?.name || 'Cômodo'}`} navigation={navigation}>
     <View style={styles.arStage}><View style={styles.arRoom}><View style={styles.arWall} /><View style={styles.arFloor} /><View style={styles.arWindow}><View style={styles.arCurtainLeft} /><View style={styles.arCurtainRight} /><View style={styles.arRod} /></View></View><View style={styles.arBadge}><Sparkles size={14} color={colors.gold} /><Text style={styles.arBadgeText}>ESPAÇO PRONTO PARA AR</Text></View></View>
     <Card style={styles.formCard}><Text style={styles.formTitle}>{photoOnly ? 'Registrar foto sem cômodo' : (record?.modelName || 'Cortina sob medida')}</Text>
       {photoOnly ? <Text style={styles.rowDetail}>A imagem ficará no perfil de {client?.name || 'cliente'} e poderá ser vinculada a um cômodo depois.</Text> : <><Text style={styles.rowDetail}>{record?.openingName || 'Abertura'} · {record?.widthCentimeters || '—'} × {record?.heightCentimeters || '—'} cm</Text><Text style={styles.rowDetail}>Tecido: {record?.fabricMaterialName || 'CurtainFabric'} · Varão: {record?.rodMaterialName || 'RodMaterial'}</Text></>}
-      <Button label={photoOnly ? 'Abrir câmera para tirar foto' : 'Abrir câmera AR do Unity'} icon={<Camera size={22} color="#FFFFFF" />} onPress={openUnity} loading={opening} />
+      <Button label={photoOnly ? 'Abrir câmera para tirar foto' : 'Abrir câmera AR do Unity'} icon={<Camera size={22} color={colors.onPrimary} />} onPress={openUnity} loading={opening} />
       {error ? <Text style={styles.errorText}>{error}</Text> : <Text style={styles.helpText}>A câmera e a captura continuarão sendo executadas pelo Unity.</Text>}
       <Button label={photoOnly ? 'Voltar ao perfil' : 'Voltar ao cômodo'} variant="secondary" icon={<DoorOpen size={22} color={colors.blue} />} onPress={() => photoOnly ? navigation.replace('ClientProfile', {clientId: params.clientId}) : navigation.replace('RoomDetail', {clientId: params.clientId, roomId: params.roomId!})} />
     </Card>
@@ -803,53 +851,61 @@ export function TabIcon({name, color, size}: {name: keyof MainTabParamList; colo
   }
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  clientActions: {flexDirection: 'row', gap: 8, paddingVertical: 12},
+  clientAction: {flex: 1, minHeight: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 4, paddingHorizontal: 12},
+  clientActionText: {flex: 1, textAlign: 'center', lineHeight: 18, fontSize: 12, color: colors.blueDeep, fontWeight: '700'},
+  heroDescription: {fontSize: 14, lineHeight: 20, color: '#E8F1F5'},
+  quickActions: {flexDirection: 'row', gap: 10},
+  quickAction: {flex: 1, minHeight: 122, padding: 12, borderRadius: radius.card, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, alignItems: 'center', gap: 10},
+  quickActionIcon: {width: 48, height: 48, borderRadius: 24, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  quickActionLabel: {width: '100%', minHeight: 40, fontSize: 12, lineHeight: 18, fontWeight: '700', textAlign: 'center', color: colors.ink},
   pressed: {opacity: 0.76, transform: [{scale: 0.995}]},
   welcomeRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 8, paddingBottom: 2},
   eyebrow: {fontSize: 10, fontWeight: '800', letterSpacing: 1.2, color: colors.blue, marginBottom: 7},
-  welcomeTitle: {fontSize: 24, lineHeight: 30, fontWeight: '800', color: colors.ink, letterSpacing: -0.5},
+  welcomeTitle: {fontSize: 28, lineHeight: 34, fontWeight: '800', color: colors.ink, letterSpacing: -0.5},
   welcomeIcon: {width: 54, height: 54, borderRadius: 18, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
-  hero: {borderRadius: radius.large, padding: 20, backgroundColor: colors.blue, gap: 12, overflow: 'hidden'},
+  hero: {borderRadius: radius.large, padding: 20, backgroundColor: colors.hero, gap: 12, overflow: 'hidden'},
   heroTop: {flexDirection: 'row', alignItems: 'center', gap: 9},
   heroIcon: {width: 32, height: 32, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.13)', alignItems: 'center', justifyContent: 'center'},
   heroTag: {fontSize: 10, fontWeight: '800', letterSpacing: 1.1, color: '#D9E9F1'},
   heroTitle: {fontSize: 21, lineHeight: 27, fontWeight: '800', color: '#FFFFFF'},
-  heroAction: {height: 39, alignSelf: 'flex-start', borderRadius: 12, paddingHorizontal: 13, backgroundColor: 'rgba(255,255,255,0.15)', flexDirection: 'row', alignItems: 'center', gap: 8},
-  heroActionText: {color: '#FFFFFF', fontSize: 13, fontWeight: '800'},
+  heroAction: {height: 48, minWidth: 180, alignSelf: 'flex-start', borderRadius: 24, paddingHorizontal: 20, backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', gap: 8},
+  heroActionText: {flex: 1, color: '#1F526E', fontSize: 13, lineHeight: 20, fontWeight: '800'},
   statRow: {flexDirection: 'row', gap: 9},
   statCard: {flex: 1, minHeight: 105, padding: 12, gap: 4},
   statIcon: {width: 30, height: 30, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 3},
-  statValue: {fontSize: 22, fontWeight: '800', color: colors.ink},
+  statValue: {fontSize: 24, fontWeight: '800', color: colors.ink},
   statLabel: {fontSize: 11, color: colors.muted},
   seeAll: {fontSize: 12, color: colors.blue, fontWeight: '800'},
   actionCard: {paddingVertical: 4},
   divider: {height: 1, backgroundColor: colors.line},
   recentCard: {backgroundColor: colors.surface, borderRadius: 16, borderWidth: 1, borderColor: colors.line, padding: 13, flexDirection: 'row', alignItems: 'center', gap: 12},
-  recentIcon: {width: 40, height: 40, borderRadius: 14, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  recentIcon: {width: 40, height: 40, borderRadius: 18, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   recentCopy: {flex: 1, gap: 4},
-  rowTitle: {fontSize: 14, fontWeight: '800', color: colors.ink},
-  rowDetail: {fontSize: 12, lineHeight: 17, color: colors.muted},
+  rowTitle: {fontSize: 16, fontWeight: '800', color: colors.ink},
+  rowDetail: {fontSize: 14, lineHeight: 20, color: colors.muted},
   muted: {fontSize: 13, lineHeight: 20, color: colors.muted},
-  addHeaderButton: {width: 42, height: 42, borderRadius: 14, backgroundColor: colors.blue, alignItems: 'center', justifyContent: 'center'},
-  listContent: {paddingHorizontal: 20, paddingTop: 3, paddingBottom: 26},
+  addHeaderButton: {width: 42, height: 42, borderRadius: 18, backgroundColor: colors.blue, alignItems: 'center', justifyContent: 'center'},
+  listContent: {paddingHorizontal: 16, paddingTop: 3, paddingBottom: 26},
   listHeader: {gap: 10, paddingBottom: 14},
-  searchBox: {height: 48, borderRadius: 14, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', gap: 9},
+  searchBox: {height: 48, borderRadius: 18, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', gap: 9},
   searchInput: {flex: 1, paddingVertical: 0, fontSize: 13, color: colors.ink},
   listHint: {fontSize: 12, color: colors.muted},
   clientCard: {paddingHorizontal: 13, paddingVertical: 0},
   clientOpen: {flexDirection: 'row', alignItems: 'center', gap: 11, paddingTop: 13, paddingBottom: 10},
   clientCopy: {flex: 1, gap: 3},
-  avatar: {width: 43, height: 43, borderRadius: 15, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
-  avatarLarge: {width: 50, height: 50, borderRadius: 17, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  avatar: {width: 43, height: 43, borderRadius: 22, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  avatarLarge: {width: 50, height: 50, borderRadius: 22, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   clientCardFooter: {borderTopWidth: 1, borderTopColor: colors.line, minHeight: 43, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8},
   addressLine: {flex: 1, flexDirection: 'row', alignItems: 'center', gap: 5},
   addressText: {fontSize: 11, color: colors.muted, flex: 1},
-  moreButton: {width: 38, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 12},
+  moreButton: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12},
   modalBackdrop: {flex: 1, backgroundColor: 'rgba(14,25,32,0.35)', justifyContent: 'flex-end'},
   actionSheet: {backgroundColor: colors.surface, paddingHorizontal: 21, paddingTop: 11, paddingBottom: 30, borderTopLeftRadius: 24, borderTopRightRadius: 24},
   identifyModalBackdrop: {flex: 1, backgroundColor: 'rgba(14,25,32,0.48)', justifyContent: 'center', alignItems: 'center', padding: 22},
   identifyModalCard: {width: '100%', maxWidth: 460, backgroundColor: colors.surface, paddingHorizontal: 21, paddingTop: 20, paddingBottom: 24, borderRadius: 24, elevation: 12},
-  sheetHandle: {width: 38, height: 4, borderRadius: 3, backgroundColor: '#D3DADD', alignSelf: 'center', marginBottom: 15},
+  sheetHandle: {width: 38, height: 4, borderRadius: 3, backgroundColor: colors.line, alignSelf: 'center', marginBottom: 15},
   sheetTitleRow: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4},
   sheetTitle: {fontSize: 18, fontWeight: '800', color: colors.ink, marginBottom: 7},
   formCard: {gap: 16},
@@ -864,22 +920,22 @@ const styles = StyleSheet.create({
   profileStat: {fontSize: 12, color: colors.muted},
   profileStatNum: {fontSize: 15, fontWeight: '800', color: colors.ink},
   verticalDivider: {width: 1, height: 18, backgroundColor: colors.line},
-  segmented: {padding: 4, borderRadius: 14, backgroundColor: '#E9EEF0', flexDirection: 'row'},
+  segmented: {padding: 4, borderRadius: 18, backgroundColor: colors.variant, flexDirection: 'row'},
   segment: {flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 11},
   segmentActive: {backgroundColor: colors.surface},
   segmentText: {fontSize: 13, color: colors.muted, fontWeight: '700'},
   segmentTextActive: {color: colors.blue, fontWeight: '800'},
   inlineAdd: {flexDirection: 'row', alignItems: 'center', gap: 3},
-  roomCard: {minHeight: 69, backgroundColor: colors.surface, borderRadius: 17, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', gap: 12},
-  roomIcon: {width: 43, height: 43, borderRadius: 14, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  roomCard: {minHeight: 69, backgroundColor: colors.surface, borderRadius: 22, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', gap: 12},
+  roomIcon: {width: 43, height: 43, borderRadius: 18, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   formTitle: {fontSize: 17, color: colors.ink, fontWeight: '800'},
-  photoList: {paddingHorizontal: 20, paddingTop: 5, paddingBottom: 28, gap: 10},
+  photoList: {paddingHorizontal: 16, paddingTop: 5, paddingBottom: 28, gap: 10},
   photoRow: {gap: 10},
   photoGrid: {flexDirection: 'row', flexWrap: 'wrap', gap: 10},
   photoGridCell: {width: '48%'},
-  photoTile: {backgroundColor: colors.surface, borderRadius: 15, borderWidth: 1, borderColor: colors.line, overflow: 'hidden', flex: 1},
-  photoImage: {width: '100%', height: 128, backgroundColor: '#E7ECEF'},
-  photoPlaceholder: {width: '100%', height: 128, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E7ECEF'},
+  photoTile: {backgroundColor: colors.surface, borderRadius: 22, borderWidth: 1, borderColor: colors.line, overflow: 'hidden', flex: 1},
+  photoImage: {width: '100%', height: 128, backgroundColor: colors.variant},
+  photoPlaceholder: {width: '100%', height: 128, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.variant},
   photoCaption: {padding: 9, gap: 3},
   photoRoom: {fontSize: 12, fontWeight: '800', color: colors.ink},
   photoClient: {fontSize: 10, color: colors.muted},
@@ -901,21 +957,21 @@ const styles = StyleSheet.create({
   photoViewerTitle: {flexShrink: 1, fontSize: 18, color: '#FFFFFF', fontWeight: '800'},
   photoViewerClient: {flex: 1, fontSize: 13, color: '#C7D0D5'},
   photoViewerDate: {fontSize: 12, color: '#C7D0D5', flexShrink: 0},
-  photoViewerAction: {marginTop: 12, minHeight: 48, borderRadius: 15, paddingHorizontal: 15, backgroundColor: '#E7F1F5', flexDirection: 'row', alignItems: 'center', gap: 9},
+  photoViewerAction: {marginTop: 12, minHeight: 48, borderRadius: 22, paddingHorizontal: 15, backgroundColor: colors.bluePale, flexDirection: 'row', alignItems: 'center', gap: 9},
   photoViewerActionText: {flex: 1, fontSize: 14, color: colors.blueDeep, fontWeight: '800'},
-  emptyFill: {flex: 1, justifyContent: 'center', paddingHorizontal: 20},
+  emptyFill: {flex: 1, justifyContent: 'center', paddingHorizontal: 16},
   roomSummary: {flexDirection: 'row', alignItems: 'center', gap: 11, paddingVertical: 6},
   countBadge: {minWidth: 25, textAlign: 'center', overflow: 'hidden', borderRadius: 8, color: colors.blue, backgroundColor: colors.bluePale, fontSize: 12, fontWeight: '800', paddingHorizontal: 7, paddingVertical: 3},
-  recordCard: {backgroundColor: colors.surface, borderRadius: 17, borderWidth: 1, borderColor: colors.line, padding: 13, flexDirection: 'row', alignItems: 'flex-start', gap: 11},
+  recordCard: {backgroundColor: colors.surface, borderRadius: 22, borderWidth: 1, borderColor: colors.line, padding: 13, flexDirection: 'row', alignItems: 'flex-start', gap: 11},
   recordIcon: {width: 39, height: 39, borderRadius: 13, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   recordTop: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8},
   recordPhotoCount: {fontSize: 10, color: colors.blue, fontWeight: '800'},
   recordNotes: {fontSize: 12, lineHeight: 17, color: colors.ink, marginTop: 2},
   formCardTitle: {fontSize: 17, fontWeight: '800', color: colors.ink},
   catalogPreviewIntro: {flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4},
-  catalogPreviewIcon: {width: 52, height: 52, borderRadius: 17, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
+  catalogPreviewIcon: {width: 52, height: 52, borderRadius: 22, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   pillRow: {flexDirection: 'row', gap: 8, flexWrap: 'wrap'},
-  modelCard: {padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 17, borderWidth: 1, borderColor: '#C7DBE4', backgroundColor: colors.bluePale},
+  modelCard: {padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 22, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.bluePale},
   modelMark: {width: 48, height: 48, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center'},
   choiceRow: {flexDirection: 'row', gap: 9, marginTop: 10},
   choiceButton: {flex: 1, minHeight: 46, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.background, borderRadius: 13, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 6},
@@ -923,20 +979,20 @@ const styles = StyleSheet.create({
   choiceText: {fontSize: 12, color: colors.muted, fontWeight: '700'},
   choiceTextSelected: {color: colors.blueDeep},
   materialCard: {minHeight: 68, borderRadius: 16, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12},
-  materialSelected: {borderColor: colors.blue, backgroundColor: '#F0F6F8'},
+  materialSelected: {borderColor: colors.blue, backgroundColor: colors.bluePale},
   swatch: {width: 40, height: 40, borderRadius: 13, borderWidth: 1, borderColor: 'rgba(20,40,50,0.08)'},
   stepRow: {flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8},
   stepItem: {alignItems: 'center', gap: 6, flex: 1},
   stepDot: {width: 27, height: 27, borderRadius: 10, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface},
   stepDotActive: {backgroundColor: colors.blue, borderColor: colors.blue},
   stepNumber: {fontSize: 11, color: colors.muted, fontWeight: '800'},
-  stepNumberActive: {color: '#FFFFFF'},
+  stepNumberActive: {color: colors.onPrimary},
   stepLabel: {fontSize: 9, color: colors.muted},
   stepLabelActive: {fontWeight: '800', color: colors.blue},
   lockedRoom: {flexDirection: 'row', alignItems: 'center', gap: 7, padding: 11, backgroundColor: colors.bluePale, borderRadius: 12},
   lockedRoomText: {fontSize: 13, fontWeight: '800', color: colors.blueDeep},
   measureRow: {flexDirection: 'row', gap: 10},
-  selectionSummary: {flexDirection: 'row', gap: 11, padding: 13, borderRadius: 15, backgroundColor: colors.background},
+  selectionSummary: {flexDirection: 'row', gap: 11, padding: 13, borderRadius: 22, backgroundColor: colors.background},
   wizardActions: {flexDirection: 'row', gap: 10},
   summaryRow: {borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 9, gap: 4},
   summaryLabel: {fontSize: 11, color: colors.muted, fontWeight: '700'},
@@ -947,8 +1003,8 @@ const styles = StyleSheet.create({
   editableRecordActions: {flexDirection: 'row', alignItems: 'center', gap: 5},
   editableRecordIcon: {width: 38, height: 38, borderRadius: 13, backgroundColor: colors.bluePale, alignItems: 'center', justifyContent: 'center'},
   arStage: {height: 240, borderRadius: radius.large, overflow: 'hidden', backgroundColor: '#EAF0F2', padding: 15, justifyContent: 'flex-end'},
-  arRoom: {flex: 1, borderRadius: 15, overflow: 'hidden', backgroundColor: '#DFE8EC', position: 'relative'},
-  arWall: {position: 'absolute', top: 0, left: 0, right: 0, height: '75%', backgroundColor: '#E9EEF0'},
+  arRoom: {flex: 1, borderRadius: 22, overflow: 'hidden', backgroundColor: '#DFE8EC', position: 'relative'},
+  arWall: {position: 'absolute', top: 0, left: 0, right: 0, height: '75%', backgroundColor: colors.variant},
   arFloor: {position: 'absolute', bottom: 0, left: 0, right: 0, height: '28%', backgroundColor: '#C8D5DB', transform: [{skewY: '-5deg'}]},
   arWindow: {position: 'absolute', top: 35, left: '26%', width: '48%', height: 108, borderRadius: 3, backgroundColor: '#F8FCFD', borderWidth: 5, borderColor: '#9BAEB7'},
   arCurtainLeft: {position: 'absolute', top: 0, bottom: 0, left: -7, width: '23%', backgroundColor: '#DAB98A'},
