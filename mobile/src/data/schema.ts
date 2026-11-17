@@ -61,10 +61,19 @@ export const appMetaTable = sqliteTable('app_meta', {
   value: text('value').notNull(),
 });
 
+export const recordCurtainSettingsTable = sqliteTable('record_curtain_settings', {
+  recordId: text('record_id').notNull().references(() => recordsTable.id, {onDelete: 'cascade'}),
+  layerIndex: integer('layer_index').notNull(),
+  field: text('field').notNull(),
+  value: text('value').notNull(),
+  valueType: text('value_type').notNull(),
+}, table => [uniqueIndex('record_curtain_settings_key').on(table.recordId, table.layerIndex, table.field)]);
+
 export const schema = {
   clients: clientsTable,
   rooms: roomsTable,
   records: recordsTable,
+  recordCurtainSettings: recordCurtainSettingsTable,
   photos: photosTable,
   appMeta: appMetaTable,
 };

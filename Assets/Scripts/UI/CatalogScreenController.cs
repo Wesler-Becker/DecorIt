@@ -224,9 +224,12 @@ public sealed class CatalogScreenController : MonoBehaviour
         widthField.isDelayed = true;
         heightField.isDelayed = true;
         layerSpacingField.isDelayed = true;
-        widthField.RegisterValueChangedCallback(_ => ReadDimensions());
-        heightField.RegisterValueChangedCallback(_ => ReadDimensions());
-        layerSpacingField.RegisterValueChangedCallback(_ => ReadLayerSpacing());
+        widthField.keyboardType = TouchScreenKeyboardType.DecimalPad;
+        heightField.keyboardType = TouchScreenKeyboardType.DecimalPad;
+        layerSpacingField.keyboardType = TouchScreenKeyboardType.DecimalPad;
+        widthField.RegisterValueChangedCallback(_ => { FilterNumericInput(widthField); ReadDimensions(); });
+        heightField.RegisterValueChangedCallback(_ => { FilterNumericInput(heightField); ReadDimensions(); });
+        layerSpacingField.RegisterValueChangedCallback(_ => { FilterNumericInput(layerSpacingField); ReadLayerSpacing(); });
         materialSearch.RegisterValueChangedCallback(_ => RefreshMaterials());
         addLayerButton.clicked += AddLayer;
         selectedFabricButton.clicked += OpenMaterialPicker;
@@ -240,6 +243,22 @@ public sealed class CatalogScreenController : MonoBehaviour
             int index = i;
             sliders[i].RegisterValueChangedCallback(evt => UpdateCustomValue(index, evt.newValue));
         }
+    }
+
+    private static void FilterNumericInput(TextField field)
+    {
+        var result = new System.Text.StringBuilder();
+        bool separator = false;
+        foreach (char character in field.value ?? string.Empty)
+        {
+            if (character >= '0' && character <= '9') result.Append(character);
+            else if (!separator && (character == '.' || character == ','))
+            {
+                result.Append(character);
+                separator = true;
+            }
+        }
+        field.SetValueWithoutNotify(result.ToString());
     }
 
     private void CreatePreview()
@@ -667,7 +686,7 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     private void PersistWorking()
     {
-        if (previewOnly) return;
+        if (previewOnly || UnityARHostBridge.IsCatalogRecordSelection) return;
         CurtainViewSettingsStore.SaveLast(working);
         CurtainViewSettingsStore.ApplyToDraft(working, VisitDraftSession.Current);
         UnityARHostBridge.SaveLastViewConfig();
@@ -680,6 +699,11 @@ public sealed class CatalogScreenController : MonoBehaviour
         ReadDimensions();
         if (!TryPositive(widthField.value, out _) || !TryPositive(heightField.value, out _)) return;
         working.SyncLegacyFromFrontLayer();
+        if (UnityARHostBridge.IsCatalogRecordSelection)
+        {
+            UnityARHostBridge.FinishCatalogSelection(JsonUtility.ToJson(working));
+            return;
+        }
         PersistWorking();
         CatalogSelectionSession.CurrentConfiguration = CurtainViewSettingsStore.Clone(working);
         CatalogSelectionSession.SelectedCurtainPrefab = curtainPrefab;
@@ -706,6 +730,11 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     public void Back()
     {
+        if (UnityARHostBridge.IsCatalogRecordSelection)
+        {
+            UnityARHostBridge.FinishCatalogSelection(null);
+            return;
+        }
         if (previewOnly)
         {
             UnityARHostBridge.ReturnToReactHost();

@@ -73,6 +73,18 @@ describe('cliente e armazenamento legado', () => {
     expect(record).toMatchObject({id: 'record-new', notes: 'Medição', roomNotes: 'Parede clara', photos: []});
   });
 
+  it('mantém a configuração de camadas ao criar e normalizar um registro', () => {
+    const settings = {modelName: 'Cortina', supportType: 'Rail' as const, doubleSupport: true, opening: 0.2, secondaryOpening: 0.7,
+      rodMaterialPath: 'trilho', rodMaterialName: 'Branco', layers: [
+        {widthCentimeters: 240, heightCentimeters: 180, panelType: 'DoublePanel' as const, supportIndex: 0, spacingMillimeters: 2, fabricStyle: 'Natural', fabricMaterialPath: 'voil', fabricMaterialName: 'Voil', foldsPerMeter: 5, foldDepthCentimeters: 6, foldProfile: 1.15, naturalness: 0.8, seed: 17},
+        {widthCentimeters: 240, heightCentimeters: 180, panelType: 'SinglePanel' as const, supportIndex: 1, spacingMillimeters: 10, fabricStyle: 'Natural', fabricMaterialPath: 'blackout', fabricMaterialName: 'Blackout', foldsPerMeter: 4, foldDepthCentimeters: 3, foldProfile: 1, naturalness: 0.5, seed: 18},
+      ]};
+    const draft: VisitDraft = {clientName: 'Maria', phone: '', address: '', visitNotes: '', roomName: 'Sala', openingName: '', widthCentimeters: 240, heightCentimeters: 180, roomNotes: '', productCategory: 'Cortinas', modelName: 'Cortina', panelType: 'DoublePanel', fabricMaterialName: 'Voil', fabricMaterialPath: 'voil', rodMaterialName: 'Branco', rodMaterialPath: 'trilho', curtainSettings: settings};
+    const record = createVisitRecord(draft, 'record-new');
+    const collection = normalizeClientCollection({clients: [{...legacyClient, rooms: [{...legacyClient.rooms[0], records: [record]}]}]});
+    expect(collection.clients[0].rooms[0].records[0].curtainSettings).toEqual(settings);
+  });
+
   it('mantém fotos avulsas no cliente e permite vinculá-las a um cômodo depois', () => {
     const client = normalizeClientCollection({clients: [{
       id: 'client-1', name: 'Maria', rooms: [{id: 'room-1', name: 'Sala', records: []}],

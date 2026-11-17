@@ -58,6 +58,7 @@ export function normalizeClientCollection(value: unknown): ClientCollection {
         panelType: String(record.panelType || 'DoublePanel'),
         fabricMaterialName: String(record.fabricMaterialName || 'CurtainFabric'),
         rodMaterialName: String(record.rodMaterialName || 'RodMaterial'),
+        ...(record.curtainSettings ? {curtainSettings: record.curtainSettings} : {}),
         photos: normalizePhotos(record.photos, room.name, record.id),
       })),
     })),
@@ -161,6 +162,7 @@ export function createVisitRecord(draft: VisitDraft, id = createId(), createdAt 
     panelType: draft.panelType,
     fabricMaterialName: draft.fabricMaterialName,
     rodMaterialName: draft.rodMaterialName,
+    ...(draft.curtainSettings ? {curtainSettings: draft.curtainSettings} : {}),
     photos: [],
   };
 }

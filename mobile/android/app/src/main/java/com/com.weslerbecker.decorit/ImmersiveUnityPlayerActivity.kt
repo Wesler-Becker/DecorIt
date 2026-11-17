@@ -1,6 +1,8 @@
 package com.weslerbecker.decorit
 
 import android.os.Bundle
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.database.sqlite.SQLiteDatabase
 import java.util.UUID
@@ -10,6 +12,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.unity3d.player.UnityPlayerGameActivity
 
 class ImmersiveUnityPlayerActivity : UnityPlayerGameActivity() {
+  fun completeCatalogSelection(value: String) {
+    runOnUiThread { setResult(Activity.RESULT_OK, Intent().putExtra("decorit_catalog_result", value)); finish() }
+  }
+  fun cancelCatalogSelection() {
+    runOnUiThread { setResult(Activity.RESULT_CANCELED); finish() }
+  }
   fun saveCurtainSettings(value: String) { ArSettingsStore.save(this, value) }
   fun loadCurtainSettings(): String = ArSettingsStore.load(this)
   fun saveCapturedPhoto(clientId: String, roomId: String, recordId: String, path: String, roomName: String, capturedAt: String): Boolean {

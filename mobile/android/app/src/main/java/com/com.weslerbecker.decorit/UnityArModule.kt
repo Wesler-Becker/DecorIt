@@ -2,6 +2,8 @@ package com.weslerbecker.decorit
 
 import android.content.Intent
 import android.content.Context
+import android.app.Activity
+import com.facebook.react.bridge.BaseActivityEventListener
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -9,7 +11,33 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 
 class UnityArModule(private val context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  private var catalogPromise: Promise? = null
+  private val catalogRequest = 41872
+  init {
+    context.addActivityEventListener(object : BaseActivityEventListener() {
+      override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != catalogRequest) return
+        val pending = catalogPromise ?: return
+        catalogPromise = null
+        pending.resolve(if (resultCode == Activity.RESULT_OK) data?.getStringExtra("decorit_catalog_result") else null)
+      }
+    })
+  }
   override fun getName() = "UnityArModule"
+
+  @ReactMethod
+  fun openCatalogSelection(draftJson: String, promise: Promise) {
+    try {
+      check(catalogPromise == null) { "O catálogo já está aberto." }
+      val activity = context.currentActivity ?: throw IllegalStateException("O app não está em primeiro plano.")
+      val intent = UnityArLauncher.catalogSelectionIntent(activity, draftJson)
+      catalogPromise = promise
+      activity.startActivityForResult(intent, catalogRequest)
+    } catch (error: Exception) {
+      catalogPromise = null
+      promise.reject("UNITY_CATALOG_START_FAILED", error.message, error)
+    }
+  }
 
   @ReactMethod
   fun loadCurtainSettings(promise: Promise) {
@@ -63,6 +91,13 @@ object UnityArLauncher {
       .putExtra("decorit_dark_theme", isDarkTheme(context))
     context.startActivity(intent)
   }
+
+  fun catalogSelectionIntent(context: Context, draftJson: String): Intent =
+    Intent(context, ImmersiveUnityPlayerActivity::class.java)
+      .putExtra("decorit_rn_host", true)
+      .putExtra("decorit_catalog_selection", true)
+      .putExtra("decorit_draft_json", draftJson)
+      .putExtra("decorit_dark_theme", isDarkTheme(context))
 
   fun open(context: Context, clientId: String?, roomId: String?, recordId: String?, draftJson: String?, quickAR: Boolean = false) {
     val intent = Intent(context, ImmersiveUnityPlayerActivity::class.java)

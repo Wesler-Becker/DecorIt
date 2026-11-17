@@ -8,6 +8,7 @@ import {
   clientsTable,
   photosTable,
   recordsTable,
+  recordCurtainSettingsTable,
   roomsTable,
   schema,
 } from './schema';
@@ -193,6 +194,18 @@ async function replaceClientCollection(tx: Transaction, source: ClientData[], db
           panelType: record.panelType, fabricMaterialName: record.fabricMaterialName,
           rodMaterialName: record.rodMaterialName, sortOrder: recordIndex,
         }));
+        if (record.curtainSettings) {
+          const settings = record.curtainSettings;
+          const writeFields = async (layerIndex: number, object: object) => {
+            for (const [field, value] of Object.entries(object)) {
+              const valueType = typeof value;
+              if (valueType !== 'string' && valueType !== 'number' && valueType !== 'boolean') continue;
+              await runDrizzleStatement(tx, db.insert(recordCurtainSettingsTable).values({recordId: record.id, layerIndex, field, value: String(value), valueType}));
+            }
+          };
+          await writeFields(-1, settings);
+          for (let index = 0; index < settings.layers.length; index++) await writeFields(index, settings.layers[index]);
+        }
         await insertPhotos(tx, db, client.id, room.id, record.id, record.photos, recordIndex);
       }
       await insertPhotos(tx, db, client.id, room.id, null, room.photos, roomIndex);
@@ -243,11 +256,12 @@ type PhotoSqlRow = Pick<PhotoData, 'path' | 'roomName' | 'capturedAt'> & {
 async function readClientCollection(db: AppDatabase): Promise<ClientData[]> {
   // OP-SQLite's async execute API is reliable here; Drizzle's SELECT adapter
   // throws on-device with the current OP-SQLite/Drizzle combination.
-  const [clientResult, roomResult, recordResult, photoResult] = await Promise.all([
+  const [clientResult, roomResult, recordResult, photoResult, settingsResult] = await Promise.all([
     db.$client.execute('SELECT id, name, phone, address, postal_code AS postalCode, street, complement, neighborhood, city, state, observations, sort_order AS sortOrder FROM clients ORDER BY sort_order ASC'),
     db.$client.execute('SELECT id, client_id AS clientId, name, image_label AS imageLabel, sort_order AS sortOrder FROM rooms ORDER BY sort_order ASC'),
     db.$client.execute('SELECT id, room_id AS roomId, created_at AS createdAt, notes, room_notes AS roomNotes, opening_name AS openingName, width_centimeters AS widthCentimeters, height_centimeters AS heightCentimeters, product_category AS productCategory, model_name AS modelName, panel_type AS panelType, fabric_material_name AS fabricMaterialName, rod_material_name AS rodMaterialName, sort_order AS sortOrder FROM visit_records ORDER BY sort_order ASC'),
     db.$client.execute('SELECT id, client_id AS clientId, room_id AS roomId, record_id AS recordId, path, room_name AS roomName, captured_at AS capturedAt, sort_order AS sortOrder FROM photos ORDER BY sort_order ASC'),
+    db.$client.execute('SELECT record_id AS recordId, layer_index AS layerIndex, field, value, value_type AS valueType FROM record_curtain_settings ORDER BY layer_index ASC'),
   ]);
   const clientRows = await transformFields(clientResult.rows as unknown as ClientSqlRow[], clientSecretFields, false);
   const roomRows = roomResult.rows as unknown as RoomSqlRow[];
@@ -285,6 +299,18 @@ async function readClientCollection(db: AppDatabase): Promise<ClientData[]> {
     };
     owner.records.push(value);
     recordById.set(value.id, value);
+  }
+  const settingsByRecord = new Map<string, {root: Record<string, unknown>; layers: Map<number, Record<string, unknown>>}>();
+  for (const row of settingsResult.rows as unknown as Array<{recordId: string; layerIndex: number; field: string; value: string; valueType: string}>) {
+    let settings = settingsByRecord.get(row.recordId);
+    if (!settings) { settings = {root: {}, layers: new Map()}; settingsByRecord.set(row.recordId, settings); }
+    let target = settings.root;
+    if (row.layerIndex >= 0) { target = settings.layers.get(row.layerIndex) || {}; settings.layers.set(row.layerIndex, target); }
+    target[row.field] = row.valueType === 'boolean' ? row.value === 'true' : row.valueType === 'number' ? Number(row.value) : row.value;
+  }
+  for (const [id, settings] of settingsByRecord) {
+    const record = recordById.get(id);
+    if (record) record.curtainSettings = {...settings.root, layers: [...settings.layers.values()]} as VisitDraft['curtainSettings'];
   }
   for (const photo of photoRows) {
     const value: PhotoData = {

@@ -37,7 +37,7 @@
         android:enabled="true"
         android:exported="false"
         android:hardwareAccelerated="false"
-        android:launchMode="singleTask"
+        android:launchMode="singleTop"
         android:process=":unity"
         android:resizeableActivity="true"
         android:screenOrientation="portrait"

@@ -10,6 +10,7 @@ public static class UnityARHostBridge
     public static bool IsPhotoOnly { get; private set; }
     public static bool IsQuickAR { get; private set; }
     public static bool IsCatalogPreview { get; private set; }
+    public static bool IsCatalogRecordSelection { get; private set; }
     public static bool IsDarkTheme { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -17,7 +18,7 @@ public static class UnityARHostBridge
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         ReadLaunchData();
-        string targetScene = IsHostedByReact && IsCatalogPreview ? "Catalog" : "AR_Test";
+        string targetScene = IsHostedByReact && (IsCatalogPreview || IsCatalogRecordSelection) ? "Catalog" : "AR_Test";
         LoadStartupScene(targetScene);
 #else
         if (SceneManager.GetActiveScene().name == "UnityBootstrap")
@@ -46,6 +47,7 @@ public static class UnityARHostBridge
                 IsPhotoOnly = IsHostedByReact && string.IsNullOrEmpty(intent.Call<string>("getStringExtra", "decorit_room_id"));
                 IsQuickAR = IsHostedByReact && intent.Call<bool>("getBooleanExtra", "decorit_quick_ar", false);
                 IsCatalogPreview = IsHostedByReact && intent.Call<bool>("getBooleanExtra", "decorit_catalog_preview", false);
+                IsCatalogRecordSelection = IsHostedByReact && intent.Call<bool>("getBooleanExtra", "decorit_catalog_selection", false);
                 if (!IsHostedByReact) return;
                 if (!hasReadHostedLaunchData)
                 {
@@ -66,6 +68,9 @@ public static class UnityARHostBridge
                 string draftJson = intent.Call<string>("getStringExtra", "decorit_draft_json");
                 VisitDraft draft = string.IsNullOrWhiteSpace(draftJson) ? null : JsonUtility.FromJson<VisitDraft>(draftJson);
                 if (draft != null) VisitDraftSession.Current = draft;
+                if (IsCatalogRecordSelection)
+                    CatalogSelectionSession.CurrentConfiguration = draft?.curtainSettings != null
+                        ? CurtainViewSettingsStore.Clone(draft.curtainSettings) : null;
                 if (draft != null && !string.IsNullOrWhiteSpace(draft.modelName))
                 {
                     foreach (GameObject model in Resources.LoadAll<GameObject>("ARModels"))
@@ -77,12 +82,24 @@ public static class UnityARHostBridge
                         }
                     }
                 }
-                if (!IsCatalogPreview) SaveLastViewConfig();
+                if (!IsCatalogPreview && !IsCatalogRecordSelection) SaveLastViewConfig();
             }
         }
         catch (System.Exception exception)
         {
             Debug.LogError("Não foi possível receber os dados do app DecorIt: " + exception.Message);
+        }
+#endif
+    }
+
+    public static void FinishCatalogSelection(string result)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using (var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        using (var activity = player.GetStatic<AndroidJavaObject>("currentActivity"))
+        {
+            if (result == null) activity.Call("cancelCatalogSelection");
+            else activity.Call("completeCatalogSelection", result);
         }
 #endif
     }

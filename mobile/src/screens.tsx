@@ -38,14 +38,14 @@ import {
   Users,
   X,
 } from 'lucide-react-native';
-import {Button, Card, EmptyState, LinkRow, Page, Pill, SectionTitle, TextField} from './components/UI';
+import {Button, Card, EmptyState, LinkRow, Page, SectionTitle, TextField} from './components/UI';
 import {collectPhotos, createEmptyDraft, isUnassignedRoom} from './data/clientDomain';
 import {composeClientAddress, formatBrazilianPhone, formatBrazilianPostalCode} from './data/clientForm';
 import {photoFileUri} from './data/clientStorage';
 import {openQuickAR} from './quickAR';
 import {useAppState, useVisitDraft} from './state/AppState';
 import {useTheme, radius, type ThemeColors} from './theme';
-import type {ClientData, MainTabParamList, PhotoItem, RootStackParamList, RoomData} from './types';
+import type {ClientData, MainTabParamList, PhotoItem, RootStackParamList, RoomData, VisitDraft} from './types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 const listKey = (item: {id: string}) => item.id;
@@ -566,7 +566,7 @@ function PhotoViewerPage({photo, width, height, onClose, onOpenRoom, onOpenRecor
     </Pressable>
     <Pressable onPress={onClose} style={styles.photoViewerClose} accessibilityRole="button" accessibilityLabel="Fechar foto"><X size={32} color="#FFFFFF" /></Pressable>
     <View style={styles.photoViewerFooter}>
-      <View style={styles.photoAboutHeading}><View style={styles.photoViewerTitleRow}><Text numberOfLines={1} style={styles.photoViewerTitle}>{photo.clientName}</Text>
+      <View style={styles.photoAboutHeading}><View style={styles.photoViewerTitleRow}><Text style={styles.photoViewerTitle}>{photo.clientName}</Text>
         <Pressable onPress={() => setAbout(value => !value)} style={styles.aboutButton} accessibilityRole="button" accessibilityLabel={about ? 'Recolher informações' : 'Ver informações da foto'}><Text style={styles.aboutButtonText}>{about ? 'Fechar sobre' : 'Sobre'}</Text></Pressable>
       </View><View style={styles.photoViewerMetaRow}><Text numberOfLines={1} style={styles.photoViewerClient}>{photo.roomName}</Text>{captureDate ? <Text style={styles.photoViewerDate}>{captureDate}</Text> : null}</View>
       </View>
@@ -597,18 +597,11 @@ function formatPhotoCaptureDate(value: string): string {
   return `${datePart} - ${timePart}`;
 }
 
-export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}) {
+export function CatalogScreen() {
   const {colors} = useTheme();
   const styles = React.useMemo(() => createStyles(colors), [colors]);
-  const navigation = useNavigation<Nav>();
-  const {draft, setDraft, catalogChoice, setCatalogChoice} = useVisitDraft();
   const [previewStatus, setPreviewStatus] = useState<'idle' | 'opening' | 'opened' | 'ready' | 'error'>('idle');
   const previewOpened = useRef(false);
-  const [category, setCategory] = useState<'Cortinas' | 'Persianas' | 'Acessórios'>(draft?.productCategory === 'Persianas' ? 'Persianas' : catalogChoice.productCategory === 'Persianas' ? 'Persianas' : 'Cortinas');
-  const [panelType, setPanelType] = useState<'SinglePanel' | 'DoublePanel'>(draft?.panelType || catalogChoice.panelType);
-  const [fabric, setFabric] = useState(draft?.fabricMaterialName || catalogChoice.fabricMaterialName);
-  const [rod, setRod] = useState(draft?.rodMaterialName || catalogChoice.rodMaterialName);
-
   const openPreview = useCallback(async () => {
     if (Platform.OS !== 'android') {
       setPreviewStatus('error');
@@ -641,20 +634,10 @@ export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}
   }, []);
 
   useFocusEffect(useCallback(() => {
-    if (!selectionMode) void openPreview();
-  }, [openPreview, selectionMode]));
+    void openPreview();
+  }, [openPreview]));
 
-  const apply = () => {
-    const choice = {productCategory: category, modelName: 'CurtainPrefab', panelType, fabricMaterialName: fabric, fabricMaterialPath: 'Assets/Materials/CurtainFabric.mat', rodMaterialName: rod, rodMaterialPath: 'Assets/Materials/RodMaterial.mat'} as const;
-    setCatalogChoice(choice);
-    if (draft) setDraft({...draft, ...choice});
-    if (selectionMode) navigation.goBack();
-    else Alert.alert('Seleção atualizada', 'A seleção estará disponível ao iniciar um registro.');
-  };
-  const available = category === 'Cortinas';
-
-  if (!selectionMode) {
-    return <Page title="Catálogo" subtitle="Prévia 3D dos modelos e materiais">
+  return <Page title="Catálogo" subtitle="Prévia 3D dos modelos e materiais">
       <Card>
         <View style={styles.catalogPreviewIntro}>
           <View style={styles.catalogPreviewIcon}><Sofa size={28} color={colors.blue} /></View>
@@ -667,32 +650,6 @@ export function CatalogScreen({selectionMode = false}: {selectionMode?: boolean}
       {previewStatus === 'error' ? <Card><Text style={styles.rowDetail}>{Platform.OS === 'android' ? 'Não foi possível abrir a prévia 3D. Atualize o app para uma versão que inclua o catálogo Unity.' : 'A prévia 3D está disponível no app Android.'}</Text></Card> : null}
       <Button label="Abrir prévia 3D" icon={<Sparkles size={22} color={colors.onPrimary} />} onPress={() => {void openPreview();}} loading={previewStatus === 'opening' || previewStatus === 'opened'} />
     </Page>;
-  }
-
-  return <Page title={selectionMode ? 'Modelo e materiais' : 'Catálogo'} subtitle={selectionMode ? 'Escolha o que será aplicado na visualização em AR' : 'Modelos e materiais pré-definidos'} navigation={selectionMode ? navigation : undefined}>
-    <View style={styles.pillRow}>{(['Cortinas', 'Persianas', 'Acessórios'] as const).map(item => <Pill key={item} label={item} selected={category === item} onPress={() => setCategory(item)} />)}</View>
-    {!available ? <Card><EmptyState title={`Modelos de ${category.toLocaleLowerCase('pt-BR')} em breve`} description="O catálogo está preparado para receber os modelos pré-definidos. Por enquanto, CurtainPrefab e os materiais padrão estão disponíveis." /></Card> : <>
-      <SectionTitle>Modelo</SectionTitle>
-      <Pressable onPress={() => setCategory('Cortinas')} style={styles.modelCard}><View style={styles.modelMark}><Sofa size={26} color={colors.blue} /></View><View style={{flex: 1}}><Text style={styles.rowTitle}>Cortina sob medida</Text><Text style={styles.rowDetail}>Modelo 3D: CurtainPrefab · tecido gerado no Unity</Text></View><Check size={22} color={colors.green} /></Pressable>
-      <Card><Text style={{fontSize: 13, color: colors.ink, fontWeight: '700'}}>Composição dos painéis</Text><View style={styles.choiceRow}><ChoiceButton label="Painel único" selected={panelType === 'SinglePanel'} onPress={() => setPanelType('SinglePanel')} /><ChoiceButton label="Painel duplo" selected={panelType === 'DoublePanel'} onPress={() => setPanelType('DoublePanel')} /></View></Card>
-      <SectionTitle>Materiais disponíveis</SectionTitle>
-      <MaterialChoice label="Tecido" detail="CurtainFabric" color="#FFE3BF" selected={fabric === 'CurtainFabric'} onPress={() => setFabric('CurtainFabric')} />
-      <MaterialChoice label="Varão e ponteiras" detail="RodMaterial" color="#B6B8BA" selected={rod === 'RodMaterial'} onPress={() => setRod('RodMaterial')} />
-    </>}
-    {selectionMode ? <Button label="Aplicar seleção" icon={<Check size={22} color={colors.onPrimary} />} onPress={apply} disabled={!available} /> : <Button label="Usar no próximo registro" icon={<Check size={22} color={colors.onPrimary} />} onPress={apply} disabled={!available} />}
-  </Page>;
-}
-
-function ChoiceButton({label, selected, onPress}: {label: string; selected: boolean; onPress: () => void}) {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => createStyles(colors), [colors]);
-  return <Pressable onPress={onPress} style={[styles.choiceButton, selected && styles.choiceButtonSelected]}><Text style={[styles.choiceText, selected && styles.choiceTextSelected]}>{label}</Text></Pressable>;
-}
-
-function MaterialChoice({label, detail, color, selected, onPress}: {label: string; detail: string; color: string; selected: boolean; onPress: () => void}) {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => createStyles(colors), [colors]);
-  return <Pressable onPress={onPress} style={[styles.materialCard, selected && styles.materialSelected]}><View style={[styles.swatch, {backgroundColor: color}]} /><View style={{flex: 1}}><Text style={styles.rowTitle}>{label}</Text><Text style={styles.rowDetail}>{detail}</Text></View>{selected ? <Check size={22} color={colors.green} /> : null}</Pressable>;
 }
 
 export function VisitScreen() {
@@ -708,7 +665,31 @@ export function VisitScreen() {
   const [step, setStep] = useState(0);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [selectingProduct, setSelectingProduct] = useState(false);
   const room = client?.rooms.find(item => item.id === roomId);
+
+  const chooseProduct = async () => {
+    if (!draft || selectingProduct) return;
+    if (Platform.OS !== 'android' || !NativeModules.UnityArModule?.openCatalogSelection) {
+      Alert.alert('Catálogo indisponível', 'Atualize o aplicativo Android para usar a configuração 3D.');
+      return;
+    }
+    setSelectingProduct(true);
+    try {
+      const result: string | null = await NativeModules.UnityArModule.openCatalogSelection(JSON.stringify(draft));
+      if (!result) return;
+      const settings = JSON.parse(result) as NonNullable<VisitDraft['curtainSettings']>;
+      const layer = settings.layers?.[0];
+      if (!layer || !(layer.widthCentimeters > 0) || !(layer.heightCentimeters > 0)) throw new Error('A configuração recebida está incompleta.');
+      setDraft(current => current ? {...current, curtainSettings: settings, productCategory: 'Cortinas',
+        modelName: settings.modelName, panelType: layer.panelType,
+        widthCentimeters: layer.widthCentimeters, heightCentimeters: layer.heightCentimeters,
+        fabricMaterialName: layer.fabricMaterialName, fabricMaterialPath: layer.fabricMaterialPath,
+        rodMaterialName: settings.rodMaterialName, rodMaterialPath: settings.rodMaterialPath} : current);
+    } catch (cause) {
+      Alert.alert('Não foi possível escolher o produto', cause instanceof Error ? cause.message : 'Tente novamente.');
+    } finally {setSelectingProduct(false);}
+  };
 
   useEffect(() => {
     if (!draft && client && room) setDraft({...createEmptyDraft(client, room), ...catalogChoice});
@@ -717,7 +698,7 @@ export function VisitScreen() {
   const next = () => {
     setError('');
     if (!room) {setError('Selecione um cômodo para associar este registro.'); return;}
-    if (step === 0 && (!(Number(draft?.widthCentimeters) > 0) || !(Number(draft?.heightCentimeters) > 0))) {setError('Informe largura e altura maiores que zero.'); return;}
+    if (step === 0 && (!draft?.curtainSettings || !(draft.widthCentimeters > 0) || !(draft.heightCentimeters > 0))) {setError('Configure o produto e informe as medidas no catálogo antes de revisar.'); return;}
     if (step === 0) setStep(1);
   };
 
@@ -743,16 +724,12 @@ export function VisitScreen() {
         <Text style={styles.formTitle}>Dados do registro</Text>
         <View style={styles.lockedRoom}><DoorOpen size={22} color={colors.blue} /><Text style={styles.lockedRoomText}>{room.name}</Text></View>
         <TextField label="Abertura / janela" value={draft.openingName} onChangeText={value => setDraft({...draft, openingName: value})} placeholder="Ex.: Janela principal" />
-        <View style={styles.measureRow}>
-          <View style={{flex: 1}}><TextField label="Largura (cm)" value={draft.widthCentimeters ? String(draft.widthCentimeters) : ''} onChangeText={value => setDraft({...draft, widthCentimeters: Number(value.replace(',', '.')) || 0})} keyboardType="decimal-pad" placeholder="Ex.: 180" required /></View>
-          <View style={{flex: 1}}><TextField label="Altura (cm)" value={draft.heightCentimeters ? String(draft.heightCentimeters) : ''} onChangeText={value => setDraft({...draft, heightCentimeters: Number(value.replace(',', '.')) || 0})} keyboardType="decimal-pad" placeholder="Ex.: 140" required /></View>
-        </View>
         <Text style={styles.formTitle}>Produto e materiais</Text>
-        <View style={styles.selectionSummary}><Sofa size={22} color={colors.blue} /><View style={{flex: 1}}><Text style={styles.rowTitle}>{draft.modelName}</Text><Text style={styles.rowDetail}>{draft.panelType === 'SinglePanel' ? 'Painel único' : 'Painel duplo'}</Text><Text style={styles.rowDetail}>Tecido: {draft.fabricMaterialName}</Text><Text style={styles.rowDetail}>Varão: {draft.rodMaterialName}</Text></View></View>
-        <Button label="Escolher produto e materiais" variant="secondary" icon={<Sparkles size={22} color={colors.blue} />} onPress={() => navigation.navigate('CatalogSelection')} />
+        <View style={styles.selectionSummary}><Sofa size={22} color={colors.blue} /><View style={{flex: 1}}>{draft.curtainSettings ? <><Text style={styles.rowTitle}>Cortina sob medida</Text><Text style={styles.rowDetail}>Medidas: {draft.widthCentimeters} × {draft.heightCentimeters} cm</Text><Text style={styles.rowDetail}>{draft.curtainSettings.layers.length} camada(s) · {draft.curtainSettings.supportType === 'Rail' ? 'Trilho' : 'Varão'}{draft.curtainSettings.doubleSupport ? ' duplo' : ' simples'}</Text>{draft.curtainSettings.layers.map((layer, index) => <Text key={index} style={styles.rowDetail}>Camada {index + 1}: {layer.fabricMaterialName}</Text>)}<Text style={styles.rowDetail}>Acabamento: {draft.rodMaterialName}</Text></> : <Text style={styles.rowDetail}>Configure a cortina e seus materiais no catálogo 3D.</Text>}</View></View>
+        <Button label="Configurar produto e materiais" variant="secondary" icon={<Sparkles size={22} color={colors.blue} />} onPress={() => {void chooseProduct();}} loading={selectingProduct} />
         <TextField label="Observações" value={draft.visitNotes} onChangeText={value => setDraft({...draft, visitNotes: value})} placeholder="Detalhes importantes deste atendimento…" multiline />
       </Card> : null}
-      {step === 1 ? <Card style={styles.formCard}><Text style={styles.formTitle}>Confira o registro</Text><SummaryRow label="Cliente" value={client.name} /><SummaryRow label="Cômodo" value={room.name} /><SummaryRow label="Abertura" value={draft.openingName || 'Não informada'} /><SummaryRow label="Medidas" value={`${draft.widthCentimeters} × ${draft.heightCentimeters} cm`} /><SummaryRow label="Modelo" value={`${draft.modelName} · ${draft.panelType === 'SinglePanel' ? 'Painel único' : 'Painel duplo'}`} /><SummaryRow label="Materiais" value={`${draft.fabricMaterialName} · ${draft.rodMaterialName}`} /><SummaryRow label="Observações" value={draft.visitNotes || 'Nenhuma'} /></Card> : null}
+      {step === 1 ? <Card style={styles.formCard}><Text style={styles.formTitle}>Confira o registro</Text><SummaryRow label="Cliente" value={client.name} /><SummaryRow label="Cômodo" value={room.name} /><SummaryRow label="Abertura" value={draft.openingName || 'Não informada'} /><SummaryRow label="Medidas" value={`${draft.widthCentimeters} × ${draft.heightCentimeters} cm`} /><SummaryRow label="Produto" value={draft.curtainSettings ? `Cortina sob medida · ${draft.curtainSettings.layers.length} camada(s) · ${draft.curtainSettings.supportType === 'Rail' ? 'Trilho' : 'Varão'}${draft.curtainSettings.doubleSupport ? ' duplo' : ' simples'}` : 'Não configurado; será usada a última configuração em AR'} />{draft.curtainSettings ? <>{draft.curtainSettings.layers.map((layer, index) => <SummaryRow key={index} label={`Tecido · camada ${index + 1}`} value={layer.fabricMaterialName} />)}<SummaryRow label="Acabamento" value={draft.rodMaterialName} /></> : <SummaryRow label="Materiais" value="Não selecionados" />}<SummaryRow label="Observações" value={draft.visitNotes || 'Nenhuma'} /></Card> : null}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <View style={styles.wizardActions}>{step > 0 ? <View style={{flex: 1}}><Button label="Voltar aos dados" variant="secondary" onPress={() => setStep(0)} /></View> : <View style={{flex: 1}}><Button label="Cancelar" variant="quiet" onPress={() => navigation.goBack()} /></View>}
         {step === 0 ? <View style={{flex: 1}}><Button label="Revisar" icon={<ArrowRight size={22} color={colors.onPrimary} />} onPress={next} /></View> : <View style={{flex: 1}}><Button label="Salvar registro" icon={<Check size={22} color={colors.onPrimary} />} onPress={() => save(false)} loading={saving} /></View>}
@@ -815,6 +792,7 @@ export function UnityARScreen() {
           fabricMaterialName: record?.fabricMaterialName || 'CurtainFabric',
           fabricMaterialPath: 'Assets/Materials/CurtainFabric.mat', rodMaterialName: record?.rodMaterialName || 'RodMaterial',
           rodMaterialPath: 'Assets/Materials/RodMaterial.mat',
+          ...(record?.curtainSettings ? {curtainSettings: record.curtainSettings} : {}),
         }),
       });
     } catch (cause) {
@@ -949,12 +927,12 @@ const createStyles = (colors: ThemeColors) => StyleSheet.create({
   photoAboutHeading: {gap: 4},
   photoViewerTitleRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 9},
   photoViewerMetaRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10},
-  aboutButton: {paddingHorizontal: 10, paddingVertical: 5, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.16)'},
-  aboutButtonText: {fontSize: 11, color: '#FFFFFF', fontWeight: '800'},
+  aboutButton: {minWidth: 100, paddingHorizontal: 12, paddingVertical: 7, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.16)'},
+  aboutButtonText: {width: '100%', textAlign: 'center', fontSize: 12, lineHeight: 18, color: '#FFFFFF', fontWeight: '800'},
   photoAboutBody: {paddingVertical: 5, gap: 5},
   photoAboutText: {fontSize: 13, lineHeight: 18, color: '#E1E8EB'},
   photoViewerActions: {gap: 7},
-  photoViewerTitle: {flexShrink: 1, fontSize: 18, color: '#FFFFFF', fontWeight: '800'},
+  photoViewerTitle: {flex: 1, minWidth: 0, fontSize: 18, lineHeight: 25, color: '#FFFFFF', fontWeight: '800'},
   photoViewerClient: {flex: 1, fontSize: 13, color: '#C7D0D5'},
   photoViewerDate: {fontSize: 12, color: '#C7D0D5', flexShrink: 0},
   photoViewerAction: {marginTop: 12, minHeight: 48, borderRadius: 22, paddingHorizontal: 15, backgroundColor: colors.bluePale, flexDirection: 'row', alignItems: 'center', gap: 9},
@@ -982,21 +960,21 @@ const createStyles = (colors: ThemeColors) => StyleSheet.create({
   materialSelected: {borderColor: colors.blue, backgroundColor: colors.bluePale},
   swatch: {width: 40, height: 40, borderRadius: 13, borderWidth: 1, borderColor: 'rgba(20,40,50,0.08)'},
   stepRow: {flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8},
-  stepItem: {alignItems: 'center', gap: 6, flex: 1},
+  stepItem: {alignItems: 'center', gap: 6, flex: 1, minWidth: 0},
   stepDot: {width: 27, height: 27, borderRadius: 10, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface},
   stepDotActive: {backgroundColor: colors.blue, borderColor: colors.blue},
   stepNumber: {fontSize: 11, color: colors.muted, fontWeight: '800'},
   stepNumberActive: {color: colors.onPrimary},
-  stepLabel: {fontSize: 9, color: colors.muted},
+  stepLabel: {width: '100%', textAlign: 'center', fontSize: 12, lineHeight: 18, color: colors.muted},
   stepLabelActive: {fontWeight: '800', color: colors.blue},
   lockedRoom: {flexDirection: 'row', alignItems: 'center', gap: 7, padding: 11, backgroundColor: colors.bluePale, borderRadius: 12},
-  lockedRoomText: {fontSize: 13, fontWeight: '800', color: colors.blueDeep},
+  lockedRoomText: {flex: 1, fontSize: 13, lineHeight: 20, fontWeight: '800', color: colors.blueDeep},
   measureRow: {flexDirection: 'row', gap: 10},
   selectionSummary: {flexDirection: 'row', gap: 11, padding: 13, borderRadius: 22, backgroundColor: colors.background},
   wizardActions: {flexDirection: 'row', gap: 10},
-  summaryRow: {borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 9, gap: 4},
-  summaryLabel: {fontSize: 11, color: colors.muted, fontWeight: '700'},
-  summaryValue: {fontSize: 14, color: colors.ink, fontWeight: '700'},
+  summaryRow: {width: '100%', borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 9, gap: 4},
+  summaryLabel: {width: '100%', alignSelf: 'stretch', fontSize: 12, lineHeight: 18, color: colors.muted, fontWeight: '700'},
+  summaryValue: {width: '100%', alignSelf: 'stretch', fontSize: 14, lineHeight: 21, color: colors.ink, fontWeight: '700'},
   editableRecordHeader: {flexDirection: 'row', alignItems: 'center', gap: 8},
   editableRecordValue: {flex: 1, gap: 4},
   editableRecordInput: {flex: 1},

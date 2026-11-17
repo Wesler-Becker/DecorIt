@@ -145,9 +145,6 @@ function AppContent() {
               <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
               <Stack.Screen name="RecordDetail" component={RecordDetailScreen} />
               <Stack.Screen name="NewRecord" component={VisitScreen} />
-              <Stack.Screen name="CatalogSelection">
-                {() => <CatalogScreen selectionMode />}
-              </Stack.Screen>
               <Stack.Screen name="UnityAR" component={UnityARScreen} />
             </Stack.Navigator>
           </NavigationContainer>

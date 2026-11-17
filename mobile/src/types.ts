@@ -19,6 +19,7 @@ export type VisitRecordData = {
   panelType: 'SinglePanel' | 'DoublePanel' | string;
   fabricMaterialName: string;
   rodMaterialName: string;
+  curtainSettings?: CurtainSettings;
   photos: PhotoData[];
 };
 
@@ -118,7 +119,6 @@ export type RootStackParamList = {
   RoomDetail: {clientId: string; roomId: string};
   RecordDetail: {clientId: string; roomId: string; recordId: string};
   NewRecord: {clientId: string; roomId?: string};
-  CatalogSelection: undefined;
   UnityAR: {clientId: string; roomId?: string; recordId?: string; autoOpen?: boolean};
 };
 
