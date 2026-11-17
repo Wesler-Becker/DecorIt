@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="mobile/store-assets/ic_launcher-playstore.png" alt="Logo do DecorIt" width="180" />
+</p>
+
 # DecorIt
 
 Aplicativo mobile de apoio à visualização de cortinas em realidade aumentada. O projeto combina uma interface em **React Native + TypeScript** com uma experiência de câmera e AR desenvolvida em **Unity**.
