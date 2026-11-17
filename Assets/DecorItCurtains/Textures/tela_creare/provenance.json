@@ -1,7 +1,7 @@
 {
     "familyId": "tela_creare",
     "referencePage": 10,
-    "source": "ArtSource/Curtains/tela_creare.png",
+    "source": "Assets/DecorItCurtains/Textures/tela_creare/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,

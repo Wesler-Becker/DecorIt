@@ -1,7 +1,7 @@
 {
     "familyId": "boucle_cortina_loft",
     "referencePage": 5,
-    "source": "ArtSource/Curtains/boucle_cortina_loft.png",
+    "source": "Assets/DecorItCurtains/Textures/boucle_cortina_loft/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,

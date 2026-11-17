@@ -39,10 +39,13 @@ e a largura comercial do tecido não permite medir os fios fotografados.
 
 ## Fontes e reconstrução
 
-`ArtSource/Curtains/rebuild-manifest.json` registra a fonte, o prompt utilizado
-no gerador integrado `image_gen` e os parâmetros de cada família. As imagens
-autorais ficam ao lado do manifesto, fora de `Assets`, para não entrarem no build.
-As 56 fontes são mantidas na resolução nativa de **1254 × 1254 px** produzida pelo gerador. Ampliar um
+`Assets/DecorItCurtains/Source/rebuild-manifest.json` registra a fonte, o prompt utilizado
+no gerador integrado `image_gen` e os parâmetros de cada família. Para 55 famílias,
+o próprio `BaseColor.png` em `Assets/DecorItCurtains/Textures` é a fonte, sem uma
+segunda cópia. O Voil Trend mantém uma máscara de fios separada em
+`Assets/DecorItCurtains/Source/voil_trend.png`, pois dela são derivados os mapas de cor e opacidade.
+Esses arquivos de fonte não são referenciados pelo catálogo em execução e não precisam entrar no APK.
+As fontes têm resolução nativa de **1254 × 1254 px** produzida pelo gerador. Ampliar um
 arquivo para 2K ou 4K não criaria novos detalhes; a densidade visual vem também da
 área física coberta pelo tile.
 
@@ -80,4 +83,5 @@ podem apresentar limitações de ordenação da mistura de transparência.
 
 A cópia anterior à revisão foi preservada localmente em `tmp/curtain-review/original-DecorItCurtains`.
 Essa pasta é um backup de trabalho ignorado pelo Git; ela não é necessária para reconstruir
-ou compilar o aplicativo. As fontes de reconstrução versionadas ficam em `ArtSource/Curtains`.
+ou compilar o aplicativo. As fontes versionadas ficam nos mapas `BaseColor` em
+`Assets/DecorItCurtains/Textures` e na máscara distinta em `Assets/DecorItCurtains/Source`.

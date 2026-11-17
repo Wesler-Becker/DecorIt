@@ -1,7 +1,7 @@
 {
     "familyId": "tela_rustica",
     "referencePage": 12,
-    "source": "ArtSource/Curtains/tela_rustica.png",
+    "source": "Assets/DecorItCurtains/Textures/tela_rustica/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,

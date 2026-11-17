@@ -20,7 +20,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 3,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_trend.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Fonte autoral e uma mascara de filamentos, nao uma fotografia."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Source/voil_trend.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Fonte autoral e uma mascara de filamentos, nao uma fotografia."
         },
         {
             "id": "boucle_cortina_loft",
@@ -38,7 +38,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 5,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/boucle_cortina_loft.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/boucle_cortina_loft/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "boucle_cort_resort",
@@ -56,7 +56,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 8,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/boucle_cort_resort.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/boucle_cort_resort/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "tela_creare",
@@ -74,7 +74,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 10,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/tela_creare.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/tela_creare/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "tela_rustica",
@@ -92,7 +92,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 12,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/tela_rustica.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/tela_rustica/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "voil_tresset",
@@ -110,7 +110,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 13,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_tresset.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_tresset/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "tricot",
@@ -128,7 +128,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 15,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/tricot.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/tricot/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "linho_absoluto",
@@ -146,7 +146,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 17,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_absoluto.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_absoluto/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "linho_gaia",
@@ -164,7 +164,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 19,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_gaia.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_gaia/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_artesano",
@@ -182,7 +182,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 21,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_artesano.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_artesano/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "linho_moorea",
@@ -200,7 +200,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 24,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_moorea.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_moorea/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "parati",
@@ -218,7 +218,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 26,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/parati.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/parati/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_shantung",
@@ -236,7 +236,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 28,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_shantung.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_shantung/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_camburi",
@@ -254,7 +254,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 30,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_camburi.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_camburi/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "ln_tela",
@@ -272,7 +272,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 32,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/ln_tela.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/ln_tela/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_linho_bora_bora",
@@ -290,7 +290,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 33,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_linho_bora_bora.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_linho_bora_bora/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_flame_bali",
@@ -308,7 +308,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 37,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_flame_bali.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_flame_bali/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "voil_linho_pipa",
@@ -326,7 +326,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 40,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_linho_pipa.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_linho_pipa/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_linhao_iguape",
@@ -344,7 +344,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 42,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_linhao_iguape.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_linhao_iguape/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_bora_bora",
@@ -362,7 +362,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 44,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_bora_bora.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_bora_bora/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "brisa",
@@ -380,7 +380,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 46,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/brisa.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/brisa/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "fresh",
@@ -398,7 +398,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 48,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/fresh.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/fresh/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_urban",
@@ -416,7 +416,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 50,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_urban.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_urban/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "voil_scalla",
@@ -434,7 +434,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 51,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_scalla.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_scalla/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_lumina",
@@ -452,7 +452,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 53,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_lumina.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_lumina/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_evidence",
@@ -470,7 +470,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 55,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_evidence.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_evidence/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_essence",
@@ -488,7 +488,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 58,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_essence.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_essence/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "chiffon_decor",
@@ -506,7 +506,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 60,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/chiffon_decor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/chiffon_decor/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_snow",
@@ -524,7 +524,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 62,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_snow.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_snow/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_cross",
@@ -542,7 +542,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 64,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_cross.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_cross/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_cristal",
@@ -560,7 +560,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 66,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_cristal.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_cristal/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_gaze",
@@ -578,7 +578,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 68,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_gaze.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_gaze/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "voil_botone",
@@ -596,7 +596,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 70,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_botone.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_botone/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Vazados derivados do alpha da trama reconstruida."
         },
         {
             "id": "bordados_ramos",
@@ -614,7 +614,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 72,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/bordados_ramos.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/bordados_ramos/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "bordados_galhos",
@@ -632,7 +632,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 74,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/bordados_galhos.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/bordados_galhos/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "linho_voil_strip_211",
@@ -650,7 +650,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 76,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_voil_strip_211.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_voil_strip_211/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_liso",
@@ -668,7 +668,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 78,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_liso.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_liso/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_unique",
@@ -686,7 +686,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 79,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_unique.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_unique/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_giardino",
@@ -704,7 +704,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 81,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_giardino.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_giardino/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_terrazo",
@@ -722,7 +722,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 83,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_terrazo.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_terrazo/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "linho_nix",
@@ -740,7 +740,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 85,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_nix.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_nix/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "linho_cronos",
@@ -758,7 +758,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 87,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/linho_cronos.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/linho_cronos/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_100_indonesia_dupla_face",
@@ -776,7 +776,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 90,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_100_indonesia_dupla_face.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_100_indonesia_dupla_face/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_dupla_face",
@@ -794,7 +794,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 92,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_dupla_face.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_dupla_face/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_100",
@@ -812,7 +812,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 94,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_100.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_100/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_fosco",
@@ -830,7 +830,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 96,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_fosco.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_fosco/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_fosco_3m",
@@ -848,7 +848,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 98,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_fosco_3m.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_fosco_3m/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "oxford",
@@ -866,7 +866,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 101,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/oxford.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/oxford/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "cetim_blackout",
@@ -884,7 +884,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 104,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/cetim_blackout.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/cetim_blackout/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "microfibra_skin_peach",
@@ -902,7 +902,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 106,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/microfibra_skin_peach.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/microfibra_skin_peach/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "microfibra",
@@ -920,7 +920,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 108,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/microfibra.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/microfibra/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "voil_flame_sorelle",
@@ -938,7 +938,7 @@
             "transmission": 0.30000001192092898,
             "physicalScaleKnown": false,
             "referencePage": 110,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/voil_flame_sorelle.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/voil_flame_sorelle/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "microfibra_solea",
@@ -956,7 +956,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 111,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/microfibra_solea.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/microfibra_solea/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_dupla_face_rocca",
@@ -974,7 +974,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 112,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_dupla_face_rocca.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_dupla_face_rocca/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_dupla_face_sireno",
@@ -992,7 +992,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 113,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_dupla_face_sireno.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_dupla_face_sireno/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         },
         {
             "id": "blackout_dupla_face_nord",
@@ -1010,7 +1010,7 @@
             "transmission": 0.0,
             "physicalScaleKnown": false,
             "referencePage": 114,
-            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: ArtSource/Curtains/blackout_dupla_face_nord.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
+            "notes": "Reconstrucao visual da fotografia do catalogo; fonte: Assets/DecorItCurtains/Textures/blackout_dupla_face_nord/BaseColor.png. Escala artistica estimada, nao medida. Mapas de relevo e transmissao aproximados. Sem segmentacao de furos por luminosidade."
         }
     ],
     "products": [

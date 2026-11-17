@@ -23,19 +23,23 @@ namespace DecorIt.Curtains.Editor
         [MenuItem("DecorIt/Reconstruir mapas das fontes de tecido")]
         public static void RebuildSources()
         {
-            Build("ArtSource/Curtains/rebuild-manifest.json");
+            Build("Assets/DecorItCurtains/Source/rebuild-manifest.json");
             DecorItCatalogImporter.Rebuild();
         }
 
-        public static void Build(string manifestPath)
+        public static void Build(string manifestPath, string root = "Assets/DecorItCurtains/")
         {
             var manifest = JsonUtility.FromJson<Manifest>(File.ReadAllText(manifestPath));
-            const string root = "Assets/DecorItCurtains/";
             var catalog = JsonUtility.FromJson<CurtainCatalog>(File.ReadAllText(root + "catalog.json"));
             foreach (var entry in manifest.entries)
             {
                 var family = Array.Find(catalog.families, f => f.id == entry.id);
                 if (family == null) throw new InvalidDataException("Familia desconhecida: " + entry.id);
+                string baseColorPath = root + family.baseColor;
+                bool sourceIsBaseColor = string.Equals(Path.GetFullPath(entry.source), Path.GetFullPath(baseColorPath),
+                    Path.DirectorySeparatorChar == '\\' ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                if (entry.sourceIsCoverage && sourceIsBaseColor)
+                    throw new InvalidDataException("A mascara de origem deve ser separada do BaseColor: " + entry.id);
                 var source = new Texture2D(2, 2, TextureFormat.RGBA32, false, true);
                 try
                 {
@@ -78,8 +82,8 @@ namespace DecorIt.Curtains.Editor
                         normals[y * w + x] = (Color32)new Color(n.x * 0.5f + 0.5f, n.y * 0.5f + 0.5f, n.z * 0.5f + 0.5f, 1);
                     }
                     // Keep the authored RGB image at native resolution; upscaling would add no detail.
-                    if (albedo != null) SaveMap(root + family.baseColor, w, h, albedo);
-                    else File.Copy(entry.source, root + family.baseColor, true);
+                    if (albedo != null) SaveMap(baseColorPath, w, h, albedo);
+                    else if (!sourceIsBaseColor) File.Copy(entry.source, baseColorPath, true);
                     if (family.mode == "Opaque") SaveMap(root + family.opacity, 1, 1, new[] {new Color32(255,255,255,255)});
                     else SaveMap(root + family.opacity, w, h, opacity);
                     SaveMap(root + family.normal, w, h, normals);

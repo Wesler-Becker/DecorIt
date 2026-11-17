@@ -26,7 +26,7 @@ function New-CurtainArchive([string]$Name, [IO.FileInfo[]]$Files, [string]$Readm
 
 $materialFiles = @(Get-Item -LiteralPath (Join-Path $projectRoot 'Assets/DecorItCurtains.meta'))
 $materialFiles += Get-ChildItem -LiteralPath (Join-Path $projectRoot 'Assets/DecorItCurtains') -File -Recurse |
-    Where-Object { $_.Name -notin @('Height.png','Height.png.meta') }
+    Where-Object { $_.Name -notin @('Height.png','Height.png.meta','Source.meta') -and $_.FullName -notlike (Join-Path $projectRoot 'Assets/DecorItCurtains/Source/*') }
 $materialFiles += Get-Item -LiteralPath (Join-Path $projectRoot 'Docs/CurtainMaterials.md')
 $materialFiles += Get-ChildItem -LiteralPath (Join-Path $projectRoot 'Docs/CurtainMaterialReview') -File
 $readme = @'
@@ -53,8 +53,9 @@ A escala e visual e estimada, sem medicao de uma amostra fisica.
 
 FONTES EDITAVEIS
 Para executar Reconstruir mapas das fontes de tecido, extraia tambem
-DecorIt-Cortinas-Fontes-2026-10-21.zip na raiz do projeto. Ele contem as
-fontes geradas, prompts e parametros. Nao e necessario para usar os materiais.
+DecorIt-Cortinas-Fontes-2026-10-21.zip na raiz do projeto. Ele contem a mascara
+original do Voil Trend, o manifesto, os prompts e os parametros; as demais
+fontes sao os arquivos BaseColor ja incluidos neste pacote de materiais.
 
 Este pacote contem a biblioteca de tecidos, nao o aplicativo AR completo.
 Os comandos da lista AR e a malha ProceduralCurtainMesh pertencem ao projeto DecorIt.
@@ -65,14 +66,16 @@ Previas: Docs/CurtainMaterialReview/README.md
 '@
 New-CurtainArchive 'DecorIt-Cortinas-Materiais-2026-10-21.zip' $materialFiles $readme
 
-$sourceFiles = @(Get-ChildItem -LiteralPath (Join-Path $projectRoot 'ArtSource/Curtains') -File -Recurse)
+$sourceFiles = @(Get-Item -LiteralPath (Join-Path $projectRoot 'Assets/DecorItCurtains/Source.meta'))
+$sourceFiles += Get-ChildItem -LiteralPath (Join-Path $projectRoot 'Assets/DecorItCurtains/Source') -File -Recurse
 $sourceReadme = @'
 DECORIT - FONTES DOS TECIDOS - 21/10/2026
 
-Extraia na raiz do projeto para obter ArtSource/Curtains.
-As 56 imagens nativas de 1254 x 1254 px, os prompts e os parametros estao incluidos.
-As referencias generatedPath no manifesto registram os arquivos originais da
-geracao. A reconstrucao usa o campo source, relativo ao projeto e incluido no ZIP.
+Extraia na raiz do projeto para obter Assets/DecorItCurtains/Source.
+O manifesto e a mascara original de Voil Trend estao incluidos neste pacote.
+As demais fontes sao os mapas BaseColor da biblioteca de materiais, que deve
+estar instalada em Assets/DecorItCurtains/Textures. Os prompts e parametros
+continuam no manifesto. generatedPath registra a origem historica da geracao.
 
 Com a biblioteca de materiais instalada, o menu DecorIt > Reconstruir mapas das
 fontes de tecido recria BaseColor, Normal, Opacity e os materiais.

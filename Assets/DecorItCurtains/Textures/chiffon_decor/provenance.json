@@ -1,7 +1,7 @@
 {
     "familyId": "chiffon_decor",
     "referencePage": 60,
-    "source": "ArtSource/Curtains/chiffon_decor.png",
+    "source": "Assets/DecorItCurtains/Textures/chiffon_decor/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,

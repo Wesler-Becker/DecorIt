@@ -29,7 +29,6 @@ mobile/                  Aplicativo React Native e projeto Android
   android/               Activity Unity, módulo nativo e build Android
   scripts/               Exportação Unity e utilitários Android
 Docs/                    Notas técnicas sobre materiais e cortinas procedurais
-ArtSource/               Fontes de arte usadas na preparação dos tecidos
 ```
 
 ## Requisitos

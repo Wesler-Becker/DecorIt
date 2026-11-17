@@ -1,7 +1,7 @@
 {
     "familyId": "blackout_giardino",
     "referencePage": 81,
-    "source": "ArtSource/Curtains/blackout_giardino.png",
+    "source": "Assets/DecorItCurtains/Textures/blackout_giardino/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,

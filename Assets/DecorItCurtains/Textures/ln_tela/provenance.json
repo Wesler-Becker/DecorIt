@@ -1,7 +1,7 @@
 {
     "familyId": "ln_tela",
     "referencePage": 32,
-    "source": "ArtSource/Curtains/ln_tela.png",
+    "source": "Assets/DecorItCurtains/Textures/ln_tela/BaseColor.png",
     "width": 1254,
     "height": 1254,
     "tileSizeMeters": 0.03999999910593033,
