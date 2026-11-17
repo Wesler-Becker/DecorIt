@@ -23,7 +23,7 @@ public class ARPhotoCapture : MonoBehaviour
             RectTransform rect = btnCamera.transform as RectTransform;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(0f, 84f);
+            rect.anchoredPosition = new Vector2(0f, (36f + 116f / 2f) * 1.12f);
         }
         if (btnCamera != null) btnCamera.onClick.AddListener(TirarFoto);
         AddBackButton();

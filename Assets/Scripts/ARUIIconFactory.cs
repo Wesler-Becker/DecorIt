@@ -13,6 +13,14 @@ public static class ARUIIconFactory
     public static Sprite RoundedSprite => roundedSprite != null ? roundedSprite : roundedSprite = CreateShapeSprite(false);
     public static Sprite CircleSprite => circleSprite != null ? circleSprite : circleSprite = CreateShapeSprite(true);
 
+    public static void SetButtonOpacity(Button button)
+    {
+        if (button == null) return;
+        CanvasGroup group = button.GetComponent<CanvasGroup>();
+        if (group == null) group = button.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = 0.7f;
+    }
+
     public static RectTransform GetCameraControlsRoot(Canvas canvas)
     {
         Transform existing = canvas.transform.Find("CameraControlsSafeArea");
@@ -97,6 +105,7 @@ public static class ARUIIconFactory
     public static void ConfigureCameraButton(Button button, string iconName, float size, Color background, Color iconColor)
     {
         if (button == null) return;
+        SetButtonOpacity(button);
         size *= 1.12f;
         RectTransform rect = button.transform as RectTransform;
         rect.sizeDelta = new Vector2(size, size);

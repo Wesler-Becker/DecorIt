@@ -123,26 +123,26 @@ public class ARInteractionUI : MonoBehaviour
 
     private void BuildEditingControls()
     {
-        addButton = CreateButton("AddCurtainButton", overlayRoot, Vector2.zero, new Vector2(24f, 36f), new Vector2(96f, 96f), Ink, ToggleAddOptions);
+        addButton = CreateButton("AddCurtainButton", overlayRoot, Vector2.zero, new Vector2(126f, 36f), new Vector2(96f, 96f), Ink, ToggleAddOptions);
         ARUIIconFactory.ConfigureCameraButton(addButton, "Add", 96f, Ink, SoftWhite);
         BuildAddOptions();
-        editControls = CreatePanel("CameraEditControls", overlayRoot, new Vector2(1f, 0f), new Vector2(-24f, 36f), new Vector2(252f, 96f), Color.clear);
+        editControls = CreatePanel("CameraEditControls", overlayRoot, new Vector2(1f, 0f), new Vector2(-24f, 36f), new Vector2(300f, 96f), Color.clear);
         editControls.GetComponent<Image>().raycastTarget = false;
-        zoomButton = CreateGestureButton("ZoomGestureButton", "Zoom", 42f, () => SelecionarGesto(false));
-        editButton = CreateGestureButton("EditObjectButton", "Edit", 126f, AtivarAjuste);
-        rotateButton = CreateGestureButton("RotateGestureButton", "Rotate", 210f, () => SelecionarGesto(true));
+        zoomButton = CreateGestureButton("ZoomGestureButton", "Zoom", 50f, () => SelecionarGesto(false));
+        editButton = CreateGestureButton("EditObjectButton", "Edit", 150f, AtivarAjuste);
+        rotateButton = CreateGestureButton("RotateGestureButton", "Rotate", 250f, () => SelecionarGesto(true));
     }
 
     private void BuildAddOptions()
     {
         addOptionsPanel = CreatePanel("AddCurtainOptions", overlayRoot, Vector2.zero,
-            new Vector2(24f, 144f), new Vector2(420f, 170f), Panel);
+            new Vector2(24f, 144f), new Vector2(300f, 170f), Panel);
         Button addLast = CreateButton("AddLastCurtainButton", addOptionsPanel.transform,
-            new Vector2(0f, 1f), new Vector2(12f, -10f), new Vector2(396f, 68f),
+            new Vector2(0f, 1f), new Vector2(12f, -10f), new Vector2(276f, 68f),
             new Color(0.12f, 0.17f, 0.21f, 0.96f), AddLastCurtain);
         StyleMenuButton(addLast, "Adicionar objeto", "Add");
         Button search = CreateButton("SearchCurtainButton", addOptionsPanel.transform,
-            new Vector2(0f, 1f), new Vector2(12f, -90f), new Vector2(396f, 68f),
+            new Vector2(0f, 1f), new Vector2(12f, -90f), new Vector2(276f, 68f),
             new Color(0.12f, 0.17f, 0.21f, 0.96f), OpenCurtainCatalog);
         StyleMenuButton(search, "Buscar no catálogo", "Search");
         addOptionsPanel.SetActive(false);
@@ -172,9 +172,9 @@ public class ARInteractionUI : MonoBehaviour
 
     private Button CreateGestureButton(string name, string icon, float x, System.Action action)
     {
-        Button button = CreateButton(name, editControls.transform, new Vector2(0f, 0.5f), new Vector2(x, 0f), new Vector2(80f, 80f), Ink, action);
+        Button button = CreateButton(name, editControls.transform, new Vector2(0f, 0.5f), new Vector2(x, 0f), new Vector2(96f, 96f), Ink, action);
         (button.transform as RectTransform).pivot = new Vector2(0.5f, 0.5f);
-        ARUIIconFactory.ConfigureCameraButton(button, icon, 80f, Ink, SoftWhite);
+        ARUIIconFactory.ConfigureCameraButton(button, icon, 96f, Ink, SoftWhite);
         return button;
     }
 
@@ -353,6 +353,7 @@ public class ARInteractionUI : MonoBehaviour
         foreach (GameObject model in modelOptions)
         {
             GameObject option = new GameObject(model.name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+            ARUIIconFactory.SetButtonOpacity(option.GetComponent<Button>());
             option.transform.SetParent(contentObject.transform, false);
             option.GetComponent<LayoutElement>().preferredWidth = 176f;
             option.GetComponent<LayoutElement>().preferredHeight = 76f;
@@ -592,6 +593,7 @@ public class ARInteractionUI : MonoBehaviour
             Image itemBackground = item.GetComponent<Image>();
             itemBackground.color = new Color(0f, 0f, 0f, 0f);
             Button itemButton = item.GetComponent<Button>();
+            ARUIIconFactory.SetButtonOpacity(itemButton);
             itemButton.targetGraphic = itemBackground;
             itemButton.onClick.AddListener(() => onSelected(index));
             if (name == "FabricSwatches") fabricOptionItems.Add(item);
@@ -654,6 +656,7 @@ public class ARInteractionUI : MonoBehaviour
         image.type = Image.Type.Sliced;
         image.color = color;
         Button button = buttonObject.GetComponent<Button>();
+        ARUIIconFactory.SetButtonOpacity(button);
         button.targetGraphic = image;
         if (callback != null) button.onClick.AddListener(() => callback());
         return button;
@@ -840,7 +843,6 @@ public class ARInteractionUI : MonoBehaviour
         ARUIIconFactory.SetSelected(rotateButton, modoRotacao);
         if (zoomButton != null) zoomButton.gameObject.SetActive(modoAjustar);
         if (rotateButton != null) rotateButton.gameObject.SetActive(modoAjustar);
-        if (editControls != null) editControls.GetComponent<Image>().color = modoAjustar ? Ink : Color.clear;
         if (textoModoGesto != null) textoModoGesto.text = modoRotacao ? "Gestos: girar" : "Gestos: aproximar";
     }
 
