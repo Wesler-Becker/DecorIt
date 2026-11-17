@@ -114,14 +114,10 @@ public class ARPhotoCapture : MonoBehaviour
                     VisitDraftSession.Current != null ? VisitDraftSession.Current.roomName : string.Empty,
                     capturedAt);
             }
-            else if (string.IsNullOrEmpty(VisitDraftSession.TargetRoomId))
-            {
-                photoSaved = ClientRepository.AddUnassignedPhoto(ClientSession.SelectedClientId, caminho, capturedAt);
-            }
             else
             {
-                photoSaved = ClientRepository.AddPhoto(ClientSession.SelectedClientId, VisitDraftSession.TargetRoomId,
-                    RecordSession.CurrentRecordId, caminho, capturedAt);
+                photoSaved = false;
+                Debug.Log("Foto salva localmente; associação a cliente requer o aplicativo Android.");
             }
             if (photoSaved)
                 Debug.Log(string.IsNullOrEmpty(VisitDraftSession.TargetRoomId)

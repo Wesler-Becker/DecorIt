@@ -21,6 +21,9 @@ public sealed class CatalogScreenController : MonoBehaviour
     private Camera previewCamera;
     private RenderTexture previewTexture;
     private VisualElement root;
+    private VisualElement screen;
+    private Rect lastSafeArea;
+    private Vector2Int lastScreenSize;
     private ScrollView scroll;
     private ScrollView layerTabsScroll;
     private VisualElement layerTabs;
@@ -58,6 +61,8 @@ public sealed class CatalogScreenController : MonoBehaviour
         if (document == null) document = GetComponent<UIDocument>();
         previewOnly = UnityARHostBridge.IsCatalogPreview;
         root = document.rootVisualElement;
+        screen = root.Q<VisualElement>("root");
+        root.style.backgroundColor = new Color(0.157f, 0.408f, 0.573f, 1f);
         root.RegisterCallback<GeometryChangedEvent>(_ => ApplySafeAreaInsets());
         CacheElements();
         LoadMaterials();
@@ -89,11 +94,19 @@ public sealed class CatalogScreenController : MonoBehaviour
 
     private void ApplySafeAreaInsets()
     {
-        if (root == null || Screen.height <= 0 || root.layout.height <= 0f) return;
+        if (root == null || screen == null || Screen.height <= 0 || root.layout.height <= 0f) return;
         Rect safeArea = Screen.safeArea;
         float pointsPerPixel = root.layout.height / Screen.height;
-        root.style.paddingTop = Mathf.Max(0f, Screen.height - safeArea.yMax) * pointsPerPixel;
-        root.style.paddingBottom = Mathf.Max(0f, safeArea.yMin) * pointsPerPixel;
+        screen.style.paddingTop = Mathf.Max(0f, Screen.height - safeArea.yMax) * pointsPerPixel;
+        screen.style.paddingBottom = Mathf.Max(0f, safeArea.yMin) * pointsPerPixel;
+        lastSafeArea = safeArea;
+        lastScreenSize = new Vector2Int(Screen.width, Screen.height);
+    }
+
+    private void Update()
+    {
+        if (Screen.safeArea != lastSafeArea || Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y)
+            ApplySafeAreaInsets();
     }
 
     private void CacheElements()
@@ -168,6 +181,13 @@ public sealed class CatalogScreenController : MonoBehaviour
     private void BindEvents()
     {
         root.Q<Button>("backButton").clicked += Back;
+        Button togglePreview = root.Q<Button>("togglePreviewButton");
+        togglePreview.clicked += () =>
+        {
+            bool collapsed = !previewImage.ClassListContains("hidden");
+            previewImage.EnableInClassList("hidden", collapsed);
+            togglePreview.text = collapsed ? "Mostrar prévia" : "Recolher";
+        };
         Button applyButton = root.Q<Button>("applyButton");
         if (previewOnly)
         {
@@ -464,7 +484,7 @@ public sealed class CatalogScreenController : MonoBehaviour
         RefreshSelectedFabric();
         filteredMaterials.Clear();
         foreach (CurtainMaterialCatalog.Entry entry in materials)
-            if (string.IsNullOrEmpty(query) || entry.displayName.IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0)
+            if (CurtainMaterialCatalog.MatchesSearch(entry.displayName, entry.assetPath, query))
                 filteredMaterials.Add(entry);
         materialGrid.Clear();
         foreach (CurtainMaterialCatalog.Entry entry in filteredMaterials)
@@ -591,7 +611,7 @@ public sealed class CatalogScreenController : MonoBehaviour
             layerSpacingField.SetEnabled(gap > 0f);
             root.Q<Label>("spacingHint").text = gap <= 0f
                 ? "Esta é a camada da frente. As demais reservam espaço atrás dela."
-                : $"Folga livre aplicada: {gap:0.#} mm. O espaço das dobras é reservado automaticamente; mínimo de 2 mm entre tecidos.";
+                : $"Distância entre os centros: {gap:0.#} mm (mínimo de 2 mm). As pregas são reduzidas quando necessário para evitar sobreposição.";
             for (int i = 0; i < working.layers.Count; i++)
             {
                 CurtainLayerViewSettings layer = working.layers[i];

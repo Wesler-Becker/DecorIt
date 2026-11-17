@@ -2,12 +2,16 @@
 
 Aplicativo mobile de apoio à visualização de cortinas em realidade aumentada. O projeto combina uma interface em **React Native + TypeScript** com uma experiência de câmera e AR desenvolvida em **Unity**.
 
+O alvo integrado atual é Android. A experiência AR depende de um aparelho compatível com ARCore e dos serviços necessários; o emulador pode ser usado para conferir parte das telas, mas não substitui o teste da câmera e da detecção no telefone.
+
 ## O que o aplicativo faz
 
 - Mantém clientes, cômodos, registros de atendimento e fotos associados a cada cliente.
 - Permite iniciar a câmera AR a partir do fluxo de um registro ou pelo atalho de AR rápido.
 - Usa o Unity para posicionar e ajustar a cortina virtual, configurar dimensões e aplicar materiais.
+- Configura até oito camadas de tecido, com varão ou trilho simples ou duplo e abertura por suporte.
 - Salva as fotos capturadas no histórico do cliente; fotos do AR rápido podem ser identificadas com um cômodo depois.
+- Mantém os dados no SQLite local e protege campos selecionados com uma chave do Android Keystore.
 
 As telas de cadastro e histórico ficam no React Native. A câmera, o posicionamento AR e a visualização 3D ficam no Unity, iniciado por uma Activity Android integrada ao app.
 
@@ -15,7 +19,7 @@ As telas de cadastro e histórico ficam no React Native. A câmera, o posicionam
 
 ```text
 Assets/                  Cenas, scripts, prefabs, materiais e recursos do Unity
-  Scenes/                Home, AR_Test, Catalog e outras cenas do projeto
+  Scenes/                UnityBootstrap, AR_Test e Catalog
   Scripts/               AR, cortina procedural, dados e integração com Android
   DecorItCurtains/       Materiais e texturas de cortinas
 mobile/                  Aplicativo React Native e projeto Android
@@ -47,7 +51,14 @@ O projeto é configurado para preservar o identificador Android `com.Wesler_Beck
    npm ci
    ```
 
-3. Conecte um aparelho Android com depuração USB ativada ou inicie um emulador. Confira a conexão com `adb devices`.
+3. Conecte um aparelho Android com depuração USB ativada ou inicie um emulador. No PowerShell, confira a conexão:
+
+   ```powershell
+   $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+   & $adb devices -l
+   ```
+
+   Se o SDK estiver em outro local, ajuste `$adb`. Autorize a depuração USB no aparelho quando solicitado.
 4. Com o projeto Unity preparado, exporte a biblioteca Android do Unity. Esse passo precisa ser repetido em cada máquina e após mudanças que afetem a build Unity:
 
    ```powershell
@@ -66,19 +77,23 @@ cd mobile
 npm start
 ```
 
-No segundo terminal, instale e compile a variante Debug:
+No segundo terminal, compile a variante Debug e instale no dispositivo escolhido. O parâmetro `-r` substitui uma instalação com assinatura compatível sem limpar os dados:
 
 ```powershell
 cd mobile/android
-.\gradlew.bat :app:installDebug -PreactNativeArchitectures=arm64-v8a
+$env:JAVA_TOOL_OPTIONS = '-Djdk.net.unixdomain.tmpdir=C:\Windows\Temp'
+.\gradlew.bat :app:assembleDebug -PreactNativeArchitectures=arm64-v8a
+$adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+& $adb devices -l
+& $adb -s '<ID_DO_DISPOSITIVO>' install -r .\app\build\outputs\apk\debug\app-debug.apk
 ```
 
 Se o aparelho estiver conectado por USB e o app não alcançar o Metro, redirecione a porta padrão e abra o aplicativo:
 
 ```powershell
 $adb = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"
-& $adb reverse tcp:8081 tcp:8081
-& $adb shell am start -n com.Wesler_Becker.DecorIt/com.weslerbecker.decorit.MainActivity
+& $adb -s '<ID_DO_DISPOSITIVO>' reverse tcp:8081 tcp:8081
+& $adb -s '<ID_DO_DISPOSITIVO>' shell am start -n com.Wesler_Becker.DecorIt/com.weslerbecker.decorit.MainActivity
 ```
 
 Se o Android SDK estiver em outro local, ajuste o caminho do `adb` ou adicione `platform-tools` ao `PATH`. A variante Debug espera o Metro ativo para carregar o código JavaScript.
@@ -96,10 +111,11 @@ O script não precisa do Metro. Se houver mais de um emulador/aparelho conectado
 
 Para compilar sem instalar, ou acompanhar cada etapa manualmente, exporte primeiro a biblioteca Unity e então execute o Gradle conforme abaixo.
 
-Depois de exportar a biblioteca Unity, gere o APK sem depender do Metro:
+Depois de exportar a biblioteca Unity, gere o APK sem depender do Metro. O ajuste de `JAVA_TOOL_OPTIONS` evita o problema de diretório temporário de sockets já encontrado no ambiente Windows do projeto:
 
 ```powershell
 cd mobile/android
+$env:JAVA_TOOL_OPTIONS = '-Djdk.net.unixdomain.tmpdir=C:\Windows\Temp'
 .\gradlew.bat :app:assembleRelease -PreactNativeArchitectures=arm64-v8a
 ```
 
@@ -114,10 +130,13 @@ mobile/android/app/build/outputs/apk/release/app-release.apk
 Para instalar uma atualização preservando os dados locais:
 
 ```powershell
-& $adb install -r .\app\build\outputs\apk\release\app-release.apk
+$adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+& $adb devices -l
+& $adb -s '<ID_DO_DISPOSITIVO>' install -r .\app\build\outputs\apk\release\app-release.apk
+& $adb -s '<ID_DO_DISPOSITIVO>' shell monkey -p com.Wesler_Becker.DecorIt 1
 ```
 
-Execute esse comando a partir de `mobile/android`, com `$adb` configurado como acima.
+Execute esses comandos a partir de `mobile/android` e substitua `<ID_DO_DISPOSITIVO>` pelo serial mostrado pelo ADB. A atualização com `-r` exige a mesma assinatura do app instalado; uma futura chave de produção exige planejar a transição de assinatura para preservar atualizações.
 
 ## Verificações do React Native
 
@@ -133,14 +152,18 @@ npm run lint
 
 O aplicativo usa SQLite local através de OP-SQLite, com esquema e consultas tipados pelo Drizzle ORM. O esquema está em `mobile/src/data/schema.ts`; as migrations do Drizzle ficam em `mobile/drizzle/` e são aplicadas ao iniciar o app. Para gerar uma migration após alterar o esquema, execute `npm run db:generate` dentro de `mobile`.
 
-Na primeira inicialização com essa versão, clientes, cômodos, registros e metadados de fotos existentes em `clients.json` são importados uma única vez para `decorit.db`. O JSON original e seu backup são mantidos como cópia da migração. Os arquivos PNG permanecem no armazenamento privado do app; o banco guarda os caminhos e metadados.
+Nome, contato, endereço, observações e abertura do registro são protegidos por AES-GCM com chave gerada no Android Keystore. Os outros campos e os arquivos PNG não são criptografados por essa implementação. Desinstalar o app remove seus dados e a chave; não há recuperação de backup configurada. Arquivos JSON antigos do app são removidos na inicialização, conforme a decisão de descartar esses dados de desenvolvimento.
 
-Ao abrir a Unity, o Android passa o contexto do cliente e do registro. Fotos capturadas durante o AR são colocadas em uma fila de eventos compartilhada no armazenamento do app; quando o React Native volta ao primeiro plano, importa esses eventos para o SQLite. Assim, a Unity não altera o JSON legado durante o fluxo integrado.
+A proteção dos campos foi implementada para Android; o armazenamento do aplicativo ainda precisa de uma implementação equivalente para iOS.
+
+Ao abrir a Unity, o Android passa o contexto do cliente e do registro. Fotos capturadas são associadas ao cliente em uma transação SQLite, e a última configuração da cortina é guardada em campos do banco. JSON é usado somente como formato temporário de comunicação entre componentes e nas respostas da API externa.
 
 O catálogo de materiais usado no Unity é construído a partir de `Assets/DecorItCurtains/Materials/Active`; suas texturas estão em `Assets/DecorItCurtains/Textures`. A documentação sobre escala, materiais e geração da cortina procedural está em [`Docs/CurtainMaterials.md`](Docs/CurtainMaterials.md) e [`Docs/ProceduralCurtains.md`](Docs/ProceduralCurtains.md).
 
 ## Documentação complementar
 
 - [Guia do aplicativo mobile](mobile/README.md)
+- [Arquitetura, persistência e segurança](Docs/Arquitetura.md)
+- [Funcionalidades e fluxos](Docs/Funcionalidades.md)
 - [Revisão dos materiais de cortina](Docs/CurtainMaterials.md)
 - [Cortinas procedurais](Docs/ProceduralCurtains.md)

@@ -8,11 +8,16 @@
         <ui:Label text="Personalize e confira o resultado" class="header-subtitle" />
       </ui:VisualElement>
     </ui:VisualElement>
-    <ui:ScrollView name="configurationScroll" class="content" mode="Vertical">
+    <ui:VisualElement class="preview-container">
       <ui:VisualElement class="card preview-card">
+        <ui:VisualElement class="preview-heading">
         <ui:Label text="PRÉVIA AO VIVO" class="eyebrow" />
+        <ui:Button name="togglePreviewButton" text="Recolher" class="preview-toggle" />
+        </ui:VisualElement>
         <ui:Image name="previewImage" class="preview-image" />
       </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:ScrollView name="configurationScroll" class="content" mode="Vertical">
       <ui:VisualElement class="card layer-card">
         <ui:Label text="Suporte" class="section-title" />
         <ui:VisualElement class="row">
@@ -38,7 +43,7 @@
           <ui:Button name="groupFront" text="Varão 1 · frente" class="choice-button" />
           <ui:Button name="groupBack" text="Varão 2 · trás" class="choice-button" />
         </ui:VisualElement>
-        <ui:TextField name="layerSpacingField" label="Folga à frente · mm" class="spacing-field" />
+        <ui:TextField name="layerSpacingField" label="Distância entre camadas · mm" class="spacing-field" />
         <ui:Label name="spacingHint" class="help-text" />
       </ui:VisualElement>
       <ui:VisualElement class="card">

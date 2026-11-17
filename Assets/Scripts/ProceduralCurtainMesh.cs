@@ -73,6 +73,32 @@ public class ProceduralCurtainMesh : MonoBehaviour
 
     public Bounds LocalMeshBounds => generatedMesh != null ? generatedMesh.bounds : new Bounds();
 
+    public Vector3 GetTopPoint(float fraction)
+    {
+        if (vertices == null || cachedColumns <= 0) return Vector3.zero;
+        int column = Mathf.Clamp(Mathf.RoundToInt(Mathf.Clamp01(fraction) * cachedColumns), 0, cachedColumns);
+        return vertices[column];
+    }
+
+    public void LimitDepth(float maximumAbsoluteDepth)
+    {
+        if (generatedMesh == null || vertices == null) return;
+        float extent = Mathf.Max(Mathf.Abs(generatedMesh.bounds.min.z), Mathf.Abs(generatedMesh.bounds.max.z));
+        if (extent <= maximumAbsoluteDepth || extent <= 0f) return;
+        float scale = Mathf.Max(0f, maximumAbsoluteDepth) / extent;
+        for (int i = 0; i < vertices.Length; i++) vertices[i].z *= scale;
+        generatedMesh.vertices = vertices;
+        generatedMesh.RecalculateNormals();
+        generatedMesh.RecalculateTangents();
+        generatedMesh.RecalculateBounds();
+        for (int i = 0; i < triangleCenters.Length; i++)
+        {
+            int first = i * 3;
+            triangleCenters[i] = (vertices[triangles[first]] + vertices[triangles[first + 1]] + vertices[triangles[first + 2]]) / 3f;
+        }
+        sortDirty = true;
+    }
+
     private void OnEnable()
     {
         rebuildRequested = true;

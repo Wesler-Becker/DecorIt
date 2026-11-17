@@ -66,6 +66,8 @@ public class CurtainController : MonoBehaviour
     private Transform secondRod;
     private Transform secondLeftFinial;
     private Transform secondRightFinial;
+    private readonly List<Transform> railHooks = new List<Transform>();
+    private int usedRailHooks;
     public const float MinimumLayerClearanceMillimeters = 2f;
 
     private sealed class PanelGroup
@@ -147,9 +149,10 @@ public class CurtainController : MonoBehaviour
             group.maxDepth = bounds.max.z;
         }
 
-        // Local +Z faces the viewer in AR and in the catalog. Reserve the actual
-        // mesh envelope, including gathered folds, before placing the next layer.
+        // Spacing is measured between layer center planes. Each neighboring mesh
+        // receives half the available depth, leaving a small clearance at contact.
         PanelGroup previous = null;
+        var orderedGroups = new List<PanelGroup>();
         for (int support = 0; support < (doubleSupport ? 2 : 1); support++)
         {
             for (int i = 0; i < layerSettings.Count; i++)
@@ -159,15 +162,28 @@ public class CurtainController : MonoBehaviour
                 PanelGroup group = panelGroups[i];
                 group.clearanceMillimeters = previous == null ? 0f :
                     Mathf.Max(MinimumLayerClearanceMillimeters, layer.spacingMillimeters);
-                group.offset = previous == null ? 0f : previous.offset + previous.minDepth -
-                    group.maxDepth - group.clearanceMillimeters / 1000f;
+                group.offset = previous == null ? 0f : previous.offset - group.clearanceMillimeters / 1000f;
                 SetLayerDepth(group, group.offset);
+                orderedGroups.Add(group);
                 previous = group;
             }
+        }
+        for (int i = 0; i < orderedGroups.Count; i++)
+        {
+            float available = float.PositiveInfinity;
+            if (i > 0) available = Mathf.Min(available, orderedGroups[i].clearanceMillimeters);
+            if (i + 1 < orderedGroups.Count) available = Mathf.Min(available, orderedGroups[i + 1].clearanceMillimeters);
+            if (float.IsPositiveInfinity(available)) continue;
+            float limit = Mathf.Max(0f, (available - 0.1f) / 2000f);
+            PanelGroup group = orderedGroups[i];
+            if (group.single != null && group.single.gameObject.activeSelf) group.single.LimitDepth(limit);
+            if (group.left != null && group.left.gameObject.activeSelf) group.left.LimitDepth(limit);
+            if (group.right != null && group.right.gameObject.activeSelf) group.right.LimitDepth(limit);
         }
 
         ApplyFirstLayerToLegacyFields();
         UpdateSupports();
+        UpdateRailHooks();
     }
 
     public float GetLayerClearanceMillimeters(int index) =>
@@ -441,7 +457,6 @@ public class CurtainController : MonoBehaviour
                 count++;
             }
             depth = count > 0 ? depth / count : support == 0 ? 0.12f : previousSupportDepth - 0.12f;
-            if (support == 1) depth = Mathf.Min(depth, previousSupportDepth - rodDiameter - 0.01f);
             UpdateRod(body, left, right, width > 0f ? width : widthCm / 100f, depth);
             previousSupportDepth = depth;
         }
@@ -454,6 +469,60 @@ public class CurtainController : MonoBehaviour
         clone.name = partName;
         if (!Application.isPlaying) clone.gameObject.hideFlags = HideFlags.HideAndDontSave;
         return clone;
+    }
+
+    private void UpdateRailHooks()
+    {
+        usedRailHooks = 0;
+        if (supportType == "Rail" && rodBody != null && rodMesh != null)
+        {
+            for (int i = 0; i < layerSettings.Count; i++)
+            {
+                CurtainLayerViewSettings layer = layerSettings[i];
+                Transform rail = doubleSupport && layer.supportIndex == 1 ? secondRod : rodBody;
+                if (rail == null) continue;
+                PanelGroup group = panelGroups[i];
+                float closedWidth = layer.widthCentimeters / 100f;
+                AddPanelRailHooks(group.single, rail, layer.foldsPerMeter, closedWidth);
+                AddPanelRailHooks(group.left, rail, layer.foldsPerMeter, closedWidth / 2f);
+                AddPanelRailHooks(group.right, rail, layer.foldsPerMeter, closedWidth / 2f);
+            }
+        }
+        for (int i = usedRailHooks; i < railHooks.Count; i++)
+            if (railHooks[i] != null) railHooks[i].gameObject.SetActive(false);
+    }
+
+    private void AddPanelRailHooks(ProceduralCurtainMesh panel, Transform rail, float density, float closedWidth)
+    {
+        if (panel == null || !panel.gameObject.activeSelf) return;
+        int count = Mathf.Clamp(Mathf.CeilToInt(closedWidth * density) + 1, 2, 32);
+        for (int i = 0; i < count; i++)
+        {
+            Transform hook;
+            if (usedRailHooks < railHooks.Count) hook = railHooks[usedRailHooks];
+            else
+            {
+                var item = new GameObject("RodBody_RailHook", typeof(MeshFilter), typeof(MeshRenderer));
+                item.layer = gameObject.layer;
+                if (!Application.isPlaying) item.hideFlags = HideFlags.HideAndDontSave;
+                item.GetComponent<MeshFilter>().sharedMesh = rodMesh;
+                hook = item.transform;
+                railHooks.Add(hook);
+            }
+            usedRailHooks++;
+            hook.SetParent(panel.transform, false);
+            hook.gameObject.SetActive(true);
+            hook.gameObject.layer = panel.gameObject.layer;
+            hook.GetComponent<MeshRenderer>().sharedMaterial = rail.GetComponent<MeshRenderer>().sharedMaterial;
+            Vector3 start = panel.GetTopPoint((float)i / (count - 1));
+            Vector3 railPoint = panel.transform.InverseTransformPoint(rail.TransformPoint(new Vector3(
+                0f, -0.5f, 0f)));
+            Vector3 end = new Vector3(start.x, railPoint.y, railPoint.z);
+            Vector3 delta = end - start;
+            hook.localPosition = (start + end) * 0.5f;
+            hook.localRotation = Quaternion.FromToRotation(Vector3.up, delta.normalized);
+            hook.localScale = new Vector3(0.006f, delta.magnitude * 0.5f, 0.006f);
+        }
     }
 
     private void UpdateRod(Transform body, Transform left, Transform right, float curtainWidth, float depth)
@@ -487,6 +556,8 @@ public class CurtainController : MonoBehaviour
         DestroyGeneratedSupport(secondRod);
         DestroyGeneratedSupport(secondLeftFinial);
         DestroyGeneratedSupport(secondRightFinial);
+        foreach (Transform hook in railHooks) DestroyGeneratedSupport(hook);
+        railHooks.Clear();
     }
 
     private static void DestroyGeneratedSupport(Transform part)

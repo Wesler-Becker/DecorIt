@@ -161,14 +161,20 @@ public sealed class CurtainViewSettings
 
 public static class CurtainViewSettingsStore
 {
-    private const string PreferenceKey = "DecorIt.LastCurtainSettings.v1";
     private static CurtainViewSettings last;
 
     public static CurtainViewSettings LoadLast()
     {
         if (last == null)
         {
-            string json = PlayerPrefs.GetString(PreferenceKey, string.Empty);
+            // Remove the configuration saved by previous versions in PlayerPrefs.
+            const string oldPreferenceKey = "DecorIt.LastCurtainSettings.v1";
+            if (PlayerPrefs.HasKey(oldPreferenceKey))
+            {
+                PlayerPrefs.DeleteKey(oldPreferenceKey);
+                PlayerPrefs.Save();
+            }
+            string json = UnityARHostBridge.LoadCurtainSettings();
             last = string.IsNullOrEmpty(json)
                 ? new CurtainViewSettings()
                 : JsonUtility.FromJson<CurtainViewSettings>(json) ?? new CurtainViewSettings();
@@ -181,8 +187,7 @@ public static class CurtainViewSettingsStore
     {
         if (settings == null) return;
         last = Clone(settings);
-        PlayerPrefs.SetString(PreferenceKey, JsonUtility.ToJson(last));
-        PlayerPrefs.Save();
+        UnityARHostBridge.SaveCurtainSettings(JsonUtility.ToJson(last));
     }
 
     public static CurtainViewSettings Clone(CurtainViewSettings source)

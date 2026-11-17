@@ -1,11 +1,10 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import {Platform} from 'react-native';
+import {NativeModules, Platform} from 'react-native';
 import {open, type Transaction} from '@op-engineering/op-sqlite';
 import {drizzle, type OPSQLiteDatabase} from 'drizzle-orm/op-sqlite';
 import migrations from '../../drizzle/migrations';
-import {createId, normalizeClientCollection, seedClients} from './clientDomain';
+import {createId, normalizeClientCollection} from './clientDomain';
 import {
-  appMetaTable,
   clientsTable,
   photosTable,
   recordsTable,
@@ -14,37 +13,76 @@ import {
 } from './schema';
 import type {ClientData, PhotoData, RoomData, VisitDraft, VisitRecordData} from '../types';
 
-// This folder is shared with Unity for the JSON import and AR photo outbox.
-const sharedDataDirectory = Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath;
-const legacyClientsPath = `${sharedDataDirectory}/clients.json`;
-const legacyBackupPath = `${legacyClientsPath}.bak`;
-const lastARConfigPath = `${sharedDataDirectory}/last_ar_config.json`;
-const photoOutboxDirectory = `${sharedDataDirectory}/DecorIt/PhotoOutbox`;
-const legacyImportKey = 'migration.clients_json.v1';
-
 type AppDatabase = OPSQLiteDatabase<typeof schema> & {$client: ReturnType<typeof open>};
 let databasePromise: Promise<AppDatabase> | null = null;
-let photoOutboxImportPromise: Promise<void> | null = null;
-let legacyImportPromise: Promise<void> | null = null;
 let storageTaskQueue: Promise<void> = Promise.resolve();
 
-type UnityPhotoEvent = {
-  clientId: string;
-  roomId?: string;
-  recordId?: string;
-  path: string;
-  roomName?: string;
-  capturedAt?: string;
-};
+async function removeOldJsonFiles(): Promise<void> {
+  const base = Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath;
+  if (!base) return;
+  for (const name of ['clients.json', 'clients.json.bak', 'last_ar_config.json']) {
+    const path = `${base}/${name}`;
+    if (await RNFS.exists(path)) await RNFS.unlink(path);
+  }
+  const outbox = `${base}/DecorIt/PhotoOutbox`;
+  if (await RNFS.exists(outbox)) {
+    for (const item of await RNFS.readDir(outbox))
+      if (item.isFile() && (item.name.endsWith('.json') || item.name.endsWith('.json.tmp'))) await RNFS.unlink(item.path);
+  }
+}
+
+const clientSecretFields = ['name', 'phone', 'address', 'postalCode', 'street', 'complement', 'neighborhood', 'city', 'state', 'observations'] as const;
+const recordSecretFields = ['notes', 'roomNotes', 'openingName'] as const;
+
+async function transformFields<T extends object>(rows: T[], fields: readonly string[], encrypt: boolean): Promise<T[]> {
+  if (Platform.OS !== 'android' || !NativeModules.SecureFields?.transform)
+    throw new Error('Criptografia segura indisponível neste dispositivo.');
+  const copies = rows.map(row => ({...row})) as Array<Record<string, unknown>>;
+  const values = copies.flatMap(row => fields.map(field => String(row[field] || '')));
+  if (!values.length) return copies as T[];
+  const result: string[] = await NativeModules.SecureFields.transform(values, encrypt);
+  if (result.length !== values.length) throw new Error('Falha ao processar campos protegidos.');
+  let index = 0;
+  for (const row of copies) for (const field of fields) row[field] = result[index++];
+  return copies as T[];
+}
+
+async function protectExistingData(connection: ReturnType<typeof open>): Promise<void> {
+  const marker = connection.executeSync("SELECT value FROM app_meta WHERE key = 'secure_fields_v1'").rows[0];
+  if (marker) return;
+  const clientRows = connection.executeSync('SELECT id, name, phone, address, postal_code AS postalCode, street, complement, neighborhood, city, state, observations FROM clients').rows as unknown as ClientSqlRow[];
+  const recordRows = connection.executeSync('SELECT id, notes, room_notes AS roomNotes, opening_name AS openingName FROM visit_records').rows as unknown as RecordSqlRow[];
+  const clients = await transformFields(clientRows, clientSecretFields, true);
+  const records = await transformFields(recordRows, recordSecretFields, true);
+  await connection.transaction(async tx => {
+    for (const c of clients) await tx.execute('UPDATE clients SET name=?, phone=?, address=?, postal_code=?, street=?, complement=?, neighborhood=?, city=?, state=?, observations=? WHERE id=?',
+      [c.name, c.phone, c.address, c.postalCode, c.street, c.complement, c.neighborhood, c.city, c.state, c.observations, c.id]);
+    for (const r of records) await tx.execute('UPDATE visit_records SET notes=?, room_notes=?, opening_name=? WHERE id=?', [r.notes, r.roomNotes || '', r.openingName, r.id]);
+    await tx.execute("INSERT INTO app_meta (key, value) VALUES ('secure_fields_v1', 'done')");
+  });
+}
 
 function getDatabase(): Promise<AppDatabase> {
   if (!databasePromise) {
     databasePromise = (async () => {
       const connection = open({name: 'decorit.db'});
-      connection.executeSync('PRAGMA foreign_keys = ON');
-      await applyGeneratedMigrations(connection);
-      const db = drizzle(connection, {schema}) as AppDatabase;
-      return db;
+      try {
+        connection.executeSync('PRAGMA foreign_keys = ON');
+        connection.executeSync('PRAGMA secure_delete = ON');
+        await applyGeneratedMigrations(connection);
+        await protectExistingData(connection);
+        if (!connection.executeSync("SELECT value FROM app_meta WHERE key = 'secure_cleanup_v1'").rows.length) {
+          connection.executeSync('PRAGMA wal_checkpoint(TRUNCATE)');
+          connection.executeSync('VACUUM');
+          connection.executeSync('PRAGMA wal_checkpoint(TRUNCATE)');
+          connection.executeSync("INSERT INTO app_meta (key, value) VALUES ('secure_cleanup_v1', 'done')");
+        }
+        await removeOldJsonFiles();
+        return drizzle(connection, {schema}) as AppDatabase;
+      } catch (error) {
+        connection.close();
+        throw error;
+      }
     })().catch(error => {
       console.error('[DecorIt][storage] Falha ao abrir SQLite ou aplicar migrations.', error);
       databasePromise = null;
@@ -80,8 +118,11 @@ async function applyGeneratedMigrations(connection: ReturnType<typeof open>): Pr
 
 export async function loadLastARConfig(): Promise<Partial<VisitDraft>> {
   try {
-    if (!(await RNFS.exists(lastARConfigPath))) return {};
-    return JSON.parse(await RNFS.readFile(lastARConfigPath, 'utf8')) as Partial<VisitDraft>;
+    await getDatabase();
+    const value: string = await NativeModules.UnityArModule.loadCurtainSettings();
+    if (!value) return {};
+    const settings = JSON.parse(value) as NonNullable<VisitDraft['curtainSettings']> & {widthCentimeters: number; heightCentimeters: number; panelType: VisitDraft['panelType']; fabricMaterialName: string; fabricMaterialPath: string};
+    return {curtainSettings: settings, modelName: settings.modelName, widthCentimeters: settings.widthCentimeters, heightCentimeters: settings.heightCentimeters, panelType: settings.panelType, fabricMaterialName: settings.fabricMaterialName, fabricMaterialPath: settings.fabricMaterialPath, rodMaterialName: settings.rodMaterialName, rodMaterialPath: settings.rodMaterialPath};
   } catch (error) {
     console.warn('[DecorIt][storage] Não foi possível ler a última configuração AR; usando os padrões.', error);
   }
@@ -91,8 +132,6 @@ export async function loadLastARConfig(): Promise<Partial<VisitDraft>> {
 export async function loadClients(): Promise<ClientData[]> {
   return serializeStorageTask(async () => {
     const db = await getDatabase();
-    await importLegacyCollectionOnce(db);
-    await importUnityPhotoOutbox(db);
     return readClientCollection(db);
   });
 }
@@ -110,111 +149,16 @@ function serializeStorageTask<T>(task: () => Promise<T>): Promise<T> {
   return result;
 }
 
-function importLegacyCollectionOnce(db: AppDatabase): Promise<void> {
-  if (!legacyImportPromise) {
-    legacyImportPromise = importLegacyCollection(db).finally(() => {
-      legacyImportPromise = null;
-    });
-  }
-  return legacyImportPromise;
-}
-
-async function importLegacyCollection(db: AppDatabase): Promise<void> {
-  const markerResult = await db.$client.execute('SELECT key FROM app_meta WHERE key = ? LIMIT 1', [legacyImportKey]);
-  const marker = markerResult.rows[0];
-  if (marker) return;
-
-  let legacyCollection: unknown = null;
-  let legacyFileFound = false;
-  let legacyFileParsed = false;
-  for (const path of [legacyClientsPath, legacyBackupPath]) {
-    try {
-      if (await RNFS.exists(path)) {
-        legacyFileFound = true;
-        legacyCollection = JSON.parse(await RNFS.readFile(path, 'utf8'));
-        legacyFileParsed = true;
-        break;
-      }
-    } catch {
-      // If clients.json was interrupted, try the previous atomic-write backup.
-      console.warn(`[DecorIt][storage] Não foi possível ler ${path}; tentando o próximo backup.`);
-    }
-  }
-
-  if (legacyFileFound && !legacyFileParsed)
-    throw new Error('Não foi possível ler clients.json nem seu backup; os dados antigos foram preservados para recuperação.');
-
-  const clients = !legacyFileParsed
-    ? seedClients()
-    : normalizeClientCollection(legacyCollection).clients;
-
-  await db.$client.transaction(async tx => {
-    const existing = await tx.execute('SELECT id FROM clients LIMIT 1');
-    if (existing.rows.length === 0 && clients.length) await replaceClientCollection(tx, clients, db);
-    await tx.execute('INSERT OR IGNORE INTO app_meta (key, value) VALUES (?, ?)', [legacyImportKey, 'done']);
-  });
-}
-
-function importUnityPhotoOutbox(db: AppDatabase): Promise<void> {
-  if (!photoOutboxImportPromise) {
-    photoOutboxImportPromise = importUnityPhotoOutboxFiles(db).finally(() => {
-      photoOutboxImportPromise = null;
-    });
-  }
-  return photoOutboxImportPromise;
-}
-
-async function importUnityPhotoOutboxFiles(db: AppDatabase): Promise<void> {
-  if (!(await RNFS.exists(photoOutboxDirectory))) return;
-  const files = await RNFS.readDir(photoOutboxDirectory);
-  for (const file of files.filter(item => item.isFile() && item.name.endsWith('.json'))) {
-    try {
-      const photo = JSON.parse(await RNFS.readFile(file.path, 'utf8')) as UnityPhotoEvent;
-      if (!photo.path || !photo.clientId) continue;
-
-      await db.$client.transaction(async tx => {
-        const client = await tx.execute('SELECT id FROM clients WHERE id = ? LIMIT 1', [photo.clientId]);
-        if (client.rows.length === 0) throw new Error(`Cliente ${photo.clientId} não encontrado ao importar foto da Unity.`);
-        const roomId = photo.roomId || null;
-        const recordId = photo.recordId || null;
-        let roomName = photo.roomName || 'Não informado';
-        if (roomId) {
-          const room = await tx.execute('SELECT id, name FROM rooms WHERE id = ? AND client_id = ? LIMIT 1', [roomId, photo.clientId]);
-          if (room.rows.length === 0) throw new Error(`Cômodo ${roomId} não encontrado ao importar foto da Unity.`);
-          roomName = String(room.rows[0].name || '');
-        }
-        if (recordId) {
-          const record = await tx.execute('SELECT id FROM visit_records WHERE id = ? AND room_id = ? LIMIT 1', [recordId, roomId]);
-          if (!roomId || record.rows.length === 0)
-            throw new Error(`Registro ${recordId} não encontrado ao importar foto da Unity.`);
-        }
-
-        const inserted = await tx.execute(
-          'INSERT OR IGNORE INTO photos (id, client_id, room_id, record_id, path, room_name, captured_at, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-          [createId(), photo.clientId, roomId, recordId, photo.path, roomName, photo.capturedAt || null, Date.now()],
-        );
-
-        if (roomId && inserted.rowsAffected > 0) {
-          const photoCount = await tx.execute('SELECT COUNT(*) AS count FROM photos WHERE room_id = ?', [roomId]);
-          const count = Number(photoCount.rows[0]?.count || 0);
-          await tx.execute('UPDATE rooms SET image_label = ? WHERE id = ?', [count === 1 ? '1 foto' : `${count} fotos`, roomId]);
-        }
-      });
-
-      // The unique photo path makes retrying safe if the process stops before this unlink.
-      await RNFS.unlink(file.path);
-    } catch (error) {
-      console.warn('Foto da fila Unity preservada para nova tentativa:', error);
-    }
-  }
-}
-
 async function replaceClientCollection(tx: Transaction, source: ClientData[], db: OPSQLiteDatabase<typeof schema>): Promise<void> {
   const normalized = normalizeClientCollection({clients: source}).clients;
+  const protectedClients = await transformFields(normalized, clientSecretFields, true);
+  for (const client of protectedClients)
+    for (const room of client.rooms)
+      room.records = await transformFields(room.records, recordSecretFields, true);
   await runDrizzleStatement(tx, db.delete(clientsTable));
 
-  for (let clientIndex = 0; clientIndex < normalized.length; clientIndex++) {
-    const client = normalized[clientIndex];
+  for (let clientIndex = 0; clientIndex < protectedClients.length; clientIndex++) {
+    const client = protectedClients[clientIndex];
     await runDrizzleStatement(tx, db.insert(clientsTable).values({
       id: client.id, name: client.name, phone: client.phone, address: client.address,
       postalCode: client.postalCode, street: client.street, complement: client.complement,
@@ -295,9 +239,9 @@ async function readClientCollection(db: AppDatabase): Promise<ClientData[]> {
     db.$client.execute('SELECT id, room_id AS roomId, created_at AS createdAt, notes, room_notes AS roomNotes, opening_name AS openingName, width_centimeters AS widthCentimeters, height_centimeters AS heightCentimeters, product_category AS productCategory, model_name AS modelName, panel_type AS panelType, fabric_material_name AS fabricMaterialName, rod_material_name AS rodMaterialName, sort_order AS sortOrder FROM visit_records ORDER BY sort_order ASC'),
     db.$client.execute('SELECT id, client_id AS clientId, room_id AS roomId, record_id AS recordId, path, room_name AS roomName, captured_at AS capturedAt, sort_order AS sortOrder FROM photos ORDER BY sort_order ASC'),
   ]);
-  const clientRows = clientResult.rows as unknown as ClientSqlRow[];
+  const clientRows = await transformFields(clientResult.rows as unknown as ClientSqlRow[], clientSecretFields, false);
   const roomRows = roomResult.rows as unknown as RoomSqlRow[];
-  const recordRows = recordResult.rows as unknown as RecordSqlRow[];
+  const recordRows = await transformFields(recordResult.rows as unknown as RecordSqlRow[], recordSecretFields, false);
   const photoRows = photoResult.rows as unknown as PhotoSqlRow[];
 
   const clients: ClientData[] = clientRows.map(client => ({
@@ -348,5 +292,3 @@ export function photoFileUri(path: string): string {
   if (path.startsWith('file://') || path.startsWith('content://')) return path;
   return `file://${path}`;
 }
-
-export const legacyClientsFilePath = legacyClientsPath;

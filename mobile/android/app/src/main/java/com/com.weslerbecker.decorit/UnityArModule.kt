@@ -12,6 +12,12 @@ class UnityArModule(private val context: ReactApplicationContext) : ReactContext
   override fun getName() = "UnityArModule"
 
   @ReactMethod
+  fun loadCurtainSettings(promise: Promise) {
+    try { promise.resolve(ArSettingsStore.load(context)) }
+    catch (error: Exception) { promise.reject("AR_SETTINGS_READ_FAILED", error.message, error) }
+  }
+
+  @ReactMethod
   fun openCatalogPreview(promise: Promise) {
     try {
       val activity = context.currentActivity ?: throw IllegalStateException("O app não está em primeiro plano.")

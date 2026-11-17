@@ -31,6 +31,15 @@ public class ARPlacementController : MonoBehaviour
     private int modelIndex;
 
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
+
+    private bool IsOverUI(Vector2 position)
+    {
+        if (EventSystem.current == null) return false;
+        uiHits.Clear();
+        EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = position }, uiHits);
+        return uiHits.Count > 0;
+    }
 
     private void Start()
     {
@@ -103,8 +112,7 @@ public class ARPlacementController : MonoBehaviour
             return;
 
         // Ignora o clique caso ele esteja sobre algum elemento da interface
-        if (EventSystem.current != null &&
-            EventSystem.current.IsPointerOverGameObject())
+        if (IsOverUI(Mouse.current.position.ReadValue()))
         {
             return;
         }
@@ -125,8 +133,7 @@ public class ARPlacementController : MonoBehaviour
             return;
 
         // Ignora o toque caso ele esteja sobre a interface
-        if (EventSystem.current != null &&
-            EventSystem.current.IsPointerOverGameObject(touch.touchId.ReadValue()))
+        if (IsOverUI(touch.position.ReadValue()))
         {
             return;
         }
@@ -139,6 +146,7 @@ public class ARPlacementController : MonoBehaviour
     private void TryPlaceObject(Vector2 screenPosition)
     {
         if (UnityARHostBridge.IsPhotoOnly && !UnityARHostBridge.IsQuickAR) return;
+        if (!createNewObjectOnNextPlacement) return;
 
         // Só permite posicionar se o modo estiver ativo
         if (interactionUI != null &&
@@ -156,7 +164,11 @@ public class ARPlacementController : MonoBehaviour
             TrackableType.PlaneWithinPolygon))
         {
             Debug.Log("Plano detectado; usando a pose real do AR.");
-            placementPose = hits[0].pose;
+            Camera camera = Camera.main;
+            Vector3 cameraPosition = camera != null ? camera.transform.position : hits[0].pose.position + Vector3.forward;
+            Vector3 cameraForward = camera != null ? camera.transform.forward : Vector3.back;
+            placementPose = new Pose(hits[0].pose.position,
+                UprightRotation(hits[0].pose.up, hits[0].pose.position, cameraPosition, cameraForward));
         }
         else
         {
@@ -169,7 +181,7 @@ public class ARPlacementController : MonoBehaviour
             Debug.Log("Sem plano detectado; posicionando à frente da câmera para ajuste manual.");
         }
 
-        if (spawnedObject == null || createNewObjectOnNextPlacement)
+        if (createNewObjectOnNextPlacement)
         {
             GameObject prefabToPlace = CatalogSelectionSession.SelectedCurtainPrefab != null
                 ? CatalogSelectionSession.SelectedCurtainPrefab
@@ -186,12 +198,19 @@ public class ARPlacementController : MonoBehaviour
             ApplyVisitSelection(spawnedObject);
             if (objectManipulator != null) objectManipulator.SetTargetObject(spawnedObject);
         }
-        else
-        {
-            spawnedObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
-        }
-
         if (interactionUI != null) interactionUI.ConfirmObjectPlacement();
+    }
+
+    private static Quaternion UprightRotation(Vector3 surfaceNormal, Vector3 position, Vector3 cameraPosition, Vector3 cameraForward)
+    {
+        Vector3 towardCamera = Vector3.ProjectOnPlane(cameraPosition - position, Vector3.up);
+        Vector3 facing = Vector3.ProjectOnPlane(surfaceNormal, Vector3.up);
+        // A floor or ceiling does not provide a useful horizontal facing direction.
+        if (facing.sqrMagnitude < 0.25f) facing = towardCamera;
+        if (facing.sqrMagnitude < 0.0001f) facing = -Vector3.ProjectOnPlane(cameraForward, Vector3.up);
+        if (facing.sqrMagnitude < 0.0001f) facing = Vector3.forward;
+        if (towardCamera.sqrMagnitude > 0.0001f && Vector3.Dot(facing, towardCamera) < 0f) facing = -facing;
+        return Quaternion.LookRotation(facing.normalized, Vector3.up);
     }
 
     private bool TryGetCameraRelativePose(Vector2 screenPosition, out Pose pose)
@@ -396,13 +415,5 @@ public class ARPlacementController : MonoBehaviour
         CurtainViewSettingsStore.ApplyToDraft(settings, draft);
         UnityARHostBridge.SaveLastViewConfig();
         CurtainViewSettingsStore.SaveLast(settings);
-        ClientRepository.UpdateCurrentRecordSelection(
-            ClientSession.SelectedClientId,
-            VisitDraftSession.TargetRoomId,
-            RecordSession.CurrentRecordId,
-            draft.modelName,
-            draft.panelType,
-            draft.fabricMaterialName,
-            draft.rodMaterialName);
     }
 }

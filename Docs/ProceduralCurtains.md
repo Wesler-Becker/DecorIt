@@ -44,16 +44,17 @@ voltar ao suporte simples, todas usam a abertura do suporte 1; a atribuição do
 grupos e a abertura do suporte 2 são preservadas para quando o duplo for reativado.
 A ordem das camadas dentro de cada grupo segue a ordem das abas.
 
-**Folga à frente**, em milímetros, é o espaço livre entre o tecido selecionado e
-o anterior. O controlador reserva também a profundidade real das dobras e aplica
-um mínimo de **2 mm**, mesmo quando solicitado zero. As posições são recalculadas
+**Distância entre camadas**, em milímetros, é a distância entre os planos centrais
+do tecido selecionado e do anterior, com mínimo de **2 mm**. As pregas são
+comprimidas em profundidade quando necessário para não atravessar a camada vizinha;
+com distâncias muito pequenas os tecidos ficam visualmente mais planos. As posições são recalculadas
 ao mudar medidas, caimento ou abertura. Essa restrição geométrica impede a
 interseção das camadas da mesma cortina; não simula forças, vento ou colisões com
 outros objetos AR.
 
 `CurtainViewSettings` guarda a lista de `CurtainLayerViewSettings`, o tipo de
-suporte e as duas aberturas. A configuração completa também acompanha
-`VisitDraft.curtainSettings` no arquivo `last_ar_config.json`, usado pelo AR rápido.
+suporte e as duas aberturas. Os campos da última configuração ficam na tabela
+`ar_settings`, usada pelo AR rápido.
 Configurações antigas herdam as medidas e painéis compartilhados e convertem
 o afastamento de centímetros para milímetros automaticamente.
 

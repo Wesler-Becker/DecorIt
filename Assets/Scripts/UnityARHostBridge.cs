@@ -1,4 +1,3 @@
-using System.IO;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,17 +5,6 @@ using UnityEngine.SceneManagement;
 /// <summary>Receives the selected DecorIt record when AR is opened from the React Native host.</summary>
 public static class UnityARHostBridge
 {
-    [Serializable]
-    private sealed class CapturedPhotoEvent
-    {
-        public string clientId;
-        public string roomId;
-        public string recordId;
-        public string path;
-        public string roomName;
-        public string capturedAt;
-    }
-
     private static bool hasReadHostedLaunchData;
     public static bool IsHostedByReact { get; private set; }
     public static bool IsPhotoOnly { get; private set; }
@@ -99,44 +87,53 @@ public static class UnityARHostBridge
 
     public static void SaveLastViewConfig()
     {
-        try
-        {
-            string path = Path.Combine(Application.persistentDataPath, "last_ar_config.json");
-            File.WriteAllText(path, JsonUtility.ToJson(VisitDraftSession.Current));
-        }
-        catch (System.Exception exception)
-        {
-            Debug.LogWarning("Não foi possível salvar a última configuração AR: " + exception.Message);
-        }
+        if (VisitDraftSession.Current?.curtainSettings != null)
+            SaveCurtainSettings(JsonUtility.ToJson(VisitDraftSession.Current.curtainSettings));
+    }
+
+    public static string LoadCurtainSettings()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!IsHostedByReact) return string.Empty;
+        try {
+            using (var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var activity = player.GetStatic<AndroidJavaObject>("currentActivity"))
+                return activity.Call<string>("loadCurtainSettings");
+        } catch (Exception error) { Debug.LogError("Não foi possível ler a configuração AR: " + error.Message); }
+#endif
+        return string.Empty;
+    }
+
+    public static void SaveCurtainSettings(string settings)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!IsHostedByReact) return;
+        try {
+            using (var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var activity = player.GetStatic<AndroidJavaObject>("currentActivity"))
+                activity.Call("saveCurtainSettings", settings);
+        } catch (Exception error) { Debug.LogError("Não foi possível salvar a configuração AR: " + error.Message); }
+#endif
     }
 
     public static bool QueuePhotoCapture(string clientId, string roomId, string recordId, string path, string roomName, string capturedAt)
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (!IsHostedByReact || string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(path)) return false;
         try
         {
-            string directory = Path.Combine(Application.persistentDataPath, "DecorIt", "PhotoOutbox");
-            Directory.CreateDirectory(directory);
-            string eventPath = Path.Combine(directory, Guid.NewGuid().ToString("N") + ".json");
-            string temporaryPath = eventPath + ".tmp";
-            var photoEvent = new CapturedPhotoEvent
-            {
-                clientId = clientId,
-                roomId = roomId ?? string.Empty,
-                recordId = recordId ?? string.Empty,
-                path = path,
-                roomName = roomName ?? string.Empty,
-                capturedAt = capturedAt ?? string.Empty,
-            };
-            File.WriteAllText(temporaryPath, JsonUtility.ToJson(photoEvent));
-            File.Move(temporaryPath, eventPath);
-            return true;
+            using (var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var activity = player.GetStatic<AndroidJavaObject>("currentActivity"))
+                return activity.Call<bool>("saveCapturedPhoto", clientId, roomId ?? "", recordId ?? "", path, roomName ?? "", capturedAt ?? "");
         }
         catch (Exception exception)
         {
             Debug.LogError("Não foi possível enviar os dados da foto ao app: " + exception.Message);
             return false;
         }
+#else
+        return false;
+#endif
     }
 
     public static bool ReturnToReactHost()

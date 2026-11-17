@@ -291,8 +291,8 @@ public class ARInteractionUI : MonoBehaviour
         query = query != null ? query.Trim() : string.Empty;
         for (int i = 0; i < fabricOptionItems.Count && i < fabricNames.Count; i++)
         {
-            bool matches = string.IsNullOrEmpty(query) ||
-                fabricNames[i].IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0;
+            bool matches = CurtainMaterialCatalog.MatchesSearch(fabricNames[i],
+                i < fabricPaths.Count ? fabricPaths[i] : null, query);
             fabricOptionItems[i].SetActive(matches);
         }
 
