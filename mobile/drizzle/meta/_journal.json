@@ -8,13 +8,6 @@
       "when": 1794284037989,
       "tag": "0000_initial_schema",
       "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1794893591266,
-      "tag": "0001_bent_microbe",
-      "breakpoints": true
     }
   ]
 }

@@ -167,13 +167,6 @@ public static class CurtainViewSettingsStore
     {
         if (last == null)
         {
-            // Remove the configuration saved by previous versions in PlayerPrefs.
-            const string oldPreferenceKey = "DecorIt.LastCurtainSettings.v1";
-            if (PlayerPrefs.HasKey(oldPreferenceKey))
-            {
-                PlayerPrefs.DeleteKey(oldPreferenceKey);
-                PlayerPrefs.Save();
-            }
             string json = UnityARHostBridge.LoadCurtainSettings();
             last = string.IsNullOrEmpty(json)
                 ? new CurtainViewSettings()

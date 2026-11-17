@@ -269,6 +269,75 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "record_curtain_settings": {
+      "name": "record_curtain_settings",
+      "columns": {
+        "record_id": {
+          "name": "record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "layer_index": {
+          "name": "layer_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "field": {
+          "name": "field",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value_type": {
+          "name": "value_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "record_curtain_settings_key": {
+          "name": "record_curtain_settings_key",
+          "columns": [
+            "record_id",
+            "layer_index",
+            "field"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "record_curtain_settings_record_id_visit_records_id_fk": {
+          "name": "record_curtain_settings_record_id_visit_records_id_fk",
+          "tableFrom": "record_curtain_settings",
+          "tableTo": "visit_records",
+          "columnsFrom": [
+            "record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "visit_records": {
       "name": "visit_records",
       "columns": {

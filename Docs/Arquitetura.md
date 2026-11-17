@@ -36,7 +36,9 @@ Os arquivos Kotlin citados ficam em `mobile/android/app/src/main/java/com/com.we
 
 Ao abrir AR ou o catálogo, `UnityArModule` inicia `ImmersiveUnityPlayerActivity` no processo Android `:unity`. O contexto da operação, como cliente, cômodo, registro e rascunho, é passado pela Intent. `UnityARHostBridge` lê esse contexto e encaminha para a cena correspondente. A build Unity começa em `UnityBootstrap` e carrega `AR_Test` ou `Catalog`; as três cenas estão habilitadas em `ProjectSettings/EditorBuildSettings.asset`.
 
-JSON ainda é usado em memória como formato de troca entre componentes e para interpretar a resposta do ViaCEP. Ele não é o formato de persistência dos clientes ou da configuração AR. Na inicialização, o app remove arquivos JSON antigos de desenvolvimento; eles não são importados. A preferência antiga de configuração Unity também é removida ao carregar a configuração.
+No cadastro de registro, `openCatalogSelection` abre o catálogo esperando um resultado da Activity. O Unity recebe o rascunho e devolve a configuração confirmada; o React Native copia as medidas da primeira camada para o resumo e guarda a configuração completa no rascunho. Cancelar retorna sem substituir a escolha anterior. A gravação do registro associa essa configuração ao registro no SQLite. Ao abrir um registro em AR, a configuração salva é enviada novamente ao Unity. Registros antigos podem não ter configuração completa associada; nesse caso, o AR usa a última configuração disponível como base.
+
+JSON é usado em memória como formato de troca entre componentes e para interpretar a resposta do ViaCEP.
 
 No AR rápido, a saída da câmera pode retornar ao perfil do cliente usando o endereço interno `decorit://client/<id>`. Uma foto capturada é gravada como PNG e `ImmersiveUnityPlayerActivity.saveCapturedPhoto` registra a associação no SQLite dentro de uma transação. Ao retornar ao React Native, o estado é recarregado. A foto física e seu registro no banco são operações distintas: uma falha ao registrar a associação não garante a remoção automática do arquivo.
 
@@ -61,16 +63,19 @@ O banco Android é `decorit.db`, aberto pelo OP-SQLite. `schema.ts` descreve as 
 | `clients` | Identificação, contato e endereço do cliente. |
 | `rooms` | Cômodos vinculados a um cliente. |
 | `visit_records` | Registros de um cômodo, com abertura, medidas, produto e observações. |
+| `record_curtain_settings` | Configuração completa de cortina associada ao registro; possui exclusão em cascata e índice único por registro, camada e campo. |
 | `photos` | Caminho, data e vínculos com cliente, cômodo e registro; o caminho é único. Cômodo e registro podem estar vazios. |
-| `app_meta` | Marcadores internos, incluindo proteção de campos e limpeza. |
+| `app_meta` | Preferências e marcadores internos, como o tema visual. |
 | `__drizzle_migrations` | Histórico de aplicação das migrations de esquema. |
 | `ar_settings` | Campos da última configuração de cortina, separados por índice de camada. É criada e mantida pelo Android em `ArSettingsStore.kt`, fora do esquema Drizzle atual. |
+
+Em `record_curtain_settings`, `record_id` identifica o registro, `layer_index = -1` guarda propriedades gerais e índices a partir de zero identificam as camadas. Cada linha guarda `field`, `value` e `value_type`; valores escalares são reconstruídos na leitura. A tabela não armazena um documento JSON. A tabela é criada junto com as demais pelo esquema inicial `0000_initial_schema.sql`. Ela é distinta de `ar_settings`, que representa a última configuração geral usada no AR.
 
 As chaves estrangeiras de clientes, cômodos e registros usam exclusão em cascata. A escrita atual da coleção de clientes é feita em transação e reconstrói as linhas da coleção; não é uma API de atualização incremental por entidade. A configuração AR é substituída em sua própria transação. Os PNGs ficam em `Android/data/com.Wesler_Becker.DecorIt/files/DecorIt/Fotos/<cliente>/`; o banco contém os caminhos, não a imagem em si. Esse diretório de arquivos externo específico do app não deve ser confundido com uma galeria ou backup independente.
 
 ## Segurança e privacidade
 
-Em Android, `SecureFieldsModule` usa AES-GCM com chave AES de 256 bits gerada no Android Keystore. Os valores protegidos recebem o prefixo `enc:v1:`; a leitura usa a chave para devolver os campos à interface. São protegidos nome, telefone, endereço e seus componentes e observações do cliente, além de `notes`, `roomNotes` e `openingName` do registro. Campos vazios permanecem vazios. A primeira abertura protege os valores existentes no SQLite em uma transação; há marcadores para evitar repetir o processo e uma etapa de limpeza do banco.
+Em Android, `SecureFieldsModule` usa AES-GCM com chave AES de 256 bits gerada no Android Keystore. Os valores protegidos recebem o prefixo `enc:v1:`; a leitura usa a chave para devolver os campos à interface. São protegidos nome, telefone, endereço e seus componentes e observações do cliente, além de `notes`, `roomNotes` e `openingName` do registro. Campos vazios permanecem vazios. Os campos são protegidos ao gravar dados pelo aplicativo.
 
 **A criptografia é por campo, não do banco inteiro.** Nomes de cômodos, identificadores, medidas, caminhos, configurações e outros metadados não estão incluídos nessa proteção. Os PNGs não são criptografados pela aplicação. A chave não exige autenticação a cada uso e o app não implementa controle de acesso por usuário. O conteúdo descriptografado fica disponível ao próprio app durante o uso. O manifesto Android está com `allowBackup="false"`; não há mecanismo de recuperação de chave ou backup implementado. Atualizações com a mesma assinatura e `adb install -r` preservam os dados e a chave; desinstalar o app os remove. iOS ainda não possui implementação equivalente do módulo de proteção.
 
@@ -90,7 +95,7 @@ O posicionamento usa um raycast do AR Foundation quando encontra um plano e, cas
 ## Pontos de atenção para manutenção
 
 - A captura registra caminhos de arquivos; ao alterar exclusão ou movimentação de fotos, trate banco e arquivos em conjunto.
-- Alterações na estrutura do banco exigem uma nova migration e teste de atualização sobre um banco existente. Não edite migrations já distribuídas como substituto de uma nova.
+- Alterações na estrutura do banco exigem uma nova migration e teste de atualização sobre um banco existente. Após a distribuição do app, não edite migrations já aplicadas como substituto de uma nova.
 - Alterações no Unity exigem nova exportação da biblioteca Android antes de compilar o app integrado.
 - As telas React Native podem ser verificadas em emulador, mas câmera, ARCore, desempenho de transparência e comportamento de gestos devem ser conferidos em aparelhos compatíveis.
 - A proteção no Keystore depende do ciclo de vida do app no dispositivo. Não há restauração de dados em outro aparelho implementada.

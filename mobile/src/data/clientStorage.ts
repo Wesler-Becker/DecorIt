@@ -1,4 +1,3 @@
-import * as RNFS from '@dr.pogodin/react-native-fs';
 import {NativeModules, Platform} from 'react-native';
 import {open, type Transaction} from '@op-engineering/op-sqlite';
 import {drizzle, type OPSQLiteDatabase} from 'drizzle-orm/op-sqlite';
@@ -28,20 +27,6 @@ export async function saveThemePreference(value: 'light' | 'dark'): Promise<void
   await db.$client.execute("INSERT INTO app_meta (key, value) VALUES ('ui_theme', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", [value]);
 }
 
-async function removeOldJsonFiles(): Promise<void> {
-  const base = Platform.OS === 'android' ? RNFS.ExternalDirectoryPath : RNFS.DocumentDirectoryPath;
-  if (!base) return;
-  for (const name of ['clients.json', 'clients.json.bak', 'last_ar_config.json']) {
-    const path = `${base}/${name}`;
-    if (await RNFS.exists(path)) await RNFS.unlink(path);
-  }
-  const outbox = `${base}/DecorIt/PhotoOutbox`;
-  if (await RNFS.exists(outbox)) {
-    for (const item of await RNFS.readDir(outbox))
-      if (item.isFile() && (item.name.endsWith('.json') || item.name.endsWith('.json.tmp'))) await RNFS.unlink(item.path);
-  }
-}
-
 const clientSecretFields = ['name', 'phone', 'address', 'postalCode', 'street', 'complement', 'neighborhood', 'city', 'state', 'observations'] as const;
 const recordSecretFields = ['notes', 'roomNotes', 'openingName'] as const;
 
@@ -58,21 +43,6 @@ async function transformFields<T extends object>(rows: T[], fields: readonly str
   return copies as T[];
 }
 
-async function protectExistingData(connection: ReturnType<typeof open>): Promise<void> {
-  const marker = connection.executeSync("SELECT value FROM app_meta WHERE key = 'secure_fields_v1'").rows[0];
-  if (marker) return;
-  const clientRows = connection.executeSync('SELECT id, name, phone, address, postal_code AS postalCode, street, complement, neighborhood, city, state, observations FROM clients').rows as unknown as ClientSqlRow[];
-  const recordRows = connection.executeSync('SELECT id, notes, room_notes AS roomNotes, opening_name AS openingName FROM visit_records').rows as unknown as RecordSqlRow[];
-  const clients = await transformFields(clientRows, clientSecretFields, true);
-  const records = await transformFields(recordRows, recordSecretFields, true);
-  await connection.transaction(async tx => {
-    for (const c of clients) await tx.execute('UPDATE clients SET name=?, phone=?, address=?, postal_code=?, street=?, complement=?, neighborhood=?, city=?, state=?, observations=? WHERE id=?',
-      [c.name, c.phone, c.address, c.postalCode, c.street, c.complement, c.neighborhood, c.city, c.state, c.observations, c.id]);
-    for (const r of records) await tx.execute('UPDATE visit_records SET notes=?, room_notes=?, opening_name=? WHERE id=?', [r.notes, r.roomNotes || '', r.openingName, r.id]);
-    await tx.execute("INSERT INTO app_meta (key, value) VALUES ('secure_fields_v1', 'done')");
-  });
-}
-
 function getDatabase(): Promise<AppDatabase> {
   if (!databasePromise) {
     databasePromise = (async () => {
@@ -81,14 +51,6 @@ function getDatabase(): Promise<AppDatabase> {
         connection.executeSync('PRAGMA foreign_keys = ON');
         connection.executeSync('PRAGMA secure_delete = ON');
         await applyGeneratedMigrations(connection);
-        await protectExistingData(connection);
-        if (!connection.executeSync("SELECT value FROM app_meta WHERE key = 'secure_cleanup_v1'").rows.length) {
-          connection.executeSync('PRAGMA wal_checkpoint(TRUNCATE)');
-          connection.executeSync('VACUUM');
-          connection.executeSync('PRAGMA wal_checkpoint(TRUNCATE)');
-          connection.executeSync("INSERT INTO app_meta (key, value) VALUES ('secure_cleanup_v1', 'done')");
-        }
-        await removeOldJsonFiles();
         return drizzle(connection, {schema}) as AppDatabase;
       } catch (error) {
         connection.close();

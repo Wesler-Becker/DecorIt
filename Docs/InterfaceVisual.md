@@ -13,6 +13,8 @@ A escolha fica na chave `ui_theme` da tabela `app_meta`, usando o banco já exis
 
 O Android transmite a escolha ao abrir o Unity, pelo extra `decorit_dark_theme`. `UnityARHostBridge` recebe essa preferência. O catálogo aplica a classe USS `dark` e usa as variáveis em `Assets/UI/Catalog/Catalog.uss`.
 
+O layout do catálogo fica em `Assets/UI/Catalog/Catalog.uxml`, os estilos em `Catalog.uss` e o comportamento em `Assets/Scripts/UI/CatalogScreenController.cs`. Os campos numéricos usam teclado decimal e filtragem ao confirmar; a busca de tecidos continua usando texto. Na interface React Native, o nome do cliente pode ocupar mais de uma linha no visualizador de fotos, mantendo o botão **Sobre** ao lado.
+
 A câmera mantém seus controles sobre superfícies escuras, independentemente do tema das telas de atendimento. As cores ficam em `Assets/Scripts/ARInteractionUI.cs`. A iluminação e os materiais da prévia 3D continuam independentes do tema.
 
 Mudanças na interface Unity precisam de nova exportação da biblioteca antes da build Android integrada. A tipografia utiliza a fonte nativa disponível no aplicativo; a fonte web e os ícones Material Symbols do HTML não são dependências do app. Os ícones continuam em Lucide no React Native.
