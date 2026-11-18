@@ -29,7 +29,7 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 758eb30e5bc85c74a31e30ce77401208, type: 3}
-        m_Scale: {x: 25, y: 25}
+        m_Scale: {x: 5.0, y: 5.0}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
         m_Texture: {fileID: 2800000, guid: 633b03e6f64c5c5888870ffa17cd1171, type: 3}
@@ -49,6 +49,7 @@ Material:
     - _Surface: 2
     - _ThreadOpacity: 0.87
     - _Transmission: 0.3
+    - _WeaveMidtone: 0.89536
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.5803922, g: 0.5686275, b: 0.5294118, a: 1}

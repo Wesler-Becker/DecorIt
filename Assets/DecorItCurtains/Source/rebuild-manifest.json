@@ -18,7 +18,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-805b6990-ef90-4f2e-ba05-b0070049aa70.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.94,
       "normalStrength": 0.3,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Boucle Cortina Loft. Input is a catalogue reference, reconstruct its specific textile structure. Use lower flat swatch. Dense coarse rectangular interweave of nubby boucle yarns, many tiny looped fibers, tightly grouped horizontal picks, small irregular dark microgaps. Not open lace. Output a single square flat orthographic textile texture filling the entire image, high resolution 2048x2048. No perspective, folds, borders, sample edges, book, hands, labels, text or lighting gradients. Neutral near-white yarns for subsequent material tint; preserve subtle realistic microfiber shading with restrained contrast. Seamlessly repeating opposite edges, no central focus. This tile is about 12 cm of cloth; include hundreds of fine threads, not enlarged decorative yarn. Opaque texture with no background; preserve fine weave detail but no huge open holes."
@@ -29,7 +29,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-3745c437-afa8-47d1-bcac-f6f6fb8b1016.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.88,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Boucle Cort Resort. Input is a catalogue reference, reconstruct its specific textile structure. Use flat lower sample, ignore rolled edge. Fine airy voile backing with subtle thicker rustic vertical fibers, light sparse horizontal woven yarns. Natural even gauze with small rectangular pores. Output a single square flat orthographic textile texture filling the entire image, high resolution 2048x2048. No perspective, folds, borders, sample edges, book, hands, labels, text or lighting gradients. Neutral near-white yarns for subsequent material tint; preserve subtle realistic microfiber shading with restrained contrast. Seamlessly repeating opposite edges, no central focus. This tile is about 12 cm of cloth; include hundreds of fine threads, not enlarged decorative yarn. Actual transparent alpha background in ALL inter-thread openings, opaque yarn cores and antialiased edges, no gray or white backing."
@@ -40,7 +40,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-c111f3a4-2aed-4c7c-9b72-ee4213f13e39.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.9,
       "normalStrength": 0.28,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Tela Creare. Input is a catalogue reference, reconstruct its specific textile structure. Use bottom flat white sample. Distinct closely packed vertical warp-knit zigzag triangular cells, repeated narrow elongated M/V diagonal crossings and ladder-like horizontal connectors. Tiny openings, fine lustrous strands. Match this exact knit direction, not a generic square grid. Output a single square flat orthographic textile texture filling the entire image, high resolution 2048x2048. No perspective, folds, borders, sample edges, book, hands, labels, text or lighting gradients. Neutral near-white yarns for subsequent material tint; preserve subtle realistic microfiber shading with restrained contrast. Seamlessly repeating opposite edges, no central focus. This tile is about 12 cm of cloth; include hundreds of fine threads, not enlarged decorative yarn. Actual transparent alpha background in ALL inter-thread openings, opaque yarn cores and antialiased edges, no gray or white backing."
@@ -51,7 +51,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-99d29805-f23c-4dff-849d-76f4c956173d.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.14,
       "threadOpacity": 0.94,
       "normalStrength": 0.3,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Tela Rústica. Input is a catalogue reference, reconstruct its specific textile structure. Use lower flat white sample: rustic loose basket gauze of uneven slightly wavy thick horizontal and vertical threads, rectangular open cells, subtle alternating bands of density. No gigantic holes. Output a single square flat orthographic textile texture filling the entire image, high resolution 2048x2048. No perspective, folds, borders, sample edges, book, hands, labels, text or lighting gradients. Neutral near-white yarns for subsequent material tint; preserve subtle realistic microfiber shading with restrained contrast. Seamlessly repeating opposite edges, no central focus. This tile is about 14.000000000000002 cm of cloth; include hundreds of fine threads, not enlarged decorative yarn. Actual transparent alpha background in ALL inter-thread openings, opaque yarn cores and antialiased edges, no gray or white backing."
@@ -62,7 +62,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-34127702-0a18-4800-a522-e16027d05fb1.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.87,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Tresset. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower sample: fine vertical parallel warp bundles crossed by irregular slubbed horizontal threads; occasional denser horizontal bars, delicate open rectangular grid and fibrous natural yarn. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -73,7 +73,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-ce895276-c2f9-489d-a73c-9deb5ac05260.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 0.9,
       "normalStrength": 0.3,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Tricot. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Flat knit corresponding to lower reference: tiny vertically aligned chain loops with narrow rectangular openings, irregular fuzzy slightly thicker horizontal interconnections, knitted texture rather than crocheted large lace. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -84,7 +84,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-1370b820-115c-4d7a-9e9f-8728f2db68cb.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.96,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Linho Absoluto. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat lower white fabric: fine densely woven linen, short uneven slubs in both axes, slight mottled natural fiber variations, subtle crosshatch, nearly closed weave. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -95,7 +95,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-6b957fa2-0717-433f-a347-25a7115b85b3.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.94,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Linho Gaia. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower flat white fabric: delicate linen weave with thin vertical slub streaks and fine even horizontal picks, closely spaced microthreads. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -106,7 +106,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-01d04622-f28b-49a6-8740-1047e96c25d7.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.9,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Artesano. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat bottom sample: airy vertical irregularly thick yarn bundles connected by delicate horizontal filament grid; vertical slub ridges with tiny slots between them. Preserve vertical character; no big generic holes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -117,7 +117,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-8546d112-2497-4b21-864c-29298eea3626.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.95,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Linho Moorea. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower white flat swatch, dense fine crosswoven linen with faint elongated short vertical slubs, occasional tiny dark knots; fairly smooth close weave. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -128,7 +128,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-354214d4-82b8-451c-ae56-78d8e4da54a1.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.92,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Parati. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower swatch. Strong long irregular vertical slubs in light fine linen ground, uneven thin fibrous veins, some darker slender streaks, subtle horizontal threads; no stripes painted on. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -139,7 +139,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-8b3dcfb6-db29-4120-973a-e5ec667e6f2b.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.78,
       "normalStrength": 0.16,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Shantung. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Very fine semi-sheer shantung weave with sparse irregular vertical slubs, occasional fine horizontal thicker thread, slightly lustrous but no broad highlights. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -150,7 +150,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-8584ed1e-9ffc-4bb6-bbc0-83fcac887544.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.84,
       "normalStrength": 0.23,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Camburi. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Rustic voile, prominent thin vertical dark/light slubs, fine crossing threads, delicate nonuniform linen microtexture; use flat bottom sample. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -161,7 +161,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-39e0838f-2a9a-4cc4-b703-f6c811512a12.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.93,
       "normalStrength": 0.23,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain LN Tela. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat beige bottom textile, neutralize color: dense tiny rustic linen crossweave, irregular thin elongated vertical yarn bundles and delicate horizontal fibers, no folds. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -172,7 +172,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-580ff6ef-f2f3-476a-a27f-677d03f1aa0b.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.82,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Linho Bora Bora. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat bottom sample: fine sheer linen ground with distinctive small irregular scattered thickened thread knots and slubs in horizontal and vertical directions. Pale low contrast crosshatching. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -183,7 +183,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-36f27d55-c614-4e25-a606-cb0a4c4211a2.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.8,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Flamê Bali. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use bottom sample: vertically aligned thin warp with irregular brighter slubbed horizontal flamé threads; an airy fine crossing grid, occasional thicker flecks. Small pores. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -194,7 +194,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-487d176c-3f57-4899-b168-94c8e01bc12c.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.85,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Linho Pipa. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat lower swatch: many slender irregular vertically elongated fibrous slubs with delicate horizontal crossweave, sheer fine linen character. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -205,7 +205,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-dc723196-9818-496f-9a97-cfac5cc72eca.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.89,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Linhão Iguape. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat bottom swatch: uneven prominent crosshatching of rustic linen slubs, fine sheer substrate, larger wispy fibrous horizontal/vertical grouped threads and soft irregular knots. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -216,7 +216,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-153a7099-7cdb-47f3-8903-b64825b038d3.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.8,
       "normalStrength": 0.18,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Bora Bora. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use bottom white swatch. Fine vertical warp crossed by very delicate horizontal bundles at uneven intervals, sheer voile with slender elongated slubs. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -227,7 +227,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-6ec96de9-d3ed-4eac-a845-6dad53c35f28.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.85,
       "normalStrength": 0.23,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Brisa. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower swatch: irregular rustic crossweave with thin closely packed vertical filaments and thicker uneven horizontal slubs, subtle density bands. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -238,7 +238,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-9b4e4235-59c4-491c-a50a-628d6e342e32.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 0.82,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Fresh. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower swatch: very fine airy plain weave with subtle scattered short slubs and slightly thicker crossing yarn groups, discreet natural microtexture. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -249,7 +249,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-ca62c9d3-064a-42a2-aafd-b7fa1b4f4b7c.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.9,
       "normalStrength": 0.27,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Urban. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use bottom white swatch. Distinct open square grid of closely spaced skinny vertical and horizontal yarns, a few irregular thicker dark slubs mostly vertical; finer and more regular than rustic lace. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -260,7 +260,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-c1e209c0-cb71-412b-93f9-c71459ee39f4.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.81,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Scalla. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat bottom swatch: long slim vertical fibrous slubs in a very fine voile weave, subtly grouped vertical fibers, sparse fine horizontal intersections. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -282,7 +282,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-6453f06c-9140-435a-9718-dc4ef6c86760.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.61,
       "normalStrength": 0.1,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Evidence. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower white sample: exceptionally fine smooth sheer voile, tiny uniform woven thread grid visible at macro, no large slubs, faint fiber irregularity. Very low contrast. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -293,7 +293,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-db82dfd4-031a-4df6-ac44-445922e99da7.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.64,
       "normalStrength": 0.1,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Essence. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower white sample: soft very fine close-woven semi sheer voile, tiny grain and micro fibers, subtle vertical warp emphasis. No broad gradients. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -304,7 +304,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-3f7ff66b-547c-482f-b9de-c592d7b275fd.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.53,
       "normalStrength": 0.1,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Chiffon Decor. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower swatch: delicate gossamer chiffon plain weave, tiny closely spaced fibers, very smooth slightly granular surface, no large knots or stripes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -315,7 +315,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-fbec6e10-b1fb-41b2-9e5c-5d5a575daa4d.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.68,
       "normalStrength": 0.13,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Snow. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Fine slightly crinkled tiny-grain voile, soft irregular fine fiber crossing texture, pale neutral white, no folds or large holes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -326,7 +326,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-2394736e-55d2-48ca-b678-05103320fe9c.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.75,
       "normalStrength": 0.19,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Cross. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Sheer fine voile with irregular thin heavier threads creating a subtle crosshatch check grid, thicker horizontal and vertical slubs spaced unevenly over fine base. Preserve cross pattern. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -337,7 +337,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-23500a34-e4b4-4fe1-b2f8-0ea285c33464.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.57,
       "normalStrength": 0.09,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Cristal. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Very fine smooth sheer voile with delicate uniform tiny woven fibers and subtle silk-like glints represented with restrained albedo, nearly featureless from distance. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -348,7 +348,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-9d6dc441-53df-4298-9e40-bb80f99447a2.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 0.72,
       "normalStrength": 0.19,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Gaze. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Airy fine gauze weave, subtle loosely grouped vertical filaments and uneven horizontal threads, tiny visible pores, slightly irregular grid. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -359,7 +359,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-d6623993-95c8-4739-94c3-64b0f1b94f57.png",
       "coverageFromAlpha": true,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 0.82,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Botonê. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Fine open closely spaced square grid with distinct tiny rounded boucle/nep knots dotted along threads, subtle nubby boutons. Do not make large polka dots or giant mesh. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Actual transparent alpha background through inter-thread openings, solid yarn cores and antialiased edges. No gray backing."
@@ -403,7 +403,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-f86c11a0-a903-4b95-8838-aef899abe0d5.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 0.57,
       "normalStrength": 0.08,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Liso. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Very fine smooth plain white sheer voile, almost imperceptible fine uniform crossweave microtexture. No slubs, no motifs, no wrinkles. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -414,7 +414,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-bc7be716-18a6-47dd-b349-50d10d28afa5.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 0.77,
       "normalStrength": 0.16,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Unique. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Fine semi sheer voile with tiny subtle irregular short horizontal and vertical slubs, a discreet silky granular texture. Use lower beige sample but neutralize to white. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -425,7 +425,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-97a93a40-48d7-4881-b849-dc2aa899ecd5.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.32,
       "threadOpacity": 1,
       "normalStrength": 0.23,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Giardino. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Dense fine textured blackout face, tiny irregular pebble-like woven chenille flecks and close crossweave, subtle bouclé micrograin, fully opaque. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -436,7 +436,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-7e9eddaa-7e92-4b55-a7c3-921956db1551.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.32,
       "threadOpacity": 1,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Terrazo. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower white fabric: dense linen-look blackout, fine closely spaced vertical warp ridges with tiny horizontal irregular flecks, no holes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -447,7 +447,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-bf3371c1-6479-4ba0-860c-190328aaaa11.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 1,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Linho Nix. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower swatch: dense fine mottled linen blackout face with tiny irregular crosswoven fiber flecks, closely packed small diagonal-looking micrograin; fully opaque. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -458,7 +458,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-f873cee8-6969-4556-9d18-d241b57bdbbd.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 1,
       "normalStrength": 0.21,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Linho Cronos. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use large lower blue-green fabric neutralized white: dense fine tightly woven linen with very subtle short irregular flecks and slight diagonal weave character, no holes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -469,7 +469,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-674c46e4-9aea-4aa6-9611-81e664ab2a87.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.4,
       "threadOpacity": 1,
       "normalStrength": 0.24,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout 100% Indonesia Dupla Face. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use bottom face: opaque blackout with conspicuous slender irregular vertical linen slub streaks on densely woven fine grain substrate; no open cells. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -480,7 +480,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-0870fb9a-d76f-47c4-9066-410e6dfdf1be.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 1,
       "normalStrength": 0.09,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Dupla Face. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use bottom swatch: smooth opaque finely woven blackout fabric with tiny uniform subtle micrograin, no large texture or slubs, subdued satin surface. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -491,7 +491,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-d199d400-dc38-4da7-8878-9d4c2957247c.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 1,
       "normalStrength": 0.08,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout 100%. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Smooth dense opaque blackout, extremely fine regular micro weave with very low contrast, matte soft polymer-backed textile surface. No visible holes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -502,7 +502,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-e18ad693-d688-4210-a960-8d156574e67f.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 1,
       "normalStrength": 0.11,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Fosco. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat bottom fabric: opaque matte blackout, tiny densely packed plain weave microtexture, nonreflective smooth finish, no larger flecks or stripes. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -513,7 +513,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-28778dd0-7768-4d17-8fa5-fa4bf26ede97.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 1,
       "normalStrength": 0.11,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Fosco 3M. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Opaque matte blackout with very fine compact even crosswoven microfibers and subtle soft pebbly grain, smooth uniform face, no photographic fold gradients. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -524,7 +524,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-dc124d10-fe70-43be-b582-066fdc350ba1.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 1,
       "normalStrength": 0.2,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Oxford. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use green or red fabric's weave structure neutralized to white: dense small paired-yarn basket weave Oxford, tiny checker of over-under thread bundles, fully opaque; no sample edges. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -535,7 +535,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-a8d27ca5-82bc-4e30-8d0b-10d836c80d97.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.16,
       "threadOpacity": 1,
       "normalStrength": 0.09,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Cetim Blackout. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Dense satin blackout: very fine soft diagonal satin twill microstructure, smooth slightly silky tiny fibers. Neutral pale white. No broad gloss gradients. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -546,7 +546,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-8770f4fb-edbe-41e6-b636-b0ab74d30330.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 1,
       "normalStrength": 0.11,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Microfibra Skin Peach. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Opaque peach-skin microfiber: extremely fine suede-like short soft fuzzy nap with tiny close-woven ground, very low contrast matte texture. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -557,7 +557,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-f5ef8f8a-aba2-4d41-9b38-0403ff3b3356.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 1,
       "normalStrength": 0.09,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Microfibra. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Opaque smooth densely woven microfiber, minuscule uniform crossgrain, very low contrast fine textile detail, no visible big yarns. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -568,7 +568,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-2bf0eb0d-4be6-4b0e-9e70-c53e12429298.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.24,
       "threadOpacity": 0.81,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Voil Flame Sorelle. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use center of lower fabric not printed words visible underneath: delicate voile with pronounced uneven vertical flax-like slub bundles and subtle horizontal fine threads, organic fine flamé texture. No text or ghost print. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -579,7 +579,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-8f889848-35cf-4ee6-a881-2d6acd328456.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.12,
       "threadOpacity": 1,
       "normalStrength": 0.12,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Microfibra Solea. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use lower flat fabric: opaque dense smooth microfiber with subtle very fine short irregular fibrous streaks and a light soft nap. No fold or highlight. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -590,7 +590,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-501a54e6-de2a-4486-bbae-39d7f867155e.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.32,
       "threadOpacity": 1,
       "normalStrength": 0.25,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Dupla Face Rocca. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use flat fabric on left: dense opaque face with many tiny irregular rounded boucle/chenille woven flecks, rough fine pebble microtexture and short cross fibers. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -601,7 +601,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-88a6b2a0-c997-4eab-b201-f1f03eb36268.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.2,
       "threadOpacity": 1,
       "normalStrength": 0.15,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Dupla Face Sireno. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use left flat fabric: dense opaque smooth finely pebbled textile with tiny close crossweave, subtle uniform fibrous grain. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."
@@ -612,7 +612,7 @@
       "generatedPath": "C:\\Users\\Administrator\\.codex\\generated_images\\01a15c19-45ce-7a33-8cbd-7cac64a7b97a\\exec-b8fdf0ee-4e57-4651-ae74-8397ec98ed4e.png",
       "coverageFromAlpha": false,
       "sourceIsCoverage": false,
-      "tileSizeMeters": 0.04,
+      "tileSizeMeters": 0.32,
       "threadOpacity": 1,
       "normalStrength": 0.22,
       "prompt": "Use case: precise-object-edit. Asset: production tileable PBR albedo texture for Unity curtain Blackout Dupla Face Nord. Catalogue photograph is a reference only. Reconstruct its specific textile structure. Use left flat fabric: dense opaque linen-look blackout, finely interlaced vertical and horizontal slubbed threads, subtle irregular crosshatch with nubby tiny intersections. Output a single square flat orthographic textile filling the image, with fine sharp fiber detail. No perspective, folds, borders, book, hands, labels, text or lighting gradients. Neutral WHITE/very light gray yarns for tinting, no brown pigments. Restrained fine shading only. Seamless opposite edges. Show many dozens to hundreds of threads, not oversized rope. Fully opaque albedo texture; include subtle fine microstructure, no invented holes."

@@ -4,7 +4,7 @@
     "source": "Assets/DecorItCurtains/Textures/voil_cristal/BaseColor.png",
     "width": 1254,
     "height": 1254,
-    "tileSizeMeters": 0.03999999910593033,
+    "tileSizeMeters": 0.12,
     "meanCoverage": 0.991431474685669,
     "coverageFromAuthoredAlpha": false,
     "sourceIsCoverage": false,

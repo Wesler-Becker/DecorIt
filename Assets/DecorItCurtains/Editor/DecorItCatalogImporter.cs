@@ -33,6 +33,8 @@ namespace DecorIt.Curtains.Editor
         public float normalStrength;
         public float uvScale;
         public float tileSizeMeters;
+        public bool useWeaveRGB;
+        public float weaveMidtone;
         public float transmission;
         public bool physicalScaleKnown;
         public int referencePage;
@@ -120,6 +122,8 @@ namespace DecorIt.Curtains.Editor
                     Color tint;
                     ColorUtility.TryParseHtmlString(product.colorHex, out tint);
                     material.SetColor("_BaseColor", tint);
+                    material.SetFloat("_WeaveMidtone", family.weaveMidtone);
+                    material.SetFloat("_UseWeaveRGB", family.useWeaveRGB ? 1f : 0f);
                     material.SetTexture("_BaseMap", LoadTexture(family.baseColor, Texture2D.whiteTexture));
                     material.SetTexture("_OpacityMap", LoadTexture(family.opacity, Texture2D.whiteTexture));
                     // A null normal texture uses the shader's neutral "bump" default.

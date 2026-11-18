@@ -4,7 +4,7 @@
     "source": "Assets/DecorItCurtains/Textures/voil_tresset/BaseColor.png",
     "width": 1254,
     "height": 1254,
-    "tileSizeMeters": 0.03999999910593033,
+    "tileSizeMeters": 0.2,
     "meanCoverage": 0.5936635136604309,
     "coverageFromAuthoredAlpha": true,
     "sourceIsCoverage": false,

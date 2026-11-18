@@ -518,10 +518,7 @@ public sealed class CatalogScreenController : MonoBehaviour
             if (entry == selectedMaterial) choice.AddToClassList("selected");
             var swatch = new Image { name = "Swatch" };
             swatch.AddToClassList("material-swatch");
-            swatch.scaleMode = ScaleMode.ScaleAndCrop;
-            Texture2D texture = GetMaterialTexture(entry.material);
-            if (texture != null) swatch.image = texture;
-            else swatch.style.backgroundColor = GetMaterialColor(entry.material);
+            ApplyFabricSwatch(swatch, entry.material);
             choice.Add(swatch);
             Label label = new Label(entry.displayName);
             label.AddToClassList("material-name");
@@ -543,10 +540,17 @@ public sealed class CatalogScreenController : MonoBehaviour
         selectedFabricName.text = selectedMaterial != null
             ? selectedMaterial.displayName
             : !string.IsNullOrEmpty(CurrentLayer.fabricMaterialName) ? CurrentLayer.fabricMaterialName : "Nenhum tecido selecionado";
-        selectedFabricSwatch.scaleMode = ScaleMode.ScaleAndCrop;
+        ApplyFabricSwatch(selectedFabricSwatch, material);
+    }
+
+    private static void ApplyFabricSwatch(Image swatch, Material material)
+    {
         Texture2D texture = GetMaterialTexture(material);
-        selectedFabricSwatch.image = texture;
-        selectedFabricSwatch.style.backgroundColor = texture == null ? GetMaterialColor(material) : Color.clear;
+        Color tint = GetMaterialColor(material);
+        swatch.scaleMode = ScaleMode.ScaleAndCrop;
+        swatch.image = texture;
+        swatch.tintColor = texture != null ? tint : Color.white;
+        swatch.style.backgroundColor = texture != null ? Color.clear : tint;
     }
 
     private void OpenMaterialPicker()

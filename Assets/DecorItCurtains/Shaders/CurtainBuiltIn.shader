@@ -3,7 +3,9 @@ Shader "DecorIt/Curtain BuiltIn"
     Properties
     {
         _BaseColor("Cor da amostra", Color) = (1,1,1,1)
-        _BaseMap("Trama neutra", 2D) = "white" {}
+        [Gamma] _WeaveMidtone("Tom medio da trama", Range(0,1)) = 0
+        _UseWeaveRGB("Usar cor e contraste da trama", Range(0,1)) = 0
+        _BaseMap("Trama", 2D) = "white" {}
         _OpacityMap("Vazados: preto=furo branco=fio (R)", 2D) = "white" {}
         [Normal] _NormalMap("Normal da trama", 2D) = "bump" {}
         _NormalStrength("Intensidade do normal", Range(0,2)) = 0.35
@@ -29,6 +31,8 @@ Shader "DecorIt/Curtain BuiltIn"
         sampler2D _NormalMap;
         float4 _BaseMap_ST;
         fixed4 _BaseColor;
+        half _WeaveMidtone;
+        half _UseWeaveRGB;
         half _NormalStrength;
         half _ThreadOpacity;
         half _Transmission;
@@ -104,7 +108,11 @@ Shader "DecorIt/Curtain BuiltIn"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 half alpha = CurtainAlpha(i.uv);
                 half3 weave = tex2D(_BaseMap, i.uv).rgb;
-                half3 baseColor = lerp(0.65h, 1.0h, dot(weave, half3(0.2126h, 0.7152h, 0.0722h))) * _BaseColor.rgb;
+                half luminance = dot(weave, half3(0.2126h, 0.7152h, 0.0722h));
+                half neutralShade = lerp(0.65h, 1.0h, luminance);
+                if (_WeaveMidtone > 0.0h)
+                    neutralShade = luminance * (0.35h + 0.65h / _WeaveMidtone);
+                half3 baseColor = lerp(neutralShade.xxx, weave, _UseWeaveRGB) * _BaseColor.rgb;
                 half3 normalTS = UnpackScaleNormal(tex2D(_NormalMap, i.uv), _NormalStrength);
                 half3 normal = normalize(i.normal);
                 half3 tangent = normalize(i.tangent.xyz);
